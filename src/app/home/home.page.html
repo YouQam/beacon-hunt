@@ -1,20 +1,36 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+  <ion-header>
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-title size="large" class="ion-text-center">Beacon Scanner</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  <ion-item>
+    <ion-label>UUID: </ion-label>
+    <ion-input value={{uuid}}></ion-input>
+    <ion-button style="width: 20%;" (click)="onStartClicked()">Scan</ion-button>
+  </ion-item>
+
+  <h2 *ngIf="!beaconFound">3Scanning for beacons... </h2>
+  <h2 *ngIf="beaconFound">Beacons detected: </h2>
+
+  <ion-card *ngFor="let beacon of beaconData;" >
+    <ion-card-content>
+      <ion-item>
+        <ion-label>uuid: {{beacon.uuid}}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>accuracy: {{beacon.accuracy}}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>major: {{beacon.major}}</ion-label>
+        <ion-label>minor: {{beacon.minor}}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>rssi: {{beacon.rssi}}</ion-label>
+        <ion-label>tx: {{beacon.tx}}</ion-label>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>
