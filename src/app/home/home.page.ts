@@ -60,6 +60,21 @@ export class HomePage {
       if (!this.beaconFound) {
         this.startBleFun();
       }
+
+  public stopScannning(): void {
+    // stop monitoring
+    this.ibeacon.stopMonitoringForRegion(this.beaconRegion);
+    // stop ranging
+    this.ibeacon.stopRangingBeaconsInRegion(this.beaconRegion)
+      .then(() => {
+        console.log(`Stopped ranging beacon region:`, this.beaconRegion);
+        this.beaconFound = false;
+      })
+      .catch((error: any) => {
+        console.log(`Failed to stop ranging beacon region: `, this.beaconRegion);
+      });
+    //
+
   }
 
   public startBleFun(): void {
