@@ -11,16 +11,21 @@
     <ion-button style="width: 20%;" (click)="onStartClicked()">Scan</ion-button>
   </ion-item>
 
-  <h2 *ngIf="!beaconFound">3Scanning for beacons... </h2>
+  <ion-toolbar>
+    <ion-button expand="full" (click)="onScanClicked()">{{scanStatus?"Stop scanning":"Start Scanning"}}</ion-button>
+  </ion-toolbar>
+
+  <h2 *ngIf="!beaconFound">Scanning for beacons... </h2>
   <h2 *ngIf="beaconFound">Beacons detected: </h2>
 
-  <ion-card *ngFor="let beacon of beaconData;" >
+  <ion-card *ngFor="let beacon of beaconData;">
     <ion-card-content>
       <ion-item>
         <ion-label>uuid: {{beacon.uuid}}</ion-label>
       </ion-item>
       <ion-item>
         <ion-label>accuracy: {{beacon.accuracy}}</ion-label>
+        <ion-label>proximity: {{beacon.proximity}}</ion-label>
       </ion-item>
       <ion-item>
         <ion-label>major: {{beacon.major}}</ion-label>
@@ -29,6 +34,9 @@
       <ion-item>
         <ion-label>rssi: {{beacon.rssi}}</ion-label>
         <ion-label>tx: {{beacon.tx}}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>proximity: {{beacon.proximity}}</ion-label>
       </ion-item>
     </ion-card-content>
   </ion-card>
