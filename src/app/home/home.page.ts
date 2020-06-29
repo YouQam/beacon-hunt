@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { IBeacon, IBeaconPluginResult } from '@ionic-native/ibeacon/ngx';
 import { Platform } from '@ionic/angular';
+import { async } from '@angular/core/testing';
 
 @Component({
   selector: 'app-home',
@@ -20,7 +21,7 @@ export class HomePage {
   beaconFound: boolean = false;
 
 
-  constructor(private readonly ibeacon: IBeacon, private readonly platform: Platform) {
+  constructor(private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef) {
     this.enableDebugLogs();
   }
 
@@ -65,8 +66,9 @@ export class HomePage {
     // stop monitoring
     this.ibeacon.stopMonitoringForRegion(this.beaconRegion);
     // stop ranging
+    this.ibeacon.stopRangingBeaconsInRegion(this.beaconRegion);
     this.ibeacon.stopRangingBeaconsInRegion(this.beaconRegion)
-      .then(() => {
+      .then(async () => {
         console.log(`Stopped ranging beacon region:`, this.beaconRegion);
         this.beaconFound = false;
       })
@@ -100,7 +102,7 @@ export class HomePage {
     // Subscribe to some of the delegate's event handlers
     delegate.didRangeBeaconsInRegion()
       .subscribe(
-        (pluginResult: IBeaconPluginResult) => {
+        async (pluginResult: IBeaconPluginResult) => {
           console.log('didRangeBeaconsInRegion: ', pluginResult)
           console.log('//////// pluginResult.beacons size ///////= ' + pluginResult.beacons.length)
           console.log('//////// beaconData size ///////= ' + pluginResult.beacons.length)
@@ -109,22 +111,7 @@ export class HomePage {
               this.beaconData = pluginResult.beacons;
             this.beaconFound = true;
             console.log('+++++++Beacon found+++++++++')
-
-
-            // stop monitoring
-            this.ibeacon.stopMonitoringForRegion(beaconRegion)
-            // stop ranging
-            this.ibeacon.stopRangingBeaconsInRegion(beaconRegion)
-              .then(() => {
-                console.log(` ,,,,,,,,,,,,,,,,,,,,,,,RANGING Stopppped `, beaconRegion);
-                this.beaconFound = false;
-                //this.beaconData = [];
-              })
-              .catch((error: any) => {
-                console.error(`,,,,,,,,,,,,,,,,,,,,,,,(Error) RANGING Stopppped: `, beaconRegion);
-              });
-            //
-
+            this.changeRef.detectChanges();
           } else {
             console.log('------Beacon not found-----')
           }
