@@ -150,6 +150,9 @@ export class HomePage implements OnInit {
           .setLngLat([7.63, 51.960])
           .addTo(this.map);
 
+          // Zoom to the beacon location
+          this.map.flyTo({ center: [ 7.63, 51.960] });
+
         //this.changeRef.detectChanges(); // Check for data change to update view Y.Q
 
 
