@@ -1,13 +1,21 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, ViewChild, OnInit } from '@angular/core';
 import { IBeacon, IBeaconPluginResult, Beacon } from '@ionic-native/ibeacon/ngx';
 import { Platform } from '@ionic/angular';
+import mapboxgl from "mapbox-gl";
+import { environment } from 'src/environments/environment';
+
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit {
+  @ViewChild("map") mapContainer;
+  @ViewChild("marker") directionMarker;
+  map: mapboxgl.Map;
+  marker: mapboxgl.Marker;
+
 
   uuid = 'b9407f30-f5f8-466e-aff9-25556b57fe6d';
   beaconData = [];
@@ -21,6 +29,18 @@ export class HomePage {
     this.platform.ready().then(() => {
       this.requestLocPermissoin();
       this.enableDebugLogs();
+    });
+  }
+
+  ngOnInit() { }
+  ionViewWillEnter() {
+
+    mapboxgl.accessToken = environment.mapboxAccessToken;
+    this.map = new mapboxgl.Map({
+      container: this.mapContainer.nativeElement,
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [7.63, 51.960],
+      zoom: 12
     });
   }
 
@@ -60,10 +80,10 @@ export class HomePage {
   }
 
   startScanning() {
-      // create a new delegate and register it with the native layer
-      this.delegate = this.ibeacon.Delegate();
+    // create a new delegate and register it with the native layer
+    this.delegate = this.ibeacon.Delegate();
 
-      this.ibeacon.setDelegate(this.delegate);
+    this.ibeacon.setDelegate(this.delegate);
 
     this.beaconUuid = this.uuid;
 
@@ -120,12 +140,22 @@ export class HomePage {
   }
 
   onBeaconFound(receivedData: Beacon[]): void {
-    for(let i=0; i<receivedData.length; i++){
+    for (let i = 0; i < receivedData.length; i++) {
+      console.log(' Found Beacon: 56411');
+      if (receivedData[i].major == 56411) {
         console.log(' Found Beacon: 56411');
-        if(receivedData[i].major==56411){
-          console.log(' Found Beacon: 56411');
-          this.stopScannning();
-        }
+
+        // Add marler
+        new mapboxgl.Marker()
+          .setLngLat([7.63, 51.960])
+          .addTo(this.map);
+
+        //this.changeRef.detectChanges(); // Check for data change to update view Y.Q
+
+
+        // Stop ranging
+        this.stopScannning();
+      }
     }
   }
 }

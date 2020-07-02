@@ -6,7 +6,7 @@
   </ion-header>
 
   <!-- progressbar -->
-  <ion-progress-bar type="indeterminate" [style.display]="scanStatus ? 'block' : 'none'"></ion-progress-bar>
+    <ion-progress-bar type="indeterminate" [style.display]="scanStatus ? 'block' : 'none'"></ion-progress-bar>
 
   <ion-item-divider color="primary">
     <ion-label style="max-width: 290px;">
@@ -21,6 +21,9 @@
     <ion-button style="width: 20%;" (click)="onStartClicked()">Scan</ion-button>
   </ion-item> -->
 
+    <!-- Map container -->
+    <div #map class="map"></div>
+  
   <ion-card *ngFor="let beacon of beaconData; let i = index ">
     <ion-card-content style="padding: 2px;">
       <ion-item>
@@ -55,4 +58,4 @@
       </ion-fab-button>
     </ion-fab>
 
-  </ion-content>
+</ion-content>
