@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { IBeacon, IBeaconPluginResult } from '@ionic-native/ibeacon/ngx';
+import { IBeacon, IBeaconPluginResult, Beacon } from '@ionic-native/ibeacon/ngx';
 import { Platform } from '@ionic/angular';
 
 @Component({
@@ -37,18 +37,6 @@ export class HomePage {
     this.ibeacon.enableDebugNotifications();
   }
 
-  onStartClicked(): void {
-    /* //this.platform.ready().then(() => {
-      if(!this.scanStatus){
-        this.startBleFun();
-        this.scanStatus = true;
-      }else{
-        this.scanStatus = false;
-        this.stopScannning();
-      }
-    //}); */
-  }
-
   public onScanClicked(): void {
     if (!this.scanStatus) {
       this.startScanning();
@@ -60,6 +48,7 @@ export class HomePage {
   }
 
   public stopScannning(): void {
+    this.scanStatus = false; // Change scan state Y.Q
     // stop ranging
     this.ibeacon.stopRangingBeaconsInRegion(this.beaconRegion)
       .then(async () => {
@@ -78,8 +67,6 @@ export class HomePage {
 
     this.beaconUuid = this.uuid;
 
-    console.log('--===--- Bluetooth state: ', this.ibeacon.isBluetoothEnabled());
-
     // Check bluetooth status Y.Q
     this.ibeacon.isBluetoothEnabled()
       .then(
@@ -95,6 +82,7 @@ export class HomePage {
           console.log('found beacons size: ' + pluginResult.beacons.length)
           if (pluginResult.beacons.length > 0) {
             this.beaconData = pluginResult.beacons;
+            this.onBeaconFound(this.beaconData);  // check received beacons to trigger an event
             this.changeRef.detectChanges(); // Check for data change to update view Y.Q
           } else {
             console.log('no beacons nearby')
@@ -129,5 +117,15 @@ export class HomePage {
       .catch((error: any) => {
         console.error(`Failed to start ranging beacon region: `, this.beaconRegion);
       });
+  }
+
+  onBeaconFound(receivedData: Beacon[]): void {
+    for(let i=0; i<receivedData.length; i++){
+        console.log(' Found Beacon: 56411');
+        if(receivedData[i].major==56411){
+          console.log(' Found Beacon: 56411');
+          this.stopScannning();
+        }
+    }
   }
 }

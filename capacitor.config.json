@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "mt_beacon_cordova_1",
+  "appId": "io.ionic.starter.beacon.thesis",
+  "appName": "beacon_thesis",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",
