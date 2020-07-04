@@ -3,6 +3,7 @@ import { IBeacon, IBeaconPluginResult, Beacon } from '@ionic-native/ibeacon/ngx'
 import { Platform } from '@ionic/angular';
 import mapboxgl from "mapbox-gl";
 import { environment } from 'src/environments/environment';
+import { Storage } from '@ionic/storage';
 
 
 @Component({
@@ -25,7 +26,7 @@ export class HomePage implements OnInit {
   public beaconRegion: any = null;
 
 
-  constructor(private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef) {
+  constructor(public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef) {
     this.platform.ready().then(() => {
       this.requestLocPermissoin();
       this.enableDebugLogs();
