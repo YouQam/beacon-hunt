@@ -11,6 +11,10 @@ const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full'
   },
+  {
+    path: 'add-beacon',
+    loadChildren: () => import('./handle-beacons/add-beacon/add-beacon.module').then( m => m.AddBeaconPageModule)
+  },
 ];
 
 @NgModule({
