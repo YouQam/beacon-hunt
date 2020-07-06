@@ -1,0 +1,16 @@
+<ion-content [fullscreen]="true">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title size="large" class="ion-text-center">Add Beacon Location </ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div #map class="map"></div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="saveLocation()">
+      <ion-icon name='save' style="font-size: 25px;"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>
