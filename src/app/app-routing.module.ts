@@ -4,7 +4,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+    loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
   },
   {
     path: '',
@@ -13,7 +13,10 @@ const routes: Routes = [
   },
   {
     path: 'add-beacon',
-    loadChildren: () => import('./handle-beacons/add-beacon/add-beacon.module').then( m => m.AddBeaconPageModule)
+    loadChildren: () => import('./handle-beacons/add-beacon/add-beacon.module').then(m => m.AddBeaconPageModule)
+  }, {
+    path: 'map-add-loc',
+    loadChildren: () => import('./map-add-loc/map-add-loc.module').then(m => m.MapAddLocPageModule)
   },
 ];
 
