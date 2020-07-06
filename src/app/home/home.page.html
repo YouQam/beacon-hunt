@@ -1,16 +1,20 @@
-<ion-content [fullscreen]="true">
-  <ion-header>
-    <ion-toolbar>
-      <ion-title size="large" class="ion-text-center">Beacon Scanner</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button color=dark defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title size="large" class="ion-text-center">Beacon Scanner</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
 
   <!-- progressbar -->
   <ion-progress-bar type="indeterminate" [style.display]="scanStatus ? 'block' : 'none'"></ion-progress-bar>
 
   <ion-item-divider color="primary">
     <ion-label style="max-width: 290px;">
-      <b>{{scanStatus?"Scanning for nearby beacons":"Press play to start scanning."}} </b>
+      <b>{{scanStatus?"Scanning for nearby beacons":"Press play to start playing."}} </b>
     </ion-label>
     <ion-spinner name="lines-small" color="light" [style.display]="scanStatus ? 'block' : 'none'"></ion-spinner>
   </ion-item-divider>
@@ -22,14 +26,14 @@
   </ion-item> -->
 
   <!-- Map container -->
-<!--   <ion-card>
+  <!--   <ion-card>
     <ion-card-content style="padding: 2px;">
       <div #map class="map"></div>
     </ion-card-content>
   </ion-card> -->
 
   <div #map class="map"></div>
-<!--  <div id="map" class="map"></div> -->
+  <!--  <div id="map" class="map"></div> -->
 
   <ion-card *ngFor="let beacon of beaconData; let i = index ">
     <ion-card-content style="padding: 2px;">
@@ -65,23 +69,23 @@
     </ion-fab-button>
   </ion-fab>
 
-  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+  <!--   <ion-fab vertical="bottom" horizontal="start" slot="fixed">
     <ion-fab-button (click)="navigateAddBeaconPage()">
       <ion-icon name='settings' style="font-size: 25px;"></ion-icon>
     </ion-fab-button>
-  </ion-fab>
+  </ion-fab> -->
 
-  <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+<!--   <ion-fab vertical="bottom" horizontal="center" slot="fixed">
     <ion-fab-button id="1" (click)="saveData($event)">
       <ion-icon name='save' style="font-size: 25px;"></ion-icon>
     </ion-fab-button>
-  </ion-fab>
+  </ion-fab> -->
 
-  <ion-fab vertical="top" horizontal="start" slot="fixed">
+  <!--   <ion-fab vertical="top" horizontal="center" slot="fixed">
     <ion-fab-button id="1" (click)="showMap()">
       <ion-icon name='map' style="font-size: 25px;"></ion-icon>
     </ion-fab-button>
-  </ion-fab>
+  </ion-fab> -->
 
 
 

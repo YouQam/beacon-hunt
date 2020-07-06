@@ -3,12 +3,12 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
+    path: 'menu',
+    loadChildren: () => import('./menu/menu.module').then( m => m.MenuPageModule)
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'menu',
     pathMatch: 'full'
   },
   {
@@ -17,6 +17,10 @@ const routes: Routes = [
   }, {
     path: 'map-add-loc',
     loadChildren: () => import('./map-add-loc/map-add-loc.module').then(m => m.MapAddLocPageModule)
+  },
+  {
+    path: 'home',
+    loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
   },
 ];
 

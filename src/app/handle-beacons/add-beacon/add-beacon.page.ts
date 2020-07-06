@@ -46,10 +46,10 @@ export class AddBeaconPage implements OnInit {
 
 
     // get selected coords
-    let coordsInService: number[];
+/*     let coordsInService: number[];
     this.gameServ.serviceCoords
       .subscribe(data => (coordsInService = data));
-    console.log(' data in service, After update=:', coordsInService);
+    console.log(' data in service, After update=:', coordsInService); */
   }
 
   navigateHomePage() {

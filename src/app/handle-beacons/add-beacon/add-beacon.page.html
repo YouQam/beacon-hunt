@@ -1,11 +1,14 @@
-<ion-content [fullscreen]="true">
-  <ion-header>
-    <ion-toolbar>
-      <ion-title size="large" class="ion-text-center">Beacon Settings</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button color=dark defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title size="large" class="ion-text-center">Beacon Settings</ion-title>
+  </ion-toolbar>
+</ion-header>
 
 
+<ion-content>
   <ion-card *ngFor="let beacon of beaconsStoredList; let i = index ">
     <ion-card-content style="padding: 2px;">
       <ion-item>
@@ -27,7 +30,7 @@
         <ion-label><b>Longitude</b> <br> {{beacon.lng}}</ion-label>
         <ion-label><b>Latitude</b> <br> {{beacon.lat}}</ion-label>
       </ion-item>
-      
+
       <ion-button expand="block" (click)="openBeaconData(beacon.minor)">Update location</ion-button>
 
       <!-- <ion-item>

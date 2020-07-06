@@ -6,9 +6,6 @@ import { Storage } from '@ionic/storage';
 import { ToastController, NavController, Platform } from '@ionic/angular';
 import { BeaconInfo } from 'src/app/models/beaconData'
 
-
-
-
 @Component({
   selector: 'app-map-add-loc',
   templateUrl: './map-add-loc.page.html',
@@ -24,10 +21,10 @@ export class MapAddLocPage implements OnInit {
   beaconsStoredList: BeaconInfo[];
 
 
-  constructor(private changeRef: ChangeDetectorRef, private readonly platform: Platform, public navCtrl: NavController, public storage: Storage, public toastController: ToastController, private gameServ: GameServiceService) { 
-    platform.resume.subscribe((result)=>{
+  constructor(private changeRef: ChangeDetectorRef, private readonly platform: Platform, public navCtrl: NavController, public storage: Storage, public toastController: ToastController, private gameServ: GameServiceService) {
+    platform.resume.subscribe((result) => {
       console.log('Platform Resume Event');
-  });
+    });
   }
 
   ngOnInit() {
@@ -64,9 +61,9 @@ export class MapAddLocPage implements OnInit {
       zoom: 12
     });
 
-/*     this.map.on('zoom', () => {
-      console.log(`zoom: `, this.map.getZoom());
-    }); */
+    /*     this.map.on('zoom', () => {
+          console.log(`zoom: `, this.map.getZoom());
+        }); */
 
     // Show coords on map click
     this.map.on('click', e => {
@@ -77,41 +74,41 @@ export class MapAddLocPage implements OnInit {
   }
 
 
-saveLocation(): void {
-  // update selected beacon location
-  if(this.selectedCoords != undefined) {
-  // update location of seleted beacon
-  for (let i = 0; i < this.beaconsStoredList.length; i++) {
-    console.log(' search for minor', this.beaconsStoredList[i].minor);
-    console.log(' looking for minor', this.minorNo);
+  saveLocation(): void {
+    // update selected beacon location
+    if (this.selectedCoords != undefined) {
+      // update location of seleted beacon
+      for (let i = 0; i < this.beaconsStoredList.length; i++) {
+        console.log(' search for minor', this.beaconsStoredList[i].minor);
+        console.log(' looking for minor', this.minorNo);
 
-    if (this.beaconsStoredList[i].minor == this.minorNo) {
-      this.beaconsStoredList[i].lng = this.selectedCoords[0];
-      this.beaconsStoredList[i].lat = this.selectedCoords[1];
-      console.log('beacon loaction has been updated');
+        if (this.beaconsStoredList[i].minor == this.minorNo) {
+          this.beaconsStoredList[i].lng = this.selectedCoords[0];
+          this.beaconsStoredList[i].lat = this.selectedCoords[1];
+          console.log('beacon loaction has been updated');
 
-      this.storage.set('beacon_info_list', this.beaconsStoredList);
-      this.changeRef.detectChanges(); // Check for data change to update view Y.Q
+          this.storage.set('beacon_info_list', this.beaconsStoredList);
+          this.changeRef.detectChanges(); // Check for data change to update view Y.Q
+        }
+      }
+
+      // update MinorNo service to undefined 
+      this.gameServ.changeMinorNo(undefined);
+
+      // navigate to add-beacon page
+      this.navCtrl.navigateForward('add-beacon');
+    } else {
+      this.presentToast('Please select location on the map to save.');
     }
-  }
-
-  // update MinorNo service to undefined 
-  this.gameServ.changeMinorNo(undefined);
-
-  // navigate to add-beacon page
-  this.navCtrl.navigateForward('add-beacon');
-} else {
-  this.presentToast('Please select location on the map to save.');
-}
 
   }
 
-// Show toast
-async presentToast(msg: string) {
-  const toast = await this.toastController.create({
-    message: msg,
-    duration: 2000
-  });
-  toast.present();
-}
+  // Show toast
+  async presentToast(msg: string) {
+    const toast = await this.toastController.create({
+      message: msg,
+      duration: 2000
+    });
+    toast.present();
+  }
 }

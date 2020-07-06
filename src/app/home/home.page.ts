@@ -40,41 +40,37 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
 
-    //this.storage.clear;
-    let beaconinfo1: BeaconInfo = new BeaconInfo(56410, 14338, 123, 123);
-    let beaconinfo2: BeaconInfo = new BeaconInfo(96413, 44335, 456, 456);
+/*     if (this.beaconinfoList == undefined) {
+      let beaconinfo1: BeaconInfo = new BeaconInfo(56411, 14338, 7.814, 51.675); // hamm
+      let beaconinfo2: BeaconInfo = new BeaconInfo(24489, 35011, 8.538, 52.010); // beliefeld
+      this.beaconinfoList = [beaconinfo1, beaconinfo2]
+      //this.beaconinfoList.push
+      this.storage.set('beacon_info_list', this.beaconinfoList); // store in db
+      console.log(' Beacon info stored', this.beaconinfoList);
 
-    this.beaconinfoList = [beaconinfo1, beaconinfo2]
-    //this.beaconinfoList.push
-
-    this.storage.set('beacon_info_list', this.beaconinfoList); // sotre in db
-    console.log(' Beacon info stored', this.beaconinfoList);
-
-    this.updateBeaconStoredList();
+      this.updateBeaconStoredList();
+    }else{
+      console.log('data is already intialized');
+    } */
   }
 
   ionViewWillEnter() {
     console.log('home Resume Event');
     this.updateBeaconStoredList();
 
-    /* console.log('/ marker state', this.marker);
 
-    mapboxgl.accessToken = environment.mapboxAccessToken;
-    this.map = new mapboxgl.Map({
-      container: this.mapContainer.nativeElement,
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [7.63, 51.960],
-      zoom: 12
-    });
+    if (this.map == undefined) {
 
-
-    // Show coords on map click
-    this.map.on('click', function (e) {
-      console.log("e:", e.lngLat)
-
-    }); */
-
-
+      mapboxgl.accessToken = environment.mapboxAccessToken;
+      this.map = new mapboxgl.Map({
+        container: this.mapContainer.nativeElement,
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [7.63, 51.960],
+        zoom: 12
+      });
+    } else {
+      console.log('ÒÒÒ map is alreasdy there')
+    }
   }
 
   requestLocPermissoin(): void {
@@ -246,27 +242,21 @@ export class HomePage implements OnInit {
     //this.storage.set('name', 'yousef');
     //console.log(`: Data stored`);
 
-    let beaconinfo1: BeaconInfo = new BeaconInfo(56411, 14338, 7.814, 51.675); // hamm
-    let beaconinfo2: BeaconInfo = new BeaconInfo(96413, 44335, 8.538, 52.010); // beliefeld
+    /* let beaconinfo1: BeaconInfo = new BeaconInfo(56411, 14338, 7.814, 51.675); // hamm
+    let beaconinfo2: BeaconInfo = new BeaconInfo(24489, 35011, 8.538, 52.010); // beliefeld
 
     this.beaconinfoList = [beaconinfo1, beaconinfo2]
-    this.storage.set('beacon_info_list', this.beaconinfoList); // sotre in db
+    this.storage.set('beacon_info_list', this.beaconinfoList); // sotre in db */
     //this.beaconinfo = new BeaconInfo(56411, 14338);
     ////this.beaconinfo = new BeaconInfo(24489, 35011);
     //this.storage.set('beacon_info', this.beaconinfo); // sotre in db
-    console.log(' Beacon info stored:', this.beaconinfoList);
+    //console.log(' Beacon info stored:', this.beaconinfoList);
     //console.log(' id=:', event.target.attributes.ids);
 
-    // retreive data from service
-    let coordsInService: number[];
-    this.gameServ.serviceCoords
-      .subscribe(data => (coordsInService = data));
-    console.log(' data in service, before update=:', coordsInService);
-
     // update service
-    this.gameServ.changeCoords([111, 222]);
+    //this.gameServ.changeCoords([111, 222]);
 
-    this.updateBeaconStoredList();
+    //this.updateBeaconStoredList();
   }
 
   updateBeaconStoredList() {
@@ -279,7 +269,7 @@ export class HomePage implements OnInit {
   }
 
   showMap(): void {
-    if (this.map == undefined) {
+    /* if (this.map == undefined) {
 
       mapboxgl.accessToken = environment.mapboxAccessToken;
       this.map = new mapboxgl.Map({
@@ -290,6 +280,6 @@ export class HomePage implements OnInit {
       });
     } else {
       console.log('ÒÒÒ map is alreasdy there')
-    }
+    } */
   }
 }
