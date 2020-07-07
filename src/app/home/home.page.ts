@@ -6,6 +6,11 @@ import { environment } from 'src/environments/environment';
 import { Storage } from '@ionic/storage';
 import { BeaconInfo } from 'src/app/models/beaconData'
 import { GameServiceService } from '../services/game-service.service';
+import circle from '../../../node_modules/@turf/circle'
+//import bbox from '@turf/bbox';
+//import turf from '@turf/helpers'
+
+//import { turf } from '@turf/turf'
 
 
 @Component({
@@ -20,6 +25,8 @@ export class HomePage implements OnInit {
   map: mapboxgl.Map;
   marker: mapboxgl.Marker;
 
+  //circle: TurfCircle;
+
   uuid = 'b9407f30-f5f8-466e-aff9-25556b57fe6d';
   beaconData = [];
   beaconUuid: String;
@@ -29,6 +36,8 @@ export class HomePage implements OnInit {
 
   public beaconinfoList: BeaconInfo[];
   public beaconsStoredList: BeaconInfo;
+
+  //bbox: Bbox;
 
 
   constructor(private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef) {
@@ -40,18 +49,18 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
 
-/*     if (this.beaconinfoList == undefined) {
-      let beaconinfo1: BeaconInfo = new BeaconInfo(56411, 14338, 7.814, 51.675); // hamm
-      let beaconinfo2: BeaconInfo = new BeaconInfo(24489, 35011, 8.538, 52.010); // beliefeld
-      this.beaconinfoList = [beaconinfo1, beaconinfo2]
-      //this.beaconinfoList.push
-      this.storage.set('beacon_info_list', this.beaconinfoList); // store in db
-      console.log(' Beacon info stored', this.beaconinfoList);
-
-      this.updateBeaconStoredList();
-    }else{
-      console.log('data is already intialized');
-    } */
+    /*     if (this.beaconinfoList == undefined) {
+          let beaconinfo1: BeaconInfo = new BeaconInfo(56411, 14338, 7.814, 51.675); // hamm
+          let beaconinfo2: BeaconInfo = new BeaconInfo(24489, 35011, 8.538, 52.010); // beliefeld
+          this.beaconinfoList = [beaconinfo1, beaconinfo2]
+          //this.beaconinfoList.push
+          this.storage.set('beacon_info_list', this.beaconinfoList); // store in db
+          console.log(' Beacon info stored', this.beaconinfoList);
+    
+          this.updateBeaconStoredList();
+        }else{
+          console.log('data is already intialized');
+        } */
   }
 
   ionViewWillEnter() {
@@ -281,5 +290,64 @@ export class HomePage implements OnInit {
     } else {
       console.log('ÒÒÒ map is alreasdy there')
     } */
+
+
+/*     this.map.addSource("circle-mask", {
+      type: "geojson",
+      data: {
+        type: "Point",
+        coordinates: [
+          7.626, 51.960
+        ]
+      }
+    });  */
+
+    var center = [7.626, 51.960];
+    var radius = 1;
+    var options = { steps: 10, units: 'kilometers', properties: { foo: 'bar','circle-stroke-width': 800} };
+    var circle1 = circle(center, radius, options);
+
+    //his.map.addLayer(circle1);
+
+    console.log(circle1);
+
+
+    this.map.addSource("circle-mask", {
+      type: "geojson",
+      data: circle1
+    }); 
+
+     this.map.addLayer({
+      id: "circle-mask",
+      source: "circle-mask",
+      type: "fill",
+      'paint': {
+        'fill-color': "#808080",
+        'fill-opacity': 0.8
+      }
+
+    }); 
+
+    //circle1.addTo(this.map);
+
+    /* this.map.addLayer({
+      id: "circle-mask",
+      source: "circle-mask",
+      type: "circle",
+      layout: {
+        'visibility': 'visible'
+      },
+      'paint': {
+        'circle-radius': {
+          stops: [[8, 1], [10, 5], [12, 10], [14, 15], [16, 45], [18, 210]]
+        },
+        'circle-stroke-width': 800,
+        'circle-stroke-color': "#808080",
+        'circle-stroke-opacity': 0.5,
+        'circle-opacity': 0
+      }
+    }); */
+
+
   }
 }
