@@ -29,6 +29,7 @@
     "@ionic/storage": "^2.2.0",
     "@turf/bbox": "^6.0.1",
     "@turf/circle": "^6.0.1",
+    "@turf/mask": "^5.1.5",
     "@turf/turf": "^5.1.6",
     "cordova-android": "^8.1.0",
     "cordova-ios": "^5.1.1",
@@ -37,6 +38,7 @@
     "mapbox-gl": "^1.11.0",
     "rxjs": "~6.5.1",
     "tslib": "^1.10.0",
+    "turf-polygon": "^1.0.3",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {

@@ -6,11 +6,14 @@ import { environment } from 'src/environments/environment';
 import { Storage } from '@ionic/storage';
 import { BeaconInfo } from 'src/app/models/beaconData'
 import { GameServiceService } from '../services/game-service.service';
-import circle from '../../../node_modules/@turf/circle'
+import circle from '@turf/circle'
+import mask from '@turf/mask'
 //import bbox from '@turf/bbox';
 //import turf from '@turf/helpers'
 
-//import { turf } from '@turf/turf'
+//import  polygon  from 'turf-polygon'
+
+import polygonize from '@turf/polygonize';
 
 
 @Component({
@@ -33,7 +36,6 @@ export class HomePage implements OnInit {
   scanStatus: boolean = false;
   private delegate: any = null;
   public beaconRegion: any = null;
-
   public beaconinfoList: BeaconInfo[];
   public beaconsStoredList: BeaconInfo;
 
@@ -278,21 +280,7 @@ export class HomePage implements OnInit {
   }
 
   showMap(): void {
-    /* if (this.map == undefined) {
-
-      mapboxgl.accessToken = environment.mapboxAccessToken;
-      this.map = new mapboxgl.Map({
-        container: this.mapContainer.nativeElement,
-        style: 'mapbox://styles/mapbox/streets-v11',
-        center: [7.63, 51.960],
-        zoom: 12
-      });
-    } else {
-      console.log('ÒÒÒ map is alreasdy there')
-    } */
-
-
-/*     this.map.addSource("circle-mask", {
+    /* this.map.addSource("circle-mask", {
       type: "geojson",
       data: {
         type: "Point",
@@ -300,37 +288,9 @@ export class HomePage implements OnInit {
           7.626, 51.960
         ]
       }
-    });  */
+    });
 
-    var center = [7.626, 51.960];
-    var radius = 1;
-    var options = { steps: 10, units: 'kilometers', properties: { foo: 'bar','circle-stroke-width': 800} };
-    var circle1 = circle(center, radius, options);
-
-    //his.map.addLayer(circle1);
-
-    console.log(circle1);
-
-
-    this.map.addSource("circle-mask", {
-      type: "geojson",
-      data: circle1
-    }); 
-
-     this.map.addLayer({
-      id: "circle-mask",
-      source: "circle-mask",
-      type: "fill",
-      'paint': {
-        'fill-color': "#808080",
-        'fill-opacity': 0.8
-      }
-
-    }); 
-
-    //circle1.addTo(this.map);
-
-    /* this.map.addLayer({
+    this.map.addLayer({
       id: "circle-mask",
       source: "circle-mask",
       type: "circle",
@@ -348,6 +308,39 @@ export class HomePage implements OnInit {
       }
     }); */
 
+    // circle 1
+    var center = [7.626, 51.960];
+    var radius = 1500;
+    var options = { steps: 10, units: 'kilometers' };
+    var circle1 = circle(center, radius, options);
 
+    //circle2
+    var center2 = [7.626, 51.960];
+    var radius2 = 0.02;
+    var options2 = { steps: 20, units: 'kilometers'};
+    var circle2 = circle(center2, radius2, options2);
+
+    var masked = mask(circle2, circle1);
+
+    console.log(circle1);
+
+
+
+    this.map.addSource("circle-mask", {
+      type: "geojson",
+      data: masked
+    });
+
+
+    this.map.addLayer({
+      id: "circle-mask",
+      source: "circle-mask",
+      type: "fill",
+      'paint': {
+        'fill-color': "#808080",
+        'fill-opacity': 0.8
+      }
+
+    });
   }
 }
