@@ -32,6 +32,13 @@ export class MenuPage implements OnInit {
     }
   }
 
+  onPlayGameClicked(): void{
+    console.log('PlayGame button pressed');
+
+    // navigate to play-game-select page
+    this.navCtrl.navigateForward('play-game-select');
+  }
+
   onPlayClicked(): void {
     console.log('Play button pressed');
 

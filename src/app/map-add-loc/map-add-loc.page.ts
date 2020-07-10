@@ -96,14 +96,14 @@ export class MapAddLocPage implements OnInit {
       this.gameServ.changeMinorNo(undefined);
 
       // navigate to add-beacon page
-      this.navCtrl.navigateForward('add-beacon');
+      this.navCtrl.navigateForward('/');
     } else {
       this.presentToast('Please select location on the map to save.');
     }
 
   }
 
-  // Show toast
+  // Dispaly toast
   async presentToast(msg: string) {
     const toast = await this.toastController.create({
       message: msg,
