@@ -78,4 +78,15 @@ export class PlayGameSelectPage implements OnInit {
     this.navCtrl.navigateForward('map-add-loc');
   }
 
+  onDeleteBeacon(beaconMinor: number): void {
+    for(var i = 0; i<this.beaconsStoredList_copy.length; i++){
+      if(this.beaconsStoredList_copy[i].minor == beaconMinor){
+        this.beaconsStoredList_copy.splice(i, 1);
+        console.log("Deleted successfully!");
+      }
+    }
+  }
+
+  //updateBeacon
+
 }

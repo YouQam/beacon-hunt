@@ -95,8 +95,9 @@ export class MapAddLocPage implements OnInit {
       // update MinorNo service to undefined 
       this.gameServ.changeMinorNo(undefined);
 
-      // navigate to add-beacon page
-      this.navCtrl.navigateForward('/');
+      // navigate to previous page
+      this.navCtrl.back();
+
     } else {
       this.presentToast('Please select location on the map to save.');
     }
