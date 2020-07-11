@@ -82,11 +82,14 @@ export class PlayGameSelectPage implements OnInit {
     for(var i = 0; i<this.beaconsStoredList_copy.length; i++){
       if(this.beaconsStoredList_copy[i].minor == beaconMinor){
         this.beaconsStoredList_copy.splice(i, 1);
+        this.onUpdateTasksNum();
         console.log("Deleted successfully!");
       }
     }
   }
 
-  //updateBeacon
+  onUpdateTasksNum(): void{
+    this.numTasks -=1;
+  }
 
 }
