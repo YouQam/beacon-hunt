@@ -50,7 +50,7 @@ export class PlayGameSelectPage implements OnInit {
 
     if (opType == "inc") {
       this.numTasks += 1;
-      this.beaconsStoredList_copy.push(this.beaconsStoredList[this.beaconsStoredList_copy.length]); // add task
+      this.onAddTaskPressed();
       console.log(" Num: ", this.numTasks);
     } else {
       this.numTasks -= 1;
@@ -79,8 +79,8 @@ export class PlayGameSelectPage implements OnInit {
   }
 
   onDeleteBeacon(beaconMinor: number): void {
-    for(var i = 0; i<this.beaconsStoredList_copy.length; i++){
-      if(this.beaconsStoredList_copy[i].minor == beaconMinor){
+    for (var i = 0; i < this.beaconsStoredList_copy.length; i++) {
+      if (this.beaconsStoredList_copy[i].minor == beaconMinor) {
         this.beaconsStoredList_copy.splice(i, 1);
         this.onUpdateTasksNum();
         console.log("Deleted successfully!");
@@ -88,8 +88,19 @@ export class PlayGameSelectPage implements OnInit {
     }
   }
 
-  onUpdateTasksNum(): void{
-    this.numTasks -=1;
+  onUpdateTasksNum(): void {
+    this.numTasks -= 1;
+  }
+
+  // Invoked when user press the increase button
+  onAddTaskPressed(): void {
+    for (var i = 0; i < this.beaconsStoredList.length; i++) {
+      let answer = this.beaconsStoredList_copy.filter(t => t.minor == this.beaconsStoredList[i].minor); // Check if the task is already stored
+      console.log("answer is: ", answer, ", length: ", answer.length);
+      if(answer.length == 0){
+        this.beaconsStoredList_copy.push(this.beaconsStoredList[i]); // add task
+      }
+    }
   }
 
 }
