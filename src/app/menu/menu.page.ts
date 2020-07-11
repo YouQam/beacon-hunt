@@ -53,4 +53,11 @@ export class MenuPage implements OnInit {
     this.navCtrl.navigateForward('add-beacon');
   }
 
+  onGameSettingsClicked(): void {
+    console.log('Game Settings button pressed');
+
+    // navigate to add-beacon page
+    this.navCtrl.navigateForward('game-settings');
+  }
+
 }
