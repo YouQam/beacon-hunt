@@ -30,6 +30,10 @@ const routes: Routes = [
     path: 'game-settings',
     loadChildren: () => import('./game-settings/game-settings.module').then( m => m.GameSettingsPageModule)
   },
+  {
+    path: 'beacon-scan',
+    loadChildren: () => import('./beacon-scan/beacon-scan.module').then( m => m.BeaconScanPageModule)
+  },
 ];
 
 @NgModule({

@@ -6,7 +6,19 @@ import { GameSettingsPage } from './game-settings.page';
 const routes: Routes = [
   {
     path: '',
-    component: GameSettingsPage
+    component: GameSettingsPage,
+    children: [
+      {
+        path: 'home',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../play-game-select/play-game-select.module').then(m => m.PlayGameSelectPageModule)
+          }
+        ]
+      }
+    ]
   }
 ];
 
@@ -14,4 +26,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class GameSettingsPageRoutingModule {}
+export class GameSettingsPageRoutingModule { }
