@@ -9,12 +9,27 @@ const routes: Routes = [
     component: GameSettingsPage,
     children: [
       {
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full'
+      },
+      {
         path: 'home',
         children: [
           {
             path: '',
             loadChildren: () =>
               import('../play-game-select/play-game-select.module').then(m => m.PlayGameSelectPageModule)
+          }
+        ]
+      },
+      {
+        path: 'beacon-scan',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../beacon-scan/beacon-scan.module').then(m => m.BeaconScanPageModule)
           }
         ]
       }
