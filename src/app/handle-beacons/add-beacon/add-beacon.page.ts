@@ -14,6 +14,7 @@ export class AddBeaconPage implements OnInit {
 
   beaconsStoredList: BeaconInfo[]; // hold stored beacons info to show them in page
 
+
   constructor(private changeRef: ChangeDetectorRef,private readonly platform: Platform, private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController) {
     
   

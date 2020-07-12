@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { Storage } from '@ionic/storage';
 import { BeaconInfo } from 'src/app/models/beaconData'
 import { GameServiceService } from '../services/game-service.service';
+import { BeaconFullInfo } from '../models/beaconFullInfo';
 
 
 @Component({
@@ -27,6 +28,8 @@ export class BeaconScanPage implements OnInit {
   public beaconinfoList: BeaconInfo[];
   public beaconsStoredList: BeaconInfo;
 
+  public scanResultList: BeaconFullInfo[] = [];
+
 
   constructor(private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef) {
     this.platform.ready().then(() => {
@@ -36,19 +39,13 @@ export class BeaconScanPage implements OnInit {
   }
 
   ngOnInit() {
+    
   }
 
 
   ionViewWillEnter() {
     console.log('home Resume Event');
     this.updateBeaconStoredList();
-
-
-    this.ibeacon.isRangingAvailable()
-      .then(
-        (data) => console.log(' ranging is available', data),
-        (error: any) => console.error(' ranging is not available', error)
-      );
   }
 
   ionViewWillLeave() {
@@ -116,6 +113,7 @@ export class BeaconScanPage implements OnInit {
           console.log('found beacons size: ' + pluginResult.beacons.length)
           if (pluginResult.beacons.length > 0) {
             this.beaconData = pluginResult.beacons;
+            this.onScanResultUpdate(this.beaconData);
             //this.onBeaconFound(this.beaconData);  // check received beacons to trigger an event
             this.changeRef.detectChanges(); // Check for data change to update view Y.Q
           } else {
@@ -176,6 +174,46 @@ export class BeaconScanPage implements OnInit {
     }
   }
 
+  onScanResultUpdate(receivedData: Beacon[]): void {
+    console.log(' on onScanResultUpdate: ', receivedData.length);
+    console.log(' on onScanResultUpdate: ', this.scanResultList);
+
+    if (this.scanResultList.length == 0) {
+      for(let i = 0; i < receivedData.length; i++){
+        this.scanResultList.push(new BeaconFullInfo(receivedData[i].uuid, receivedData[i].major, receivedData[i].minor, receivedData[i].proximity, receivedData[i].tx,receivedData[i].rssi, receivedData[i].accuracy,false));
+      }
+    } else {
+      for (let i = 0; i < receivedData.length; i++) {
+        let answer = this.scanResultList.filter(t => t.minor == receivedData[i].minor); // Check if the task is already stored
+        console.log("answer is: ", answer, ", length: ", answer.length);
+        if (answer.length == 0) {
+          this.scanResultList.push(new BeaconFullInfo(receivedData[i].uuid, receivedData[i].major, receivedData[i].minor, receivedData[i].proximity, receivedData[i].tx,receivedData[i].rssi, receivedData[i].accuracy,false)); // add task
+        }
+      } 
+    }
+
+    /* //to compare with one beacon at a time
+    for (let i = 0; i < receivedData.length; i++) {
+      console.log(' look for Beacon: 56411');
+      console.log(' receivedData[i].major == this.beaconsStoredList[0].major):', receivedData[i].major, ' == ', this.beaconsStoredList[0].major);
+      if (this.beaconsStoredList) {
+        if (receivedData[i].major == this.beaconsStoredList[0].major) {
+          console.log(' Found Beacon: ', 56411);
+
+          // Zoom to the beacon location
+          this.map.flyTo({ center: [this.beaconsStoredList[0].lng, this.beaconsStoredList[0].lat] });
+          console.log(' Fly to: ', this.beaconsStoredList[0].lng, this.beaconsStoredList[0].lat);
+
+          //this.changeRef.detectChanges(); // Check for data change to update view Y.Q
+
+
+          // Stop ranging
+          this.stopScannning();
+        }
+      }
+    } */
+  }
+
   updateBeaconStoredList() {
     // get a key/value pair from db
     this.storage.get('beacon_info_list').then((val) => {
@@ -183,5 +221,9 @@ export class BeaconScanPage implements OnInit {
       //console.log(' From home, retreived list from db: ', this.beaconsStoredList);
 
     });
+  }
+
+  AddBeaconInfo(beaconMinor: number){
+    console.log(' AddBeaconInfo pressed: ', beaconMinor);
   }
 }
