@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, ViewChild, OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { IBeacon, IBeaconPluginResult, Beacon } from '@ionic-native/ibeacon/ngx';
 import { Platform, NavController } from '@ionic/angular';
 import mapboxgl from "mapbox-gl";
@@ -14,8 +14,6 @@ import { GameServiceService } from '../services/game-service.service';
   styleUrls: ['./beacon-scan.page.scss'],
 })
 export class BeaconScanPage implements OnInit {
-  @ViewChild("map") mapContainer;
-  //@ViewChild("marker") directionMarker;
   map: mapboxgl.Map;
   marker: mapboxgl.Marker;
 
@@ -38,26 +36,26 @@ export class BeaconScanPage implements OnInit {
   }
 
   ngOnInit() {
-
-/*     if (this.beaconinfoList == undefined) {
-      let beaconinfo1: BeaconInfo = new BeaconInfo(56411, 14338, 7.814, 51.675); // hamm
-      let beaconinfo2: BeaconInfo = new BeaconInfo(24489, 35011, 8.538, 52.010); // beliefeld
-      this.beaconinfoList = [beaconinfo1, beaconinfo2]
-      //this.beaconinfoList.push
-      this.storage.set('beacon_info_list', this.beaconinfoList); // store in db
-      console.log(' Beacon info stored', this.beaconinfoList);
-
-      this.updateBeaconStoredList();
-    }else{
-      console.log('data is already intialized');
-    } */
   }
+
 
   ionViewWillEnter() {
     console.log('home Resume Event');
     this.updateBeaconStoredList();
 
 
+    this.ibeacon.isRangingAvailable()
+      .then(
+        (data) => console.log(' ranging is available', data),
+        (error: any) => console.error(' ranging is not available', error)
+      );
+  }
+
+  ionViewWillLeave() {
+    console.log(`: on ionViewWillLeave , region`, this.beaconRegion);
+    if (this.beaconRegion) {
+      this.stopScannning();
+    }
   }
 
   requestLocPermissoin(): void {
@@ -74,12 +72,6 @@ export class BeaconScanPage implements OnInit {
   }
 
   public onScanClicked(): void {
-
-    if (this.marker != undefined) {
-      this.marker.remove();
-      console.log('/ marker has been removed successfully');
-    }
-
     if (!this.scanStatus) {
       this.startScanning();
       this.scanStatus = true;
@@ -182,63 +174,6 @@ export class BeaconScanPage implements OnInit {
         }
       }
     }
-
-    //to compare with mulitple beacons at a time
-    /* for (let i = 0; i < receivedData.length; i++) {
-      for (let j = 0; j < this.beaconinfoList.length; j++) {
-        console.log(' search for beacon major:', receivedData[i].major);
-        if (this.beaconinfoList) {
-          if (receivedData[i].major == this.beaconinfoList[j].major) {
-            console.log(' Found Beacon: ', this.beaconsStoredList.major);
-
-            // Add marker
-            new mapboxgl.Marker()
-              .setLngLat([this.beaconinfoList[j].lng, this.beaconinfoList[j].lat])
-              .addTo(this.map);
-
-            // Zoom to the beacon location
-            this.map.flyTo({ center: [this.beaconinfoList[j].lng, this.beaconinfoList[j].lat] });
-
-            //this.changeRef.detectChanges(); // Check for data change to update view Y.Q
-
-
-            // Stop ranging
-            this.stopScannning();
-          }
-        }
-      }
-    } */
-  }
-
-  navigateAddBeaconPage() {
-    // get a key/value pair from db
-    this.storage.get('beacon_info_list').then((val) => {
-      //console.log('From home, beacon info display: ', val);
-    });
-    this.navCtrl.navigateForward('add-beacon');
-
-  }
-
-  saveData(event) {
-    // set a key/value
-    //this.storage.set('name', 'yousef');
-    //console.log(`: Data stored`);
-
-    /* let beaconinfo1: BeaconInfo = new BeaconInfo(56411, 14338, 7.814, 51.675); // hamm
-    let beaconinfo2: BeaconInfo = new BeaconInfo(24489, 35011, 8.538, 52.010); // beliefeld
-
-    this.beaconinfoList = [beaconinfo1, beaconinfo2]
-    this.storage.set('beacon_info_list', this.beaconinfoList); // sotre in db */
-    //this.beaconinfo = new BeaconInfo(56411, 14338);
-    ////this.beaconinfo = new BeaconInfo(24489, 35011);
-    //this.storage.set('beacon_info', this.beaconinfo); // sotre in db
-    //console.log(' Beacon info stored:', this.beaconinfoList);
-    //console.log(' id=:', event.target.attributes.ids);
-
-    // update service
-    //this.gameServ.changeCoords([111, 222]);
-
-    //this.updateBeaconStoredList();
   }
 
   updateBeaconStoredList() {
@@ -248,20 +183,5 @@ export class BeaconScanPage implements OnInit {
       //console.log(' From home, retreived list from db: ', this.beaconsStoredList);
 
     });
-  }
-
-  showMap(): void {
-    /* if (this.map == undefined) {
-
-      mapboxgl.accessToken = environment.mapboxAccessToken;
-      this.map = new mapboxgl.Map({
-        container: this.mapContainer.nativeElement,
-        style: 'mapbox://styles/mapbox/streets-v11',
-        center: [7.63, 51.960],
-        zoom: 12
-      });
-    } else {
-      console.log('ÒÒÒ map is alreasdy there')
-    } */
   }
 }
