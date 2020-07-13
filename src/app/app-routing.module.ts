@@ -34,6 +34,10 @@ const routes: Routes = [
     path: 'beacon-scan',
     loadChildren: () => import('./beacon-scan/beacon-scan.module').then( m => m.BeaconScanPageModule)
   },
+  {
+    path: 'scan-nearby',
+    loadChildren: () => import('./scan-nearby/scan-nearby.module').then( m => m.ScanNearbyPageModule)
+  },
 ];
 
 @NgModule({

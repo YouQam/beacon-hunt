@@ -45,10 +45,8 @@ export class PlayGameSelectPage implements OnInit {
 
     this.changeRef.detectChanges(); // Check for data change to update view Y.Q
 
-
     // To update view when back to page
     this.ngOnInit();
-
   }
 
   onTaskNumChange(opType: string): void {

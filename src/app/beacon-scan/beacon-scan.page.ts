@@ -207,7 +207,6 @@ export class BeaconScanPage implements OnInit {
     if (this.beaconsStoredList.length > 0) {
       this.compareFoundWithStoredBeacons();
     }
-
   }
 
 

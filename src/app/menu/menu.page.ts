@@ -60,4 +60,11 @@ export class MenuPage implements OnInit {
     this.navCtrl.navigateForward('game-settings');
   }
 
+  onScanNearbyClicked(): void {
+    console.log('Scan Nearby button pressed');
+
+    // navigate to add-beacon page
+    this.navCtrl.navigateForward('scan-nearby');
+  }
+
 }

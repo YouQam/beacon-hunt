@@ -19,7 +19,10 @@
     <ion-spinner name="lines-small" color="light" [style.display]="scanStatus ? 'block' : 'none'"></ion-spinner>
   </ion-item-divider>
 
-  <ion-card *ngFor="let beacon of scanResultList; let i = index ">
+  <div #map class="map"></div>
+  <!--  <div id="map" class="map"></div> -->
+
+  <ion-card *ngFor="let beacon of beaconData; let i = index ">
     <ion-card-content style="padding: 2px;">
       <ion-item>
         <ion-label>
@@ -44,26 +47,12 @@
         <ion-label><b>Distance</b> <br> {{beacon.accuracy}} m</ion-label>
         <ion-label><b>TX</b> <br> {{beacon.tx}}</ion-label>
       </ion-item>
-
-      <ion-item>
-        <ion-button *ngIf="beacon.visibility" (click)="AddBeaconInfo(beacon.minor)">
-          <ion-icon name="add-circle"></ion-icon>
-        </ion-button>
-        <ion-label *ngIf="!beacon.visibility"><b>* This beacon info is saved.</b></ion-label>
-      </ion-item>
-
     </ion-card-content>
   </ion-card>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button [color]='scanStatus ? "danger" : "primary"' (click)="onScanClicked()">
       <ion-icon [name]='scanStatus ? "pause-sharp" : "play-sharp"' style="font-size: 25px;"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-
-  <ion-fab vertical="bottom" horizontal="center" slot="fixed">
-    <ion-fab-button [color]='scanStatus ? "danger" : "primary"' (click)="onclearClicked()">
-      <ion-icon name='trash' style="font-size: 25px;"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
