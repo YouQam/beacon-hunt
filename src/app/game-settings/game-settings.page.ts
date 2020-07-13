@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-game-settings',
@@ -7,9 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GameSettingsPage implements OnInit {
 
-  constructor() { }
+  constructor( public storage: Storage) { }
 
   ngOnInit() {
+    // get stored beaconinfo to be update selected beacon location
+    this.storage.get('test1')
+      .then((data) => {
+        console.log('// After inster test1: ', data);
+
+        //this.storage.clear();
+
+      });
   }
 
 }

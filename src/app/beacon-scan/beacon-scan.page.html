@@ -45,7 +45,9 @@
         <ion-label><b>TX</b> <br> {{beacon.tx}}</ion-label>
       </ion-item>
 
-      <ion-button (click)="AddBeaconInfo(beacon.minor)" ><ion-icon name="add-circle"></ion-icon></ion-button>
+      <ion-button *ngIf="beacon.visibility" (click)="AddBeaconInfo(beacon.minor)" ><ion-icon name="add-circle"></ion-icon></ion-button>
+      <ion-label *ngIf="!beacon.visibility" ><b>* This beacon is allready stored.</b></ion-label>
+
 
     </ion-card-content>
   </ion-card>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ToastController, NavController } from '@ionic/angular';
 import { BeaconInfo } from '../models/beaconData';
 import { Storage } from '@ionic/storage';
@@ -11,13 +11,13 @@ import { GameServiceService } from '../services/game-service.service';
 })
 export class PlayGameSelectPage implements OnInit {
 
-  numTasks: number = 1;
+  numTasks: number = 0;
   maxNumTasks: number = 0;
   beaconsStoredList: BeaconInfo[];
   beaconsStoredList_copy: BeaconInfo[];
 
 
-  constructor(public navCtrl: NavController, private gameServ: GameServiceService, public toastController: ToastController, public storage: Storage) { }
+  constructor(private changeRef: ChangeDetectorRef, public navCtrl: NavController, private gameServ: GameServiceService, public toastController: ToastController, public storage: Storage) { }
 
   ngOnInit() {
     // get stored beaconinfo to be update selected beacon location
@@ -35,6 +35,14 @@ export class PlayGameSelectPage implements OnInit {
       }).catch((error: any) => {
         console.error(`(play-game-select), error in retreiving beacon info list from storage`);
       });;
+  }
+
+  ionViewWillEnter() {
+    console.log('(play-gme-select), Resume Event');
+    this.changeRef.detectChanges(); // Check for data change to update view Y.Q
+
+    // To update view when back to page
+    this.ngOnInit();
   }
 
   onTaskNumChange(opType: string): void {
