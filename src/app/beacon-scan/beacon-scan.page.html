@@ -58,4 +58,10 @@
     </ion-fab-button>
   </ion-fab>
 
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab-button [color]='scanStatus ? "danger" : "primary"' (click)="onclearClicked()">
+      <ion-icon name='trash' style="font-size: 25px;"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
 </ion-content>

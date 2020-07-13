@@ -204,19 +204,37 @@ export class BeaconScanPage implements OnInit {
     }
 
     // Comapre found beacons with stored ones to add ability to insert new beacons
-/*     if(this.beaconsStoredList.length > 0){
+    if (this.beaconsStoredList.length > 0) {
       this.compareFoundWithStoredBeacons();
-    } */
-  
+    }
+
   }
 
-      
+
   // Comapre found beacons with stored ones to add ability to insert new beacons
-  compareFoundWithStoredBeacons(){
-    for (let i = 0; i < this.scanResultList.length; i++) {
-      let answer = this.beaconsStoredList.filter(t => t.minor == this.scanResultList[i].minor); // Check if the task is already stored in local DB
-      if (answer.length != 0) {
-        this.scanResultList[i].visibility = false;
+  compareFoundWithStoredBeacons() {
+    console.log('/', 'compareFoundWithStoredBeacons pressed');
+
+    // check if stoerd list has been deleted, and assign true to add button
+    if (this.beaconsStoredList.length == 0) {
+      for (let i = 0; i < this.scanResultList.length; i++) {
+        console.log('/\\', 'forr1');
+        this.scanResultList[i].visibility = true;
+        this.changeRef.detectChanges(); // Check for data change to update view Y.Q
+
+      }
+
+    } else {
+      for (let i = 0; i < this.scanResultList.length; i++) {
+        console.log('/\\', 'forr2');
+
+        let answer = this.beaconsStoredList.filter(t => t.minor == this.scanResultList[i].minor); // Check if the task is already stored in local DB
+        if (answer.length != 0) {
+          this.scanResultList[i].visibility = false;
+          this.changeRef.detectChanges(); // Check for data change to update view Y.Q
+          console.log('/', this.scanResultList[i].minor, 'changed button status!!');
+
+        }
       }
     }
   }
@@ -245,16 +263,27 @@ export class BeaconScanPage implements OnInit {
 
     console.log(' After inster length: ', this.beaconsStoredList.length);
 
+    // Refresh add button of inserted beacon
+    this.compareFoundWithStoredBeacons();
+  }
+
+  onclearClicked(): void {
+    this.storage.clear();
+    this.beaconsStoredList = []
+
+    console.log(' Beacon info deleted successfully');
+
+    // Refresh add button of inserted beacon
+    this.compareFoundWithStoredBeacons();
+
+    //this.changeRef.detectChanges(); // Check for data change to update view Y.Q
 
 
- /*    // get stored beaconinfo to be update selected beacon location
+    // get stored beaconinfo to be update selected beacon location
     this.storage.get('beacon_info_list')
       .then((data) => {
-        console.log('// After inster length in DB: ', data.length);
 
-
-
-      }); */
+      });
 
   }
 }

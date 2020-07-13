@@ -26,10 +26,13 @@ export class PlayGameSelectPage implements OnInit {
         if (data != null) {
           this.beaconsStoredList = data;
           this.beaconsStoredList_copy = this.beaconsStoredList.slice();
+          this.changeRef.detectChanges(); // Check for data change to update view Y.Q
+
           this.maxNumTasks = this.numTasks = this.beaconsStoredList.length;
-          console.log('(play-game-select), beacon info list retreived successfully');
-          console.log('(play-game-select), Max num of tasks is: ', this.maxNumTasks);
+          console.log('(play-game-select), beacon info list retreived successfully: ', this.maxNumTasks);
         } else {
+          this.maxNumTasks = 0;
+          this.beaconsStoredList_copy = [];
           console.log('(play-game-select), storage is empty, no beacon info is stored yet');
         }
       }).catch((error: any) => {
@@ -39,10 +42,13 @@ export class PlayGameSelectPage implements OnInit {
 
   ionViewWillEnter() {
     console.log('(play-gme-select), Resume Event');
+
     this.changeRef.detectChanges(); // Check for data change to update view Y.Q
+
 
     // To update view when back to page
     this.ngOnInit();
+
   }
 
   onTaskNumChange(opType: string): void {
