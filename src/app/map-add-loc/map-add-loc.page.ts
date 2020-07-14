@@ -53,7 +53,8 @@ export class MapAddLocPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    mapboxgl.accessToken = environment.mapboxAccessToken;
+    mapboxgl.accessToken = 'pk.eyJ1IjoidGhlZ2lzZGV2IiwiYSI6ImNqdGQ5dmd2MTEyaWk0YXF0NzZ1amhtOWMifQ.GuFE28BPyzAcHWejNLzuyw';
+    //mapboxgl.accessToken = environment.mapboxAccessToken;
     this.map = new mapboxgl.Map({
       container: this.mapContainer.nativeElement,
       style: 'mapbox://styles/mapbox/streets-v11',
