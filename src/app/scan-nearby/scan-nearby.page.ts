@@ -70,6 +70,11 @@ export class ScanNearbyPage implements OnInit {
 
   public stopScannning(): void {
     this.scanStatus = false; // Change scan state Y.Q
+
+    // Reinitialize variables to null, to reduce delay in second time scan 
+    this.delegate = null;
+    this.beaconRegion = null;
+
     // stop ranging
     this.ibeacon.stopRangingBeaconsInRegion(this.beaconRegion)
       .then(async () => {
