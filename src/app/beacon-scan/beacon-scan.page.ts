@@ -1,8 +1,6 @@
 import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { IBeacon, IBeaconPluginResult, Beacon } from '@ionic-native/ibeacon/ngx';
 import { Platform, NavController } from '@ionic/angular';
-import mapboxgl from "mapbox-gl";
-import { environment } from 'src/environments/environment';
 import { Storage } from '@ionic/storage';
 import { BeaconInfo } from 'src/app/models/beaconData'
 import { GameServiceService } from '../services/game-service.service';
@@ -15,10 +13,9 @@ import { BeaconFullInfo } from '../models/beaconFullInfo';
   styleUrls: ['./beacon-scan.page.scss'],
 })
 export class BeaconScanPage implements OnInit {
-  map: mapboxgl.Map;
-  marker: mapboxgl.Marker;
 
-  uuid = 'b9407f30-f5f8-466e-aff9-25556b57fe6d';
+  slectedUUID = 'b9407f30-f5f8-466e-aff9-25556b57fe6d';
+  //uuid = 'b9407f30-f5f8-466e-aff9-25556b57fe6d';
   beaconData = [];
   beaconUuid: String;
   scanStatus: boolean = false;
@@ -107,8 +104,6 @@ export class BeaconScanPage implements OnInit {
 
     this.ibeacon.setDelegate(this.delegate);
 
-    this.beaconUuid = this.uuid;
-
     // Check bluetooth status Y.Q
     this.ibeacon.isBluetoothEnabled()
       .then(
@@ -142,10 +137,10 @@ export class BeaconScanPage implements OnInit {
         (error: any) => console.error(`Failure during starting of monitoring: `, error)
       );
 
-    console.log(`Creating BeaconRegion with UUID of: `, this.uuid);
+    console.log(`Creating BeaconRegion with UUID of: `, this.slectedUUID);
 
     // uuid is required, identifier and range are optional.
-    this.beaconRegion = this.ibeacon.BeaconRegion('EST3', this.uuid);
+    this.beaconRegion = this.ibeacon.BeaconRegion('EST3', this.slectedUUID);
 
     this.ibeacon.startMonitoringForRegion(this.beaconRegion).
       then(
@@ -160,29 +155,6 @@ export class BeaconScanPage implements OnInit {
       .catch((error: any) => {
         console.error(`Failed to start ranging beacon region: `, this.beaconRegion);
       });
-  }
-
-  onBeaconFound(receivedData: Beacon[]): void {
-    //to compare with one beacon at a time
-    for (let i = 0; i < receivedData.length; i++) {
-      console.log(' look for Beacon: 56411');
-      console.log(' receivedData[i].major == this.beaconsStoredList[0].major):', receivedData[i].major, ' == ', this.beaconsStoredList[0].major);
-      if (this.beaconsStoredList) {
-        if (receivedData[i].major == this.beaconsStoredList[0].major) {
-          console.log(' Found Beacon: ', 56411);
-
-          // Zoom to the beacon location
-          this.map.flyTo({ center: [this.beaconsStoredList[0].lng, this.beaconsStoredList[0].lat] });
-          console.log(' Fly to: ', this.beaconsStoredList[0].lng, this.beaconsStoredList[0].lat);
-
-          //this.changeRef.detectChanges(); // Check for data change to update view Y.Q
-
-
-          // Stop ranging
-          this.stopScannning();
-        }
-      }
-    }
   }
 
   onScanResultUpdate(receivedData: Beacon[]): void {
