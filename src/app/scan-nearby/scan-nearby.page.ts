@@ -26,8 +26,10 @@ export class ScanNearbyPage implements OnInit {
 
   constructor(public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef) {
     this.platform.ready().then(() => {
-      this.requestLocPermissoin();
+      //this.requestLocPermissoin();
       this.enableDebugLogs();
+      console.log('platform is ready,,');
+
     });
   }
 
@@ -69,20 +71,23 @@ export class ScanNearbyPage implements OnInit {
   }
 
   public stopScannning(): void {
+    console.log('ÒÒÒÒ stopScannning pressed update');
     this.scanStatus = false; // Change scan state Y.Q
-
-    // Reinitialize variables to null, to reduce delay in second time scan 
-    this.delegate = null;
-    this.beaconRegion = null;
 
     // stop ranging
     this.ibeacon.stopRangingBeaconsInRegion(this.beaconRegion)
       .then(async () => {
         console.log(`Stopped ranging beacon region:`, this.beaconRegion);
+
+        // Reinitialize variables to null, to reduce delay in second time scan 
+        this.delegate = null;
+        this.beaconRegion = null;
       })
       .catch((error: any) => {
         console.log(`Failed to stop ranging beacon region: `, this.beaconRegion);
       });
+
+
   }
 
   startScanning() {
@@ -94,19 +99,19 @@ export class ScanNearbyPage implements OnInit {
     //this.beaconUuid = this.slectedUUID;
 
     // Check bluetooth status Y.Q
-    this.ibeacon.isBluetoothEnabled()
-      .then(
-        (data) => console.log('-------=== Enabled', data),
-        (error: any) => console.error('-------=== Disabled', error)
-      );
+    /*     this.ibeacon.isBluetoothEnabled()
+          .then(
+            (data) => console.log('-------=== Enabled', data),
+            (error: any) => console.error('-------=== Disabled', error)
+          ); */
 
     // Subscribe to some of the delegate's event handlers
     this.delegate.didRangeBeaconsInRegion()
       .subscribe(
         async (pluginResult: IBeaconPluginResult) => {
-          console.log('didRangeBeaconsInRegion: ', pluginResult);
-          console.log('found beacons size: ' + pluginResult.beacons.length);
-          console.log('selected UUID: ', this.slectedUUID);
+          //console.log('didRangeBeaconsInRegion: ', pluginResult);
+          //console.log('found beacons size: ' + pluginResult.beacons.length);
+          //console.log('selected UUID: ', this.slectedUUID);
 
           if (pluginResult.beacons.length > 0) {
             this.beaconData = pluginResult.beacons;
@@ -127,7 +132,7 @@ export class ScanNearbyPage implements OnInit {
         (error: any) => console.error(`Failure during starting of monitoring: `, error)
       );
 
-    console.log(`Creating BeaconRegion with UUID of: `, this.slectedUUID);
+    //console.log(`Creating BeaconRegion with UUID of: `, this.slectedUUID);
 
     // uuid is required, identifier and range are optional.
     this.beaconRegion = this.ibeacon.BeaconRegion('EST3', this.slectedUUID);
@@ -147,7 +152,7 @@ export class ScanNearbyPage implements OnInit {
       });
   }
 
-  event1(){
+  event1() {
     console.log('event1');
     if (this.beaconRegion) {
       this.stopScannning();

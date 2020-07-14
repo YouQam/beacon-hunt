@@ -19,17 +19,25 @@ export class MenuPage implements OnInit {
   ngOnInit() {
     console.log('menu/onInit');
 
-    /* if (this.beaconinfoList == undefined) {
+    if (this.beaconinfoList == undefined) {
       let beaconinfo1: BeaconInfo = new BeaconInfo(56411, 14338, 7.814, 51.675); // hamm
       let beaconinfo2: BeaconInfo = new BeaconInfo(24489, 35011, 8.538, 52.010); // beliefeld
       this.beaconinfoList = [beaconinfo1, beaconinfo2]
       //this.beaconinfoList.push
       this.storage.set('beacon_info_list', this.beaconinfoList); // store in db
+
+
+      this.storage.length()
+      .then((length) => {
+        console.log(' Beacon info stored length', length);
+
+      });
+
       console.log(' Beacon info stored', this.beaconinfoList);
 
     }else{
       console.log('data is already intialized');
-    } */
+    }
   }
 
   onPlayGameClicked(): void{
