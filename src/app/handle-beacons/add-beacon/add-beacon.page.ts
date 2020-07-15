@@ -59,7 +59,7 @@ export class AddBeaconPage implements OnInit {
       console.log('From add-beacon, beacon info display: ', val);
     });
 
-    this.navCtrl.navigateForward('home');
+    this.navCtrl.navigateForward('play');
   }
 
   openBeaconData(beaconMinor: number): void {

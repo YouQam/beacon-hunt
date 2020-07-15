@@ -1,0 +1,29 @@
+import { Component, OnInit } from '@angular/core';
+import { NavController } from '@ionic/angular';
+
+@Component({
+  selector: 'app-create-task-menu',
+  templateUrl: './create-task-menu.page.html',
+  styleUrls: ['./create-task-menu.page.scss'],
+})
+export class CreateTaskMenuPage implements OnInit {
+
+  constructor(public navCtrl: NavController) { }
+
+  ngOnInit() {
+  }
+
+  // Back button
+  onBackButton() {
+    this.navCtrl.back();
+  }
+
+  onGameCreattTaskClicked(): void {
+
+  }
+
+  onUpdateTaskClicked(): void {
+
+  }
+
+}

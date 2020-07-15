@@ -19,8 +19,8 @@ const routes: Routes = [
     loadChildren: () => import('./map-add-loc/map-add-loc.module').then(m => m.MapAddLocPageModule)
   },
   {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
+    path: 'play',
+    loadChildren: () => import('./play/play.module').then(m => m.PlayPageModule)
   },
   {
     path: 'play-game-select',
@@ -37,6 +37,10 @@ const routes: Routes = [
   {
     path: 'scan-nearby',
     loadChildren: () => import('./scan-nearby/scan-nearby.module').then( m => m.ScanNearbyPageModule)
+  },
+  {
+    path: 'create-task-menu',
+    loadChildren: () => import('./create-task/create-task-menu/create-task-menu.module').then( m => m.CreateTaskMenuPageModule)
   },
 ];
 

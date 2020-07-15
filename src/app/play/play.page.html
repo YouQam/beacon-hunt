@@ -1,8 +1,10 @@
 <ion-header>
   <ion-toolbar>
-<!--     <ion-buttons slot="start">
-      <ion-back-button color=dark defaultHref="/"></ion-back-button>
-    </ion-buttons> -->
+    <ion-buttons slot="start">
+      <ion-button color=dark (click)="onBackButton()">
+        <ion-icon name="chevron-back"></ion-icon> Back
+      </ion-button>
+    </ion-buttons>
     <ion-title size="large" class="ion-text-center">Beacon Scanner</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -58,7 +60,7 @@
 
   <ion-fab vertical="bottom" horizontal="start" slot="fixed">
     <ion-fab-button (click)="onNextClicked()">
-      <ion-icon name='arroe-forward' style="font-size: 25px;"></ion-icon>
+      <ion-icon name='arrow-forward' style="font-size: 25px;"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
@@ -68,7 +70,7 @@
     </ion-fab-button>
   </ion-fab> -->
 
-<!--   <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+  <!--   <ion-fab vertical="bottom" horizontal="center" slot="fixed">
     <ion-fab-button id="1" (click)="saveData($event)">
       <ion-icon name='save' style="font-size: 25px;"></ion-icon>
     </ion-fab-button>

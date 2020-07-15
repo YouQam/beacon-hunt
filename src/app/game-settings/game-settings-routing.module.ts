@@ -10,11 +10,11 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'home',
+        redirectTo: 'Play',
         pathMatch: 'full'
       },
       {
-        path: 'home',
+        path: 'Play',
         children: [
           {
             path: '',

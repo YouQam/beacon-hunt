@@ -10,11 +10,11 @@ import { Task } from '../models/task';
 
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  selector: 'app-play',
+  templateUrl: 'play.page.html',
+  styleUrls: ['play.page.scss'],
 })
-export class HomePage implements OnInit {
+export class PlayPage implements OnInit {
 
   @ViewChild("map") mapContainer;
   //@ViewChild("marker") directionMarker;
@@ -75,13 +75,14 @@ export class HomePage implements OnInit {
         center: [7.63, 51.960],
         zoom: 12
       });
-
-      this.initializeTask();
-
-
     } else {
       console.log('ÒÒÒ map is alreasdy there')
     }
+  }
+
+  ionViewDidEnter() {
+    this.initializeTask();
+    console.log('home ionViewDidEnter Event');
   }
 
   initializeTask() {
@@ -89,6 +90,9 @@ export class HomePage implements OnInit {
     this.marker = new mapboxgl.Marker()
       .setLngLat([this.currentTask.coords[0], this.currentTask.coords[1]])
       .addTo(this.map);
+
+    // Zoom to the beacon location
+    this.map.flyTo({ center: [this.currentTask.coords[0], this.currentTask.coords[1]] });
   }
 
   requestLocPermissoin(): void {
@@ -106,17 +110,17 @@ export class HomePage implements OnInit {
 
   public onScanClicked(): void {
 
-    if (this.marker != undefined) {
+    /* if (this.marker != undefined) {
       this.marker.remove();
       console.log('/ marker has been removed successfully');
-    }
+    } */
 
     if (!this.scanStatus) {
-      //this.startScanning();
+      this.startScanning();
       this.scanStatus = true;
     } else {
       this.scanStatus = false;
-      //this.stopScannning();
+      this.stopScannning();
     }
   }
 
@@ -195,11 +199,12 @@ export class HomePage implements OnInit {
   onBeaconFound(receivedData: Beacon[]): void {
     //to compare with one beacon at a time
     for (let i = 0; i < receivedData.length; i++) {
-      console.log(' look for Beacon: 56411');
-      console.log(' receivedData[i].major == this.beaconsStoredList[0].major):', receivedData[i].major, ' == ', this.beaconsStoredList[0].major);
+      console.log('◊ look for Beacon: 56411');
+      console.log(' receivedData[i].minor == this.currentTask.minor):', receivedData[i].minor, ' == ', this.currentTask.minor);
       if (this.beaconsStoredList) {
-        if (receivedData[i].major == this.beaconsStoredList[0].major) {
-          console.log(' Found Beacon: ', 56411);
+        if (receivedData[i].minor == this.currentTask.minor) {
+          console.log(' Found Beacon: ', this.currentTask.minor);
+
 
           // Add marler
           new mapboxgl.Marker()
@@ -207,10 +212,8 @@ export class HomePage implements OnInit {
             .addTo(this.map);
 
           // Zoom to the beacon location
-          this.map.flyTo({ center: [this.beaconsStoredList[0].lng, this.beaconsStoredList[0].lat] });
-          console.log(' Fly to: ', this.beaconsStoredList[0].lng, this.beaconsStoredList[0].lat);
-
-          //this.changeRef.detectChanges(); // Check for data change to update view Y.Q
+          this.map.flyTo({ center: [this.currentTask.coords[0], this.currentTask.coords[1]]});
+          console.log(' Fly to: ', [this.currentTask.coords[0], this.currentTask.coords[1]]);
 
 
           // Stop ranging
@@ -281,7 +284,7 @@ export class HomePage implements OnInit {
     // get a key/value pair from db
     this.storage.get('beacon_info_list').then((val) => {
       this.beaconsStoredList = val;
-      //console.log(' From home, retreived list from db: ', this.beaconsStoredList);
+      console.log(' From home, retreived list from db: ', this.beaconsStoredList);
 
     });
   }
@@ -315,5 +318,9 @@ export class HomePage implements OnInit {
     } else {
       console.log('You have passed all tasks successfully');
     }
+  }
+
+  onBackButton(){
+    this.navCtrl.back();
   }
 }

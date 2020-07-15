@@ -21,8 +21,8 @@ export class MenuPage implements OnInit {
   ngOnInit() {
     console.log('menu/onInit');
 
-    let task1: Task = new Task(1,14338, [7.814, 51.675]);
-    let task2: Task = new Task(2,35011, [8.538, 52.010]);
+    let task1: Task = new Task(1, 35011, [7.814, 51.675]);
+    let task2: Task = new Task(2, 50313, [8.538, 52.010]);
 
     this.tasksList = [task1, task2];
 
@@ -67,7 +67,7 @@ export class MenuPage implements OnInit {
     console.log('Play button pressed');
 
     // navigate to home page
-    this.navCtrl.navigateForward('home');
+    this.navCtrl.navigateForward('play');
   }
 
 /*   onSettingsClicked(): void {
@@ -76,6 +76,13 @@ export class MenuPage implements OnInit {
     // navigate to add-beacon page
     this.navCtrl.navigateForward('add-beacon');
   } */
+
+  onCreateTaskClicked(): void{
+    console.log('Create task menu button pressed');
+
+    // navigate to add-beacon page
+    this.navCtrl.navigateForward('create-task-menu');
+  }
 
   onGameSettingsClicked(): void {
     console.log('Game Settings button pressed');
