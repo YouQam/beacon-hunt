@@ -42,6 +42,10 @@ const routes: Routes = [
     path: 'create-task-menu',
     loadChildren: () => import('./create-task/create-task-menu/create-task-menu.module').then( m => m.CreateTaskMenuPageModule)
   },
+  {
+    path: 'create-task',
+    loadChildren: () => import('./create-task/create-task/create-task.module').then( m => m.CreateTaskPageModule)
+  },
 ];
 
 @NgModule({

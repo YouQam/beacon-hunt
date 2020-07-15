@@ -19,7 +19,10 @@ export class CreateTaskMenuPage implements OnInit {
   }
 
   onGameCreattTaskClicked(): void {
+    console.log('Create task button pressed');
 
+    // navigate to home page
+    this.navCtrl.navigateForward('create-task');
   }
 
   onUpdateTaskClicked(): void {

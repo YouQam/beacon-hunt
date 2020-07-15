@@ -21,7 +21,7 @@ export class MenuPage implements OnInit {
   ngOnInit() {
     console.log('menu/onInit');
 
-    let task1: Task = new Task(1, 35011, [7.814, 51.675]);
+    /* let task1: Task = new Task(1, 35011, [7.814, 51.675]);
     let task2: Task = new Task(2, 50313, [8.538, 52.010]);
 
     this.tasksList = [task1, task2];
@@ -30,7 +30,7 @@ export class MenuPage implements OnInit {
 
     //store tasks in DB
     this.storage.set('tasks_list', this.tasksList); // store in db
-
+ */
 
 
 
