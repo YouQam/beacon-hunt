@@ -19,19 +19,6 @@
     <ion-spinner name="lines-small" color="light" [style.display]="scanStatus ? 'block' : 'none'"></ion-spinner>
   </ion-item-divider>
 
-  <!--   <ion-item>
-    <ion-label>UUID: </ion-label>
-    <ion-input value={{uuid}}></ion-input>
-    <ion-button style="width: 20%;" (click)="onStartClicked()">Scan</ion-button>
-  </ion-item> -->
-
-  <!-- Map container -->
-  <!--   <ion-card>
-    <ion-card-content style="padding: 2px;">
-      <div #map class="map"></div>
-    </ion-card-content>
-  </ion-card> -->
-
   <div #map class="map"></div>
   <!--  <div id="map" class="map"></div> -->
 
@@ -66,6 +53,12 @@
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button [color]='scanStatus ? "danger" : "primary"' (click)="onScanClicked()">
       <ion-icon [name]='scanStatus ? "pause-sharp" : "play-sharp"' style="font-size: 25px;"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab-button (click)="onNextClicked()">
+      <ion-icon name='arroe-forward' style="font-size: 25px;"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 

@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { Storage } from '@ionic/storage';
 import { BeaconInfo } from 'src/app/models/beaconData'
 import { GameServiceService } from '../services/game-service.service';
+import { Task } from '../models/task';
 
 
 @Component({
@@ -30,6 +31,9 @@ export class HomePage implements OnInit {
   public beaconinfoList: BeaconInfo[];
   public beaconsStoredList: BeaconInfo;
 
+  public tasksList: Task[];
+  public currentTask: Task;
+
 
   constructor(private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef) {
     this.platform.ready().then(() => {
@@ -39,28 +43,30 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit() {
-
-/*     if (this.beaconinfoList == undefined) {
-      let beaconinfo1: BeaconInfo = new BeaconInfo(56411, 14338, 7.814, 51.675); // hamm
-      let beaconinfo2: BeaconInfo = new BeaconInfo(24489, 35011, 8.538, 52.010); // beliefeld
-      this.beaconinfoList = [beaconinfo1, beaconinfo2]
-      //this.beaconinfoList.push
-      this.storage.set('beacon_info_list', this.beaconinfoList); // store in db
-      console.log(' Beacon info stored', this.beaconinfoList);
-
-      this.updateBeaconStoredList();
-    }else{
-      console.log('data is already intialized');
-    } */
+    // Retrteive stored tasks
+    this.storage.get('tasks_list')
+      .then((storedTasks) => {
+        if (storedTasks != null) {
+          this.tasksList = storedTasks;
+          this.currentTask = this.tasksList[0];
+          console.log('(home), storedTasks: ', storedTasks);
+          console.log('(home), tasks retreived successfully: ', this.tasksList);
+          console.log('(home), current task is: ', this.currentTask);
+        } else {
+          console.log('(home), tasks is null');
+        }
+      }).catch((error: any) => {
+        console.error(`(home), error in tasks from storage`);
+      });;
   }
 
   ionViewWillEnter() {
-    console.log('home Resume Event');
+    console.log('home Resume Event, map', this.map);
     this.updateBeaconStoredList();
 
 
     if (this.map == undefined) {
-
+      console.log('◊ initialize map');
       mapboxgl.accessToken = 'pk.eyJ1IjoidGhlZ2lzZGV2IiwiYSI6ImNqdGQ5dmd2MTEyaWk0YXF0NzZ1amhtOWMifQ.GuFE28BPyzAcHWejNLzuyw';
       //mapboxgl.accessToken = environment.mapboxAccessToken;
       this.map = new mapboxgl.Map({
@@ -69,9 +75,20 @@ export class HomePage implements OnInit {
         center: [7.63, 51.960],
         zoom: 12
       });
+
+      this.initializeTask();
+
+
     } else {
       console.log('ÒÒÒ map is alreasdy there')
     }
+  }
+
+  initializeTask() {
+    // Add marker
+    this.marker = new mapboxgl.Marker()
+      .setLngLat([this.currentTask.coords[0], this.currentTask.coords[1]])
+      .addTo(this.map);
   }
 
   requestLocPermissoin(): void {
@@ -95,11 +112,11 @@ export class HomePage implements OnInit {
     }
 
     if (!this.scanStatus) {
-      this.startScanning();
+      //this.startScanning();
       this.scanStatus = true;
     } else {
       this.scanStatus = false;
-      this.stopScannning();
+      //this.stopScannning();
     }
   }
 
@@ -124,11 +141,11 @@ export class HomePage implements OnInit {
     this.beaconUuid = this.uuid;
 
     // Check bluetooth status Y.Q
-    this.ibeacon.isBluetoothEnabled()
-      .then(
-        (data) => console.log('-------=== Enabled', data),
-        (error: any) => console.error('-------=== Disabled', error)
-      );
+    /*     this.ibeacon.isBluetoothEnabled()
+          .then(
+            (data) => console.log('-------=== Enabled', data),
+            (error: any) => console.error('-------=== Disabled', error)
+          ); */
 
     // Subscribe to some of the delegate's event handlers
     this.delegate.didRangeBeaconsInRegion()
@@ -282,5 +299,21 @@ export class HomePage implements OnInit {
     } else {
       console.log('ÒÒÒ map is alreasdy there')
     } */
+  }
+
+  onNextClicked(): void {
+    console.log('Next task clicked');
+
+    if (this.marker != undefined) {
+      this.marker.remove();
+      console.log('/ marker has been removed successfully');
+    }
+
+    if (this.currentTask.id <= this.tasksList.length - 1) {
+      this.currentTask = this.tasksList[this.currentTask.id];
+      this.initializeTask();
+    } else {
+      console.log('You have passed all tasks successfully');
+    }
   }
 }
