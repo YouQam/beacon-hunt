@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Platform, NavController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { BeaconInfo } from 'src/app/models/beaconData';
+import { Task } from '../models/task';
 
 
 @Component({
@@ -12,6 +13,7 @@ import { BeaconInfo } from 'src/app/models/beaconData';
 export class MenuPage implements OnInit {
 
   public beaconinfoList: BeaconInfo[];
+  public tasksList: Task[];
 
 
   constructor(public storage: Storage, public navCtrl: NavController) { }
@@ -19,7 +21,21 @@ export class MenuPage implements OnInit {
   ngOnInit() {
     console.log('menu/onInit');
 
-    if (this.beaconinfoList == undefined) {
+    let task1: Task = new Task(1,14338, [7.814, 51.675]);
+    let task2: Task = new Task(2,35011, [8.538, 52.010]);
+
+    this.tasksList = [task1, task2];
+
+    console.log('◊◊◊ Tasks: ', this.tasksList);
+
+    //store tasks in DB
+    this.storage.set('tasks_list', this.tasksList); // store in db
+
+
+
+
+
+    /* if (this.beaconinfoList == undefined) {
       let beaconinfo1: BeaconInfo = new BeaconInfo(56411, 14338, 7.814, 51.675); // hamm
       let beaconinfo2: BeaconInfo = new BeaconInfo(24489, 35011, 8.538, 52.010); // beliefeld
       this.beaconinfoList = [beaconinfo1, beaconinfo2]
@@ -37,15 +53,15 @@ export class MenuPage implements OnInit {
 
     }else{
       console.log('data is already intialized');
-    }
+    } */
   }
 
-  onPlayGameClicked(): void{
+/*   onPlayGameClicked(): void{
     console.log('PlayGame button pressed');
 
     // navigate to play-game-select page
     this.navCtrl.navigateForward('play-game-select');
-  }
+  } */
 
   onPlayClicked(): void {
     console.log('Play button pressed');
@@ -54,12 +70,12 @@ export class MenuPage implements OnInit {
     this.navCtrl.navigateForward('home');
   }
 
-  onSettingsClicked(): void {
+/*   onSettingsClicked(): void {
     console.log('Settings button pressed');
 
     // navigate to add-beacon page
     this.navCtrl.navigateForward('add-beacon');
-  }
+  } */
 
   onGameSettingsClicked(): void {
     console.log('Game Settings button pressed');

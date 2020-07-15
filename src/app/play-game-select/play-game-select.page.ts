@@ -27,6 +27,7 @@ export class PlayGameSelectPage implements OnInit {
           this.beaconsStoredList = data;
           this.beaconsStoredList_copy = this.beaconsStoredList.slice();
           this.changeRef.detectChanges(); // Check for data change to update view Y.Q
+          console.log('From (play-game-select), beacon info list stored in the variable ', this.beaconsStoredList_copy);
 
           this.maxNumTasks = this.numTasks = this.beaconsStoredList.length;
           console.log('(play-game-select), beacon info list retreived successfully: ', this.maxNumTasks);
@@ -87,7 +88,7 @@ export class PlayGameSelectPage implements OnInit {
     this.gameServ.changeMinorNo(beaconMinor);
 
     // navigate to map-add-loc page
-    this.navCtrl.navigateForward('map-add-loc');
+    this.navCtrl.navigateRoot('map-add-loc'); // Used navigateRoot to be able to update coords in tab
   }
 
   onDeleteBeacon(beaconMinor: number): void {
