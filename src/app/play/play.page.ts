@@ -7,6 +7,8 @@ import { Storage } from '@ionic/storage';
 import { BeaconInfo } from 'src/app/models/beaconData'
 import { GameServiceService } from '../services/game-service.service';
 import { Task } from '../models/task';
+import { MapboxStyleSwitcherControl } from "mapbox-gl-style-switcher";
+
 
 
 @Component({
@@ -80,6 +82,9 @@ export class PlayPage implements OnInit {
         center: [7.63, 51.960],
         zoom: 12
       });
+
+      this.map.addControl(new MapboxStyleSwitcherControl());
+
     } else {
       console.log('ÒÒÒ map is alreasdy there')
     }

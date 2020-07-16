@@ -5,6 +5,7 @@ import { GameServiceService } from '../services/game-service.service';
 import { Storage } from '@ionic/storage';
 import { ToastController, NavController, Platform } from '@ionic/angular';
 import { BeaconInfo } from 'src/app/models/beaconData'
+import { MapboxStyleSwitcherControl } from "mapbox-gl-style-switcher";
 
 @Component({
   selector: 'app-map-add-loc',
@@ -23,8 +24,8 @@ export class MapAddLocPage implements OnInit {
   beaconDataSer: BeaconInfo;
 
   marker: mapboxgl.Marker;
-
   
+
   constructor(private changeRef: ChangeDetectorRef, private readonly platform: Platform, public navCtrl: NavController, public storage: Storage, public toastController: ToastController, private gameServ: GameServiceService) {
     platform.resume.subscribe((result) => {
       console.log('Platform Resume Event');
@@ -56,6 +57,16 @@ export class MapAddLocPage implements OnInit {
   }
 
   ionViewWillEnter() {
+    this.loadMap();
+  }
+
+  ionViewDidEnter() {
+    console.log('(create-task) ionViewDidEnter Event');
+    // Zoom to the beacon location
+    this.map.flyTo({ center: [this.beaconDataSer.lng, this.beaconDataSer.lat] });
+  }
+
+  loadMap(): void {
     mapboxgl.accessToken = 'pk.eyJ1IjoidGhlZ2lzZGV2IiwiYSI6ImNqdGQ5dmd2MTEyaWk0YXF0NzZ1amhtOWMifQ.GuFE28BPyzAcHWejNLzuyw';
     //mapboxgl.accessToken = environment.mapboxAccessToken;
     this.map = new mapboxgl.Map({
@@ -65,6 +76,7 @@ export class MapAddLocPage implements OnInit {
       zoom: 12
     });
 
+    this.map.addControl(new MapboxStyleSwitcherControl());
 
     /* this.map.on('zoom', () => {
             console.log(`zoom: `, this.map.getZoom());
@@ -75,17 +87,14 @@ export class MapAddLocPage implements OnInit {
       console.log("e:", e.lngLat)
       this.selectedCoords = [e.lngLat.lng, e.lngLat.lat];
       console.log("this.selectedCoords:", this.selectedCoords)
-
       if (this.marker != undefined) {
         this.marker.remove();
       }
-
       this.marker = new mapboxgl.Marker({
         draggable: true
       })
         .setLngLat([e.lngLat.lng, e.lngLat.lat])
         .addTo(this.map);
-
       // on marker drag implementation 
       this.marker.on('dragend', () => {
         console.log("onDragEnd: ")
@@ -95,12 +104,6 @@ export class MapAddLocPage implements OnInit {
       });
     });
 
-  }
-
-  ionViewDidEnter() {
-    console.log('(create-task) ionViewDidEnter Event');
-    // Zoom to the beacon location
-    this.map.flyTo({ center: [this.beaconDataSer.lng, this.beaconDataSer.lat] });
   }
 
 

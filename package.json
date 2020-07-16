@@ -32,6 +32,7 @@
     "cordova-plugin-ibeacon": "^3.8.1",
     "cordova-sqlite-storage": "^5.0.0",
     "mapbox-gl": "^1.11.0",
+    "mapbox-gl-style-switcher": "^1.0.8",
     "rxjs": "~6.5.1",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
