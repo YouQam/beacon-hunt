@@ -20,7 +20,11 @@ export class MapAddLocPage implements OnInit {
   selectedCoords: number[];
   beaconsStoredList: BeaconInfo[];
 
+  beaconDataSer: BeaconInfo;
 
+  marker: mapboxgl.Marker;
+
+  
   constructor(private changeRef: ChangeDetectorRef, private readonly platform: Platform, public navCtrl: NavController, public storage: Storage, public toastController: ToastController, private gameServ: GameServiceService) {
     platform.resume.subscribe((result) => {
       console.log('Platform Resume Event');
@@ -28,14 +32,13 @@ export class MapAddLocPage implements OnInit {
   }
 
   ngOnInit() {
-    // retreive selected beacon minor no from service
-    let coordsInService: number[];
-    this.gameServ.serviceMinorNo
-      .subscribe(data => (this.minorNo = data));
-    if (this.minorNo != undefined) {
-      console.log('From map-add-loc, sent minor No:', this.minorNo);
+    // retreive selected beacon info
+    this.gameServ.serviceBeaconData
+      .subscribe(data => (this.beaconDataSer = data));
+    if (this.beaconDataSer != undefined) {
+      console.log('◊◊◊ From map-add-loc, sent beacon data :', this.beaconDataSer);
     } else {
-      console.log('From map-add-loc, minor is undefined');
+      console.log('◊◊◊ From map-add-loc, beacon data is undefined');
     }
 
     // get stored beaconinfo to be update selected beacon location
@@ -63,40 +66,41 @@ export class MapAddLocPage implements OnInit {
     });
 
 
+    /* this.map.on('zoom', () => {
+            console.log(`zoom: `, this.map.getZoom());
+        }); */
 
-    var marker1;
-    
     // Show coords on map click
     this.map.on('click', e => {
       console.log("e:", e.lngLat)
       this.selectedCoords = [e.lngLat.lng, e.lngLat.lat];
       console.log("this.selectedCoords:", this.selectedCoords)
 
-
-      if(marker1 != undefined){
-        marker1.remove();
+      if (this.marker != undefined) {
+        this.marker.remove();
       }
-      
 
-      marker1 = new mapboxgl.Marker({
+      this.marker = new mapboxgl.Marker({
         draggable: true
-        })
+      })
         .setLngLat([e.lngLat.lng, e.lngLat.lat])
         .addTo(this.map);
-         
-        
-         
-        marker1.on('dragend',()=> {
-          console.log("onDragEnd: ")
-          var lngLat = marker1.getLngLat();
 
-          this.selectedCoords = [lngLat.lng, lngLat.lat];
-          console.log("drag, this.selectedCoords:", this.selectedCoords)
-        });
-
+      // on marker drag implementation 
+      this.marker.on('dragend', () => {
+        console.log("onDragEnd: ")
+        var lngLat = this.marker.getLngLat();
+        this.selectedCoords = [lngLat.lng, lngLat.lat];
+        console.log("drag, this.selectedCoords:", this.selectedCoords)
+      });
     });
 
-    
+  }
+
+  ionViewDidEnter() {
+    console.log('(create-task) ionViewDidEnter Event');
+    // Zoom to the beacon location
+    this.map.flyTo({ center: [this.beaconDataSer.lng, this.beaconDataSer.lat] });
   }
 
 
@@ -106,9 +110,9 @@ export class MapAddLocPage implements OnInit {
       // update location of seleted beacon
       for (let i = 0; i < this.beaconsStoredList.length; i++) {
         console.log(' search for minor', this.beaconsStoredList[i].minor);
-        console.log(' looking for minor', this.minorNo);
+        console.log(' looking for minor', this.beaconDataSer.minor);
 
-        if (this.beaconsStoredList[i].minor == this.minorNo) {
+        if (this.beaconsStoredList[i].minor == this.beaconDataSer.minor) {
           this.beaconsStoredList[i].lng = this.selectedCoords[0];
           this.beaconsStoredList[i].lat = this.selectedCoords[1];
           console.log('beacon loaction has been updated');

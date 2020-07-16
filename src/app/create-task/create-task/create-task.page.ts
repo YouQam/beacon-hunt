@@ -56,7 +56,7 @@ export class CreateTaskPage implements OnInit {
     //this.ngOnInit();
     this.UpdateTaskLoaction();
   }
-
+  
   UpdateTaskLoaction() {
     this.storage.get('beacon_info_list')
       .then((data) => {
@@ -110,8 +110,11 @@ export class CreateTaskPage implements OnInit {
     toast.present();
   }
 
-  openBeaconData(beaconMinor: number): void {
-    console.log("Button: ", beaconMinor)
+  openBeaconData(beaconMinor: number, beaconLng: number, beaconLat: number): void {
+    console.log("Button: ", beaconMinor, "lng ", beaconLng, beaconLat);
+
+    // Store info in service
+    this.gameServ.changebeaconData(new BeaconInfo(null, beaconMinor, beaconLng, beaconLat));
 
     // update MinorNo service to minor number 
     this.gameServ.changeMinorNo(beaconMinor);
