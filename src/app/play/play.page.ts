@@ -33,6 +33,7 @@ export class PlayPage implements OnInit {
 
   public tasksList: Task[];
   public currentTask: Task;
+  taskIndex: number;
 
 
   constructor(private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef) {
@@ -47,9 +48,13 @@ export class PlayPage implements OnInit {
     this.storage.get('tasks_list')
       .then((storedTasks) => {
         if (storedTasks != null) {
-          this.tasksList = storedTasks;
+          console.log('(home), retreived game tasks: ', storedTasks.tasks);
+          console.log('(home), retreived game tasks, length: ', storedTasks.tasks.length);
+
+          this.tasksList = storedTasks.tasks;
           this.currentTask = this.tasksList[0];
-          console.log('(home), storedTasks: ', storedTasks);
+          this.taskIndex = 0;
+
           console.log('(home), tasks retreived successfully: ', this.tasksList);
           console.log('(home), current task is: ', this.currentTask);
         } else {
@@ -312,8 +317,13 @@ export class PlayPage implements OnInit {
       console.log('/ marker has been removed successfully');
     }
 
-    if (this.currentTask.id <= this.tasksList.length - 1) {
-      this.currentTask = this.tasksList[this.currentTask.id];
+    if (this.taskIndex+1 <= this.tasksList.length) {
+      this.taskIndex += 1;
+      this.currentTask = this.tasksList[this.taskIndex];
+
+      console.log('◊ı◊ Task num:', this.taskIndex);
+
+
       this.initializeTask();
     } else {
       console.log('You have passed all tasks successfully');

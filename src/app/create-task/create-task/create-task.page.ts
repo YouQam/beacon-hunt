@@ -20,6 +20,7 @@ export class CreateTaskPage implements OnInit {
   beaconsStoredList_copy: BeaconInfo[];
 
   gameName: string = "Game_1";
+  public tasksList: Task[];
 
 
   constructor(private changeRef: ChangeDetectorRef, public navCtrl: NavController, private gameServ: GameServiceService, public toastController: ToastController, public storage: Storage) { }
@@ -145,16 +146,20 @@ export class CreateTaskPage implements OnInit {
   }
 
   onSaveGameClicked(): void {
+    this.tasksList = []; // empty tasks list
+    for(let i=0; i<this.beaconsStoredList_copy.length; i++){
+      let task = new Task(1, this.beaconsStoredList_copy[i].minor, [this.beaconsStoredList_copy[i].lng, this.beaconsStoredList_copy[i].lat]);
+      this.tasksList.push(task);
+    }
 
-    let task1 = new Task(1, this.beaconsStoredList_copy[0].minor, [this.beaconsStoredList_copy[0].lng, this.beaconsStoredList_copy[0].lat]);
+    let gameCreated = new Game(this.gameName, this.tasksList);
 
-    let gameCreated = new Game(this.gameName, [task1]);
-
-    console.log("//// Game stoeed: ", gameCreated);
+    console.log("//// Game stored: ", gameCreated);
+    console.log("//// Game stored, tasks length: ", gameCreated.tasks.length);
 
 
     //store tasks in DB
-    this.storage.set('tasks_list', [task1]); // store in db
+    this.storage.set('tasks_list', gameCreated); // store in db
 
   }
 

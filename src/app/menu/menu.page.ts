@@ -3,6 +3,7 @@ import { NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { BeaconInfo } from 'src/app/models/beaconData';
 import { Task } from '../models/task';
+import { Game } from '../models/game';
 
 
 @Component({
@@ -21,16 +22,21 @@ export class MenuPage implements OnInit {
   ngOnInit() {
     console.log('menu/onInit');
 
-    /* let task1: Task = new Task(1, 35011, [7.814, 51.675]);
+    /* // To test in browser
+    let task1: Task = new Task(1, 35011, [7.814, 51.675]);
     let task2: Task = new Task(2, 50313, [8.538, 52.010]);
+    let task3: Task = new Task(2, 50313, [20.538, 30.010]);
 
-    this.tasksList = [task1, task2];
+    this.tasksList = [task1, task2, task3];
 
-    console.log('◊◊◊ Tasks: ', this.tasksList);
+    let gameCreated = new Game("Game_Test", this.tasksList);
+
+    console.log('game stored: ', gameCreated);
+
 
     //store tasks in DB
-    this.storage.set('tasks_list', this.tasksList); // store in db
- */
+    this.storage.set('tasks_list', gameCreated); // store in db */
+
 
 
 
