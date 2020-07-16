@@ -62,16 +62,41 @@ export class MapAddLocPage implements OnInit {
       zoom: 12
     });
 
-    /*     this.map.on('zoom', () => {
-          console.log(`zoom: `, this.map.getZoom());
-        }); */
 
+
+    var marker1;
+    
     // Show coords on map click
     this.map.on('click', e => {
       console.log("e:", e.lngLat)
       this.selectedCoords = [e.lngLat.lng, e.lngLat.lat];
       console.log("this.selectedCoords:", this.selectedCoords)
+
+
+      if(marker1 != undefined){
+        marker1.remove();
+      }
+      
+
+      marker1 = new mapboxgl.Marker({
+        draggable: true
+        })
+        .setLngLat([e.lngLat.lng, e.lngLat.lat])
+        .addTo(this.map);
+         
+        
+         
+        marker1.on('dragend',()=> {
+          console.log("onDragEnd: ")
+          var lngLat = marker1.getLngLat();
+
+          this.selectedCoords = [lngLat.lng, lngLat.lat];
+          console.log("drag, this.selectedCoords:", this.selectedCoords)
+        });
+
     });
+
+    
   }
 
 
