@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from "rxjs";
 import { BeaconInfo } from '../models/beaconData';
+import { Game } from '../models/game';
 
 @Injectable({
   providedIn: 'root'
@@ -46,5 +47,14 @@ export class GameServiceService {
 
   changebeaconData(beaconData: BeaconInfo) {
     this.beaconData.next(beaconData);
+  }
+
+  // Pass selected game
+  private selectedGame = new BehaviorSubject(undefined);
+
+  serviceSelectedGame = this.selectedGame.asObservable();
+
+  ChangeGame(game: Game) {
+    this.selectedGame.next(game);
   }
 }

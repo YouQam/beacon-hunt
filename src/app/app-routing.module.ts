@@ -46,6 +46,10 @@ const routes: Routes = [
     path: 'create-task',
     loadChildren: () => import('./create-task/create-task/create-task.module').then( m => m.CreateTaskPageModule)
   },
+  {
+    path: 'play-game-list',
+    loadChildren: () => import('./play-game/play-game-list/play-game-list.module').then( m => m.PlayGameListPageModule)
+  },
 ];
 
 @NgModule({

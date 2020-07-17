@@ -33,7 +33,7 @@ export class MapAddLocPage implements OnInit {
   }
 
   ngOnInit() {
-    // retreive selected beacon info
+    // retreive selected beacon info from service
     this.gameServ.serviceBeaconData
       .subscribe(data => (this.beaconDataSer = data));
     if (this.beaconDataSer != undefined) {
@@ -53,7 +53,7 @@ export class MapAddLocPage implements OnInit {
         }
       }).catch((error: any) => {
         console.error(`Error in retreiving beacon info list from storage`);
-      });;
+      });
   }
 
   ionViewWillEnter() {
