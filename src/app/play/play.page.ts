@@ -8,6 +8,7 @@ import { BeaconInfo } from 'src/app/models/beaconData'
 import { GameServiceService } from '../services/game-service.service';
 import { Task } from '../models/task';
 import { MapboxStyleSwitcherControl } from "mapbox-gl-style-switcher";
+import { Game } from '../models/game';
 
 
 
@@ -36,6 +37,7 @@ export class PlayPage implements OnInit {
   public tasksList: Task[];
   public currentTask: Task;
   taskIndex: number;
+  selectedGame: Game;
 
 
   constructor(private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef) {
@@ -46,25 +48,20 @@ export class PlayPage implements OnInit {
   }
 
   ngOnInit() {
-    // Retrteive stored tasks
-    this.storage.get('tasks_list')
-      .then((storedTasks) => {
-        if (storedTasks != null) {
-          console.log('(home), retreived game tasks: ', storedTasks.tasks);
-          console.log('(home), retreived game tasks, length: ', storedTasks.tasks.length);
+    // Retrteive selected game
+    this.gameServ.serviceSelectedGame
+      .subscribe(selGame => (this.selectedGame = selGame));
+    if (this.selectedGame != undefined) {
+      this.tasksList = this.selectedGame.tasks;
+      this.currentTask = this.tasksList[0];
+      this.taskIndex = 0;
+      console.log('◊◊◊ (play) sent bgame :', this.selectedGame);
+      console.log('(play), retreived game tasks: ', this.tasksList);
+    } else {
+      console.log('◊◊◊ (play) game is undefined');
+    }
 
-          this.tasksList = storedTasks.tasks;
-          this.currentTask = this.tasksList[0];
-          this.taskIndex = 0;
 
-          console.log('(home), tasks retreived successfully: ', this.tasksList);
-          console.log('(home), current task is: ', this.currentTask);
-        } else {
-          console.log('(home), tasks is null');
-        }
-      }).catch((error: any) => {
-        console.error(`(home), error in tasks from storage`);
-      });;
   }
 
   ionViewWillEnter() {
@@ -222,7 +219,7 @@ export class PlayPage implements OnInit {
             .addTo(this.map);
 
           // Zoom to the beacon location
-          this.map.flyTo({ center: [this.currentTask.coords[0], this.currentTask.coords[1]]});
+          this.map.flyTo({ center: [this.currentTask.coords[0], this.currentTask.coords[1]] });
           console.log(' Fly to: ', [this.currentTask.coords[0], this.currentTask.coords[1]]);
 
 
@@ -322,7 +319,7 @@ export class PlayPage implements OnInit {
       console.log('/ marker has been removed successfully');
     }
 
-    if (this.taskIndex+1 <= this.tasksList.length) {
+    if (this.taskIndex + 1 <= this.tasksList.length) {
       this.taskIndex += 1;
       this.currentTask = this.tasksList[this.taskIndex];
 
@@ -335,7 +332,7 @@ export class PlayPage implements OnInit {
     }
   }
 
-  onBackButton(){
+  onBackButton() {
     this.navCtrl.back();
   }
 }

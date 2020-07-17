@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color=dark (click)="onBackButton()">
+        <ion-icon name="chevron-back"></ion-icon> Back
+      </ion-button>
+    </ion-buttons>
+    <ion-title size="large" class="ion-text-center">Play game list</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <h5>Select a game</h5>
+
+  <ion-list>
+    <ion-item *ngFor="let game of gameList" (click)="gameClick(game)" >
+      <ion-label>
+        <h2>{{game.name}}</h2>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

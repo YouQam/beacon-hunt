@@ -22,6 +22,8 @@ export class CreateTaskPage implements OnInit {
   gameName: string = "Game_1";
   public tasksList: Task[];
 
+  gameListStored: Game[];
+
 
   constructor(private changeRef: ChangeDetectorRef, public navCtrl: NavController, private gameServ: GameServiceService, public toastController: ToastController, public storage: Storage) { }
 
@@ -33,30 +35,44 @@ export class CreateTaskPage implements OnInit {
           this.beaconsStoredList = data;
           this.beaconsStoredList_copy = this.beaconsStoredList.slice();
           this.changeRef.detectChanges(); // Check for data change to update view Y.Q
-          console.log('From (play-game-select), beacon info list stored in the variable ', this.beaconsStoredList_copy);
+          console.log('From (create-task), beacon info list stored in the variable ', this.beaconsStoredList_copy);
 
           this.maxNumTasks = this.numTasks = this.beaconsStoredList.length;
-          console.log('(play-game-select), beacon info list retreived successfully: ', this.maxNumTasks);
+          console.log('(create-task), beacon info list retreived successfully: ', this.maxNumTasks);
         } else {
           this.maxNumTasks = 0;
           this.beaconsStoredList_copy = [];
-          console.log('(play-game-select), storage is empty, no beacon info is stored yet');
+          console.log('(create-task), storage is empty, no beacon info is stored yet');
         }
       }).catch((error: any) => {
-        console.error(`(play-game-select), error in retreiving beacon info list from storage`);
+        console.error(`(create-task), error in retreiving beacon info list from storage`);
       });;
+
+    // Retreive stored games list
+    this.storage.get('game_list')
+      .then((storedGames) => {
+        if (storedGames != null) {
+          this.gameListStored = storedGames;
+          console.log('(create-task), retreived games list', this.gameListStored);
+        } else {
+          console.log('(create-task), storage is empty, no games is stored yet');
+        }
+      }).catch((error: any) => {
+        console.error(`(create-task), error in retreiving beacon info list from storage`);
+
+      });
   }
 
   ionViewWillEnter() {
-    console.log('(play-gme-select), Resume Event');
+    console.log('(create-task), Resume Event');
 
     this.changeRef.detectChanges(); // Check for data change to update view Y.Q
 
     // To update view when back to page
     //this.ngOnInit();
-    this.UpdateTaskLoaction();
+    this.UpdateTaskLoaction(); // To update beacon loc when back from map-add-loc 
   }
-  
+
   UpdateTaskLoaction() {
     this.storage.get('beacon_info_list')
       .then((data) => {
@@ -71,7 +87,7 @@ export class CreateTaskPage implements OnInit {
           }
         }
       }).catch((error: any) => {
-        console.error(`(play-game-select), error in retreiving beacon info list from storage`);
+        console.error(`(create-task), error in retreiving beacon info list from storage`);
       });;
 
   }
@@ -116,8 +132,8 @@ export class CreateTaskPage implements OnInit {
     // Store info in service
     this.gameServ.changebeaconData(new BeaconInfo(null, beaconMinor, beaconLng, beaconLat));
 
-    // update MinorNo service to minor number 
-    this.gameServ.changeMinorNo(beaconMinor);
+    /* // update MinorNo service to minor number 
+    this.gameServ.changeMinorNo(beaconMinor); */
 
     // navigate to map-add-loc page
     this.navCtrl.navigateForward('map-add-loc');
@@ -150,7 +166,8 @@ export class CreateTaskPage implements OnInit {
 
   onSaveGameClicked(): void {
     this.tasksList = []; // empty tasks list
-    for(let i=0; i<this.beaconsStoredList_copy.length; i++){
+
+    for (let i = 0; i < this.beaconsStoredList_copy.length; i++) {
       let task = new Task(1, this.beaconsStoredList_copy[i].minor, [this.beaconsStoredList_copy[i].lng, this.beaconsStoredList_copy[i].lat]);
       this.tasksList.push(task);
     }
@@ -164,6 +181,30 @@ export class CreateTaskPage implements OnInit {
     //store tasks in DB
     this.storage.set('tasks_list', gameCreated); // store in db
 
+
+    // store game created in DB to be used in play
+    if (this.gameListStored == null) {
+      this.gameListStored = [gameCreated];
+      console.log("//◊◊◊//if Game list stored: ", this.gameListStored);
+
+    } else {
+      this.gameListStored.push(gameCreated);
+      console.log("//◊//eles Game list stored: ", gameCreated);
+
+    }
+
+    //store gmaes in DB
+    this.storage.set('game_list', this.gameListStored); // store in db
+
+
+    //this.storage. remove('game_list');
+
+
+    // Retreive stored games list
+    this.storage.get('game_list')
+      .then((storedGames) => {
+          console.log('/////(create-task), storedGames', storedGames);
+      });
   }
 
 }
