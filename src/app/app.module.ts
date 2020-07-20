@@ -12,6 +12,9 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { IonicStorageModule } from '@ionic/storage';
 
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -20,7 +23,8 @@ import { IonicStorageModule } from '@ionic/storage';
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    IBeacon
+    IBeacon,
+    Geolocation
   ],
   bootstrap: [AppComponent]
 })

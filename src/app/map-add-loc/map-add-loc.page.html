@@ -13,4 +13,16 @@
     </ion-fab-button>
   </ion-fab>
 
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+    <ion-fab-button (click)="getPosition()">
+      <ion-icon name='map' style="font-size: 25px;"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab-button (click)="watchPosition()">
+      <ion-icon name='search' style="font-size: 25px;"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
 </ion-content>

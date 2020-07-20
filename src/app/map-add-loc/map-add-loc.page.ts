@@ -7,6 +7,10 @@ import { ToastController, NavController, Platform } from '@ionic/angular';
 import { BeaconInfo } from 'src/app/models/beaconData'
 import { MapboxStyleSwitcherControl } from "mapbox-gl-style-switcher";
 
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { LocationService } from '../services/location.service';
+import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-map-add-loc',
   templateUrl: './map-add-loc.page.html',
@@ -24,9 +28,14 @@ export class MapAddLocPage implements OnInit {
   beaconDataSer: BeaconInfo;
 
   marker: mapboxgl.Marker;
-  
 
-  constructor(private changeRef: ChangeDetectorRef, private readonly platform: Platform, public navCtrl: NavController, public storage: Storage, public toastController: ToastController, private gameServ: GameServiceService) {
+  marker2: mapboxgl.Marker; // for test
+  coords: [number, number];
+
+  positionSubscription: Subscription;
+
+
+  constructor(public locationServics: LocationService, private geolocation: Geolocation, private changeRef: ChangeDetectorRef, private readonly platform: Platform, public navCtrl: NavController, public storage: Storage, public toastController: ToastController, private gameServ: GameServiceService) {
     platform.resume.subscribe((result) => {
       console.log('Platform Resume Event');
     });
@@ -145,4 +154,86 @@ export class MapAddLocPage implements OnInit {
     });
     toast.present();
   }
+
+  getPosition() {
+
+    /* console.log('◊ı◊ getPosition');
+
+    this.geolocation.getCurrentPosition().then((resp) => {
+      console.log('◊ı◊ resp.coords.latitude: ', resp.coords.latitude);
+      console.log('◊ı◊ resp.coords.latitude: ', resp.coords.longitude);
+      this.coords =[resp.coords.longitude, resp.coords.latitude];
+      this.marker2 = new mapboxgl.Marker()
+        .setLngLat([this.coords[0], this.coords[1]])
+        .addTo(this.map);
+      // resp.coords.latitude
+      // resp.coords.longitude
+    }).catch((error) => {
+      console.log('Error getting location', error);
+    }); */
+
+    this.locationServics.getUserPosition().then((data) => {
+      console.log('location data: ', data);
+
+      console.log('location coords: ', data['coords']);
+
+      console.log('location lat: ', data['coords'].latitude);
+      console.log('location lat: ', data['coords'].longitude);
+
+
+      this.marker2 = new mapboxgl.Marker()
+        .setLngLat([data['coords'].longitude, data['coords'].latitude])
+        .addTo(this.map);
+
+
+    });
+
+
+  }
+
+
+  watchPosition() {
+
+    console.log('◊ı◊ watchPosition');
+
+    this.locationServics.init();
+
+    this.positionSubscription = this.locationServics.geolocationSubscription.subscribe(position => {
+      console.log('◊ı◊ watchPosition, watchPosition:', position);
+
+      console.log('location lat: ', position['coords'].latitude);
+      console.log('location lat: ', position['coords'].longitude);
+
+
+      this.marker2 = new mapboxgl.Marker()
+        .setLngLat([position['coords'].longitude, position['coords'].latitude])
+        .addTo(this.map);
+
+    })
+
+
+    /* let watch = this.geolocation.watchPosition({});
+    watch.subscribe((data) => {
+
+      this.coords = [data.coords.longitude, data.coords.latitude];
+
+      this.marker2 = new mapboxgl.Marker()
+        .setLngLat([data.coords.longitude, data.coords.latitude])
+        .addTo(this.map);
+
+      // Zoom to the beacon location
+      this.map.flyTo({ center: [data.coords.longitude, data.coords.latitude] });
+
+      console.log('◊2◊ watchPosition');
+
+      console.log('◊ı◊ resp.coords.latitude: ', data.coords.latitude);
+      console.log('◊ı◊ resp.coords.latitude: ', data.coords.longitude);
+
+      // data can be a set of coordinates, or an error (if an error occurred).
+      // data.coords.latitude
+      // data.coords.longitude
+    });*/
+  } 
+
+
 }
