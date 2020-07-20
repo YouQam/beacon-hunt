@@ -205,6 +205,9 @@ export class CreateTaskPage implements OnInit {
       .then((storedGames) => {
           console.log('/////(create-task), storedGames', storedGames);
       });
+
+      this.presentToast("The game "+ this.gameName +", was saved successfully" );
+
   }
 
 }
