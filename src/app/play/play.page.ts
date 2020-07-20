@@ -92,6 +92,13 @@ export class PlayPage implements OnInit {
     console.log('home ionViewDidEnter Event');
   }
 
+  ionViewWillLeave() {
+    console.log(`: on ionViewWillLeave , stop region`, this.beaconRegion);
+    if (this.beaconRegion) {
+      this.stopScannning();
+    }
+  }
+
   initializeTask() {
     // Add marker
     this.marker = new mapboxgl.Marker()
