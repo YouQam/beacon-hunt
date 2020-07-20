@@ -168,7 +168,7 @@ export class CreateTaskPage implements OnInit {
     this.tasksList = []; // empty tasks list
 
     for (let i = 0; i < this.beaconsStoredList_copy.length; i++) {
-      let task = new Task(1, this.beaconsStoredList_copy[i].minor, [this.beaconsStoredList_copy[i].lng, this.beaconsStoredList_copy[i].lat]);
+      let task = new Task(1, this.beaconsStoredList_copy[i].minor, [this.beaconsStoredList_copy[i].lng, this.beaconsStoredList_copy[i].lat], this.beaconsStoredList_copy[i].distanceMeter);
       this.tasksList.push(task);
     }
 
@@ -178,8 +178,8 @@ export class CreateTaskPage implements OnInit {
     console.log("//// Game stored, tasks length: ", gameCreated.tasks.length);
 
 
-    //store tasks in DB
-    this.storage.set('tasks_list', gameCreated); // store in db
+    /* //store tasks in DB
+    this.storage.set('tasks_list', gameCreated); // store in db */
 
 
     // store game created in DB to be used in play
@@ -203,11 +203,22 @@ export class CreateTaskPage implements OnInit {
     // Retreive stored games list
     this.storage.get('game_list')
       .then((storedGames) => {
-          console.log('/////(create-task), storedGames', storedGames);
+        console.log('/////(create-task), storedGames', storedGames);
       });
 
-      this.presentToast("The game "+ this.gameName +", was saved successfully" );
+    this.presentToast("The game " + this.gameName + ", was saved successfully");
 
+  }
+
+  // invoked when user update accuracy to beacon
+  onRangeChange(bMinor: number, accuracy: number) {
+    console.log("onRangeChange,  bMinor= ", bMinor, 'accuracy', accuracy);
+
+     for (var i = 0; i < this.beaconsStoredList_copy.length; i++) {
+      if (this.beaconsStoredList_copy[i].minor == bMinor) {
+        this.beaconsStoredList_copy[i].distanceMeter = accuracy;
+      }
+    } 
   }
 
 }

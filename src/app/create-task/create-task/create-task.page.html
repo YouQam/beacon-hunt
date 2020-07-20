@@ -30,7 +30,7 @@
 
       <ion-col size="2">
         <ion-item>
-          <ion-button  (click)="onTaskNumChange('dec')">
+          <ion-button (click)="onTaskNumChange('dec')">
             <ion-icon name="remove-circle-outline"></ion-icon>
           </ion-button>
         </ion-item>
@@ -78,6 +78,18 @@
           <ion-item>
             <ion-label><b>Longitude</b> <br> {{beacon.lng}}</ion-label>
             <ion-label><b>Latitude</b> <br> {{beacon.lat}}</ion-label>
+          </ion-item>
+
+          <ion-item style="margin-right: 10%;">
+            <ion-label><b>Accuracy</b></ion-label>
+
+            <ion-range style="padding-top: 22px;" min="2" max="15" snaps ticks pin step="1" value=3 (ionChange)="onRangeChange(beacon.minor, $event['detail'].value)">
+              <ion-label slot="start">2m</ion-label>
+              <ion-icon slot="start" size="small" name="locate">
+              </ion-icon>
+              <ion-icon slot="end" name="locate"></ion-icon>
+              <ion-label slot="end">15m</ion-label>
+            </ion-range>
           </ion-item>
 
           <ion-button (click)="openBeaconData(beacon.minor, beacon.lng, beacon.lat)">

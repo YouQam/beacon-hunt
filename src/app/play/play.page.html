@@ -49,14 +49,17 @@
         <ion-label><b>Distance</b> <br> {{beacon.accuracy}} m</ion-label>
         <ion-label><b>TX</b> <br> {{beacon.tx}}</ion-label>
       </ion-item>
+
     </ion-card-content>
   </ion-card>
+
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button [color]='scanStatus ? "danger" : "primary"' (click)="onScanClicked()">
       <ion-icon [name]='scanStatus ? "pause-sharp" : "play-sharp"' style="font-size: 25px;"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+
 
   <ion-fab vertical="bottom" horizontal="start" slot="fixed">
     <ion-fab-button (click)="onNextClicked()">

@@ -215,7 +215,7 @@ export class PlayPage implements OnInit {
     for (let i = 0; i < receivedData.length; i++) {
       console.log('◊ look for Beacon: 56411');
       console.log(' receivedData[i].minor == this.currentTask.minor):', receivedData[i].minor, ' == ', this.currentTask.minor);
-      console.log(' receivedData[i].tx == this.currentTask.distanceMeter:', receivedData[i].accuracy, '==', this.currentTask.distanceMeter);
+      console.log(' receivedData[i].tx == this.currentTask.distanceMeter:', receivedData[i].accuracy, '<=', this.currentTask.distanceMeter);
 
       if (this.beaconsStoredList) {
         if (receivedData[i].minor == this.currentTask.minor && receivedData[i].accuracy <= this.currentTask.distanceMeter) { // Check minor and distance
