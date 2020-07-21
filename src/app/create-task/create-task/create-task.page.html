@@ -14,23 +14,25 @@
   <ion-item-divider></ion-item-divider>
 
 
-  <ion-item style="border: 1px solid black;">
-    <ion-row style="width: 100%;">
+  <ion-grid style="border: 1px solid black; margin: 0px; padding: 0px;">
+    <ion-row style="width: 100%; height: 50px; margin: 0px;">
 
       <ion-col size="4">
         <ion-item>
-          <ion-label>Game Name: </ion-label>
-          <ion-input [(ngModel)]="gameName" style="border: 1px solid #000;"></ion-input>
+          <ion-label>Set Name: </ion-label>
+          <ion-input [(ngModel)]="gameName" placeholder=" Game Name"></ion-input>
         </ion-item>
       </ion-col>
+    </ion-row>
 
-      <ion-col size="3">
+    <ion-row style="width: 50%;">
+      <ion-col size="2.5">
         <ion-item>
           <ion-label>Number of tasks: </ion-label>
         </ion-item>
       </ion-col>
 
-      <ion-col size="2">
+      <ion-col size="1.2">
         <ion-item>
           <ion-button (click)="onTaskNumChange('dec')">
             <ion-icon name="remove-circle-outline"></ion-icon>
@@ -40,11 +42,11 @@
 
       <ion-col size="1">
         <ion-item>
-          <ion-label> {{numTasks}} </ion-label>
+          <ion-label style="text-align: center;"> {{numTasks}} </ion-label>
         </ion-item>
       </ion-col>
 
-      <ion-col size="2">
+      <ion-col size="1.2">
         <ion-item>
           <ion-button (click)="onTaskNumChange('inc')">
             <ion-icon name="add-circle-outline"></ion-icon>
@@ -53,7 +55,7 @@
       </ion-col>
 
     </ion-row>
-  </ion-item>
+  </ion-grid>
 
 
   <ion-card>

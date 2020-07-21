@@ -19,7 +19,7 @@ export class CreateTaskPage implements OnInit {
   beaconsStoredList: BeaconInfo[];
   beaconsStoredList_copy: BeaconInfo[];
 
-  gameName: string = "Game_1";
+  gameName: string;
   public tasksList: Task[];
 
   gameListStored: Game[];
@@ -171,6 +171,11 @@ export class CreateTaskPage implements OnInit {
   }
 
   onSaveGameClicked(): void {
+    if(this.gameName == undefined || this.gameName.trim() == ""){
+      this.presentToast("Set game name to be able to save.");
+      return;
+    }
+
     this.tasksList = []; // empty tasks list
 
     for (let i = 0; i < this.beaconsStoredList_copy.length; i++) {
