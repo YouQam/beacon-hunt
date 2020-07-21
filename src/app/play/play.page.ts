@@ -11,7 +11,7 @@ import { MapboxStyleSwitcherControl } from "mapbox-gl-style-switcher";
 import { Game } from '../models/game';
 import { LocationService } from '../services/location.service';
 import { Subscription } from 'rxjs';
-import { Geoposition, Geolocation } from '@ionic-native/geolocation/ngx';
+import { Geoposition, Geolocation, GeolocationOptions } from '@ionic-native/geolocation/ngx';
 import { HelperFunctionsService } from '../services/helper-functions.service';
 
 
@@ -49,6 +49,10 @@ export class PlayPage implements OnInit {
 
   gpsToBeaconDistance: number = 0;
 
+  reachedUsingGPS: boolean =false;
+  reachedUsingBeacon: boolean =false;
+
+
 
 
   constructor(private helperFuns: HelperFunctionsService, public locationServics: LocationService, private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef) {
@@ -72,7 +76,6 @@ export class PlayPage implements OnInit {
       console.log('◊◊◊ (play) game is undefined');
     }
 
-
   }
 
   ionViewWillEnter() {
@@ -92,12 +95,14 @@ export class PlayPage implements OnInit {
       });
       this.map.addControl(new MapboxStyleSwitcherControl());
     } else {
-      console.log('ÒÒÒ map is alreasdy there')
+      console.log('ÒÒÒ map is already there')
     }
 
     // Geolocation initializng 
     this.locationServics.init();
     this.positionSubscription = this.locationServics.geolocationSubscription.subscribe(position => {
+
+      
       /*       if (this.LastKnownPosition == undefined) {
               this.LastKnownPosition = position;
               this.uerLocMarker = new mapboxgl.Marker()
@@ -108,7 +113,7 @@ export class PlayPage implements OnInit {
       console.log('(play-page), this.LastKnownPosition lat: ', this.LastKnownPosition['coords'].latitude);
       console.log('(play-page), this.LastKnownPosition lng: ', this.LastKnownPosition['coords'].longitude);
       // Zoom to the beacon location
-      //this.map.flyTo({ center: [this.LastKnownPosition['coords'].longitude, this.LastKnownPosition['coords'].latitude] });
+      this.map.flyTo({ center: [this.LastKnownPosition['coords'].longitude, this.LastKnownPosition['coords'].latitude] });
       if (this.uerLocMarker != undefined) {
         this.uerLocMarker.remove();
       }
@@ -116,7 +121,11 @@ export class PlayPage implements OnInit {
         .setLngLat([this.LastKnownPosition['coords'].longitude, this.LastKnownPosition['coords'].latitude])
         .addTo(this.map);
 
-      this.userReachedBeacon(this.currentTask.coords);
+      // Check if user reached destination
+      if(this.userReachedBeacon(this.currentTask.coords)){
+        console.log('(), GPS reached destination');
+        this.reachedUsingGPS = true;
+      }
 
     })
   }
@@ -127,10 +136,15 @@ export class PlayPage implements OnInit {
   }
 
   ionViewWillLeave() {
-    console.log(`: on ionViewWillLeave , stop region`, this.beaconRegion);
+    console.log(`on ionViewWillLeave, stop region`, this.beaconRegion);
     if (this.beaconRegion) {
       this.stopScannning();
     }
+
+    this.positionSubscription.unsubscribe();
+    this.locationServics.clear();
+    console.log(`on ionViewWillLeave, geolocatoin unsubscribe`);
+
   }
 
   userReachedBeacon(currentTaskLoc) {
@@ -140,8 +154,9 @@ export class PlayPage implements OnInit {
       currentTaskLoc[1],
       currentTaskLoc[0],
       this.LastKnownPosition['coords'].latitude,
-      this.LastKnownPosition['coords'].latitude
+      this.LastKnownPosition['coords'].longitude
     );
+
 
     console.log('userReachedBeacon, this.gpsToBeaconDistance <= this.currentTask.distanceMeter: ', this.gpsToBeaconDistance, '<=', this.currentTask.distanceMeter);
 
@@ -151,7 +166,7 @@ export class PlayPage implements OnInit {
 
   initializeTask() {
     // Add marker
-    this.marker = new mapboxgl.Marker()
+    this.marker = new mapboxgl.Marker({color: 'red'})
       .setLngLat([this.currentTask.coords[0], this.currentTask.coords[1]])
       .addTo(this.map);
 
@@ -271,8 +286,11 @@ export class PlayPage implements OnInit {
         if (receivedData[i].minor == this.currentTask.minor && receivedData[i].accuracy <= this.currentTask.distanceMeter) { // Check minor and distance
           console.log(' Found Beacon: ', this.currentTask.minor);
 
+          console.log('(), User reached the beacon');
+          this.reachedUsingBeacon = true;
 
-          // Add marler
+
+          // Add marker
           new mapboxgl.Marker()
             .setLngLat([this.beaconsStoredList[0].lng, this.beaconsStoredList[0].lat])
             .addTo(this.map);
@@ -337,6 +355,9 @@ export class PlayPage implements OnInit {
       this.currentTask = this.tasksList[this.taskIndex];
 
       console.log('◊ı◊ Task num:', this.taskIndex);
+
+      this.reachedUsingBeacon = false;
+      this.reachedUsingGPS = false; 
 
 
       this.initializeTask();

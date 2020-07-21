@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Geolocation, GeolocationOptions, Geoposition, PositionError } from '@ionic-native/geolocation/ngx';
-import { Observable, Subscriber } from 'rxjs';
+import { Observable, Subscriber, Subscription } from 'rxjs';
 
 
 @Injectable({
@@ -14,6 +14,7 @@ export class LocationService {
 
   options: GeolocationOptions;
   currentPos: Geoposition;
+  watch: Subscription;
 
   constructor(private geolocation: Geolocation,) { }
 
@@ -43,7 +44,7 @@ export class LocationService {
   init() {
     console.log("init")
     this.geolocationSubscription = Observable.create((observer: Subscriber<Geoposition>) => {
-      let watch = this.geolocation.watchPosition({enableHighAccuracy: true}).subscribe((data) => {
+      this.watch = this.geolocation.watchPosition({enableHighAccuracy: true}).subscribe((data) => {
         console.log('from init, loc', data);
         observer.next(data);
       })
@@ -51,7 +52,8 @@ export class LocationService {
   }
 
   clear() {
-    //this.geolocation
+    this.watch.unsubscribe();
+    console.log('clear, watch.unsubscribe');
   }
 
 

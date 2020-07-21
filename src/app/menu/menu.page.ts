@@ -24,7 +24,7 @@ export class MenuPage implements OnInit {
     console.log('menu/onInit');
 
     // Initialise in desktop browser for testing  
-    if (this.platform.is('desktop')) { 
+    /* if (this.platform.is('desktop')) { 
       if (this.beaconinfoList == undefined) {
         let beaconinfo1: BeaconInfo = new BeaconInfo(56411, 14338, 7.814, 51.675); // hamm
         let beaconinfo2: BeaconInfo = new BeaconInfo(24489, 35011, 8.538, 52.010); // beliefeld
@@ -44,7 +44,7 @@ export class MenuPage implements OnInit {
       } else {
         console.log('data is already intialized');
       }
-    }
+    } */
   }
 
   /*   onPlayGameClicked(): void{

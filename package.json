@@ -30,7 +30,7 @@
     "@ionic/storage": "^2.2.0",
     "cordova-android": "^8.1.0",
     "cordova-ios": "^5.1.1",
-    "cordova-plugin-geolocation": "^4.0.2",
+    "cordova-plugin-geolocation": "git+https://github.com/apache/cordova-plugin-geolocation.git",
     "cordova-plugin-ibeacon": "^3.8.1",
     "cordova-sqlite-storage": "^5.0.0",
     "mapbox-gl": "^1.11.0",

@@ -181,6 +181,8 @@ export class MapAddLocPage implements OnInit {
       console.log('location lat: ', data['coords'].latitude);
       console.log('location lat: ', data['coords'].longitude);
 
+    // Zoom to the beacon location
+    this.map.flyTo({ zoom: 18, center: [data['coords'].longitude, data['coords'].latitude] });
 
       this.marker2 = new mapboxgl.Marker()
         .setLngLat([data['coords'].longitude, data['coords'].latitude])

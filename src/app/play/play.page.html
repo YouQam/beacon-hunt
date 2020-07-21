@@ -20,6 +20,10 @@
     </ion-label>
     <ion-spinner name="lines-small" color="light" [style.display]="scanStatus ? 'block' : 'none'"></ion-spinner>
   </ion-item-divider>
+  <ion-item>
+    <ion-button *ngIf='reachedUsingGPS'>Reached target using GPS</ion-button>
+    <ion-button *ngIf='reachedUsingBeacon'>Reached target using Beacon</ion-button>
+  </ion-item>
 
   <div #map class="map"></div>
   <!--  <div id="map" class="map"></div> -->
