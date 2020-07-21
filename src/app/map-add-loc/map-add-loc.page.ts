@@ -100,7 +100,7 @@ export class MapAddLocPage implements OnInit {
         this.marker.remove();
       }
       this.marker = new mapboxgl.Marker({
-        draggable: true
+        draggable: true, color: 'red'
       })
         .setLngLat([e.lngLat.lng, e.lngLat.lat])
         .addTo(this.map);
