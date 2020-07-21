@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { NavController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { BeaconInfo } from 'src/app/models/beaconData';
 import { Task } from '../models/task';
 import { Game } from '../models/game';
+
 
 
 @Component({
@@ -17,57 +18,41 @@ export class MenuPage implements OnInit {
   public tasksList: Task[];
 
 
-  constructor(public storage: Storage, public navCtrl: NavController) { }
+  constructor(public platform: Platform, public storage: Storage, public navCtrl: NavController) { }
 
   ngOnInit() {
     console.log('menu/onInit');
 
-    /* // To test in browser
-    let task1: Task = new Task(1, 35011, [7.814, 51.675]);
-    let task2: Task = new Task(2, 50313, [8.538, 52.010]);
-    let task3: Task = new Task(2, 50313, [20.538, 30.010]);
-
-    this.tasksList = [task1, task2, task3];
-
-    let gameCreated = new Game("Game_Test", this.tasksList);
-
-    console.log('game stored: ', gameCreated);
+    // Initialise in desktop browser for testing  
+    if (this.platform.is('desktop')) { 
+      if (this.beaconinfoList == undefined) {
+        let beaconinfo1: BeaconInfo = new BeaconInfo(56411, 14338, 7.814, 51.675); // hamm
+        let beaconinfo2: BeaconInfo = new BeaconInfo(24489, 35011, 8.538, 52.010); // beliefeld
+        this.beaconinfoList = [beaconinfo1, beaconinfo2]
+        //this.beaconinfoList.push
+        this.storage.set('beacon_info_list', this.beaconinfoList); // store in db
 
 
-    //store tasks in DB
-    this.storage.set('tasks_list', gameCreated); // store in db */
+        this.storage.length()
+          .then((length) => {
+            console.log(' Beacon info stored length', length);
 
+          });
 
+        console.log(' Beacon info stored', this.beaconinfoList);
 
-
-
-    if (this.beaconinfoList == undefined) {
-      let beaconinfo1: BeaconInfo = new BeaconInfo(56411, 14338, 7.814, 51.675); // hamm
-      let beaconinfo2: BeaconInfo = new BeaconInfo(24489, 35011, 8.538, 52.010); // beliefeld
-      this.beaconinfoList = [beaconinfo1, beaconinfo2]
-      //this.beaconinfoList.push
-      this.storage.set('beacon_info_list', this.beaconinfoList); // store in db
-
-
-      this.storage.length()
-      .then((length) => {
-        console.log(' Beacon info stored length', length);
-
-      });
-
-      console.log(' Beacon info stored', this.beaconinfoList);
-
-    }else{
-      console.log('data is already intialized');
+      } else {
+        console.log('data is already intialized');
+      }
     }
   }
 
-/*   onPlayGameClicked(): void{
-    console.log('PlayGame button pressed');
-
-    // navigate to play-game-select page
-    this.navCtrl.navigateForward('play-game-select');
-  } */
+  /*   onPlayGameClicked(): void{
+      console.log('PlayGame button pressed');
+  
+      // navigate to play-game-select page
+      this.navCtrl.navigateForward('play-game-select');
+    } */
 
   onPlayClicked(): void {
     console.log('Play button pressed');
@@ -76,14 +61,14 @@ export class MenuPage implements OnInit {
     this.navCtrl.navigateForward('play');
   }
 
-/*   onSettingsClicked(): void {
-    console.log('Settings button pressed');
+  /*   onSettingsClicked(): void {
+      console.log('Settings button pressed');
+  
+      // navigate to add-beacon page
+      this.navCtrl.navigateForward('add-beacon');
+    } */
 
-    // navigate to add-beacon page
-    this.navCtrl.navigateForward('add-beacon');
-  } */
-
-  onCreateTaskClicked(): void{
+  onCreateTaskClicked(): void {
     console.log('Create task menu button pressed');
 
     // navigate to add-beacon page
@@ -102,8 +87,8 @@ export class MenuPage implements OnInit {
 
     // navigate to add-beacon page
     this.navCtrl.navigateForward('scan-nearby');
-  }  
-  
+  }
+
   onGameListClicked(): void {
     console.log('Scan Nearby button pressed');
 

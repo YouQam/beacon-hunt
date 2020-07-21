@@ -41,15 +41,17 @@ export class LocationService {
   }
 
   init() {
-
     console.log("init")
-
     this.geolocationSubscription = Observable.create((observer: Subscriber<Geoposition>) => {
-      let watch = this.geolocation.watchPosition().subscribe((data) => {
+      let watch = this.geolocation.watchPosition({enableHighAccuracy: true}).subscribe((data) => {
         console.log('from init, loc', data);
         observer.next(data);
       })
     })
+  }
+
+  clear() {
+    //this.geolocation
   }
 
 

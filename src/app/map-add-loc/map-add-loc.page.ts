@@ -155,6 +155,7 @@ export class MapAddLocPage implements OnInit {
     toast.present();
   }
 
+  // Test GPS
   getPosition() {
 
     /* console.log('◊ı◊ getPosition');
@@ -192,6 +193,7 @@ export class MapAddLocPage implements OnInit {
   }
 
 
+  // Test GPS 
   watchPosition() {
 
     console.log('◊ı◊ watchPosition');
@@ -204,6 +206,8 @@ export class MapAddLocPage implements OnInit {
       console.log('location lat: ', position['coords'].latitude);
       console.log('location lat: ', position['coords'].longitude);
 
+      // Zoom to the beacon location
+      this.map.flyTo({ center: [position['coords'].longitude, position['coords'].latitude] });
 
       this.marker2 = new mapboxgl.Marker()
         .setLngLat([position['coords'].longitude, position['coords'].latitude])

@@ -9,6 +9,10 @@ import { GameServiceService } from '../services/game-service.service';
 import { Task } from '../models/task';
 import { MapboxStyleSwitcherControl } from "mapbox-gl-style-switcher";
 import { Game } from '../models/game';
+import { LocationService } from '../services/location.service';
+import { Subscription } from 'rxjs';
+import { Geoposition, Geolocation } from '@ionic-native/geolocation/ngx';
+import { HelperFunctionsService } from '../services/helper-functions.service';
 
 
 
@@ -39,10 +43,17 @@ export class PlayPage implements OnInit {
   taskIndex: number;
   selectedGame: Game;
 
+  positionSubscription: Subscription;
+  uerLocMarker: mapboxgl.Marker; // for showing user position
+  LastKnownPosition: Geolocation;
 
-  constructor(private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef) {
+  gpsToBeaconDistance: number = 0;
+
+
+
+  constructor(private helperFuns: HelperFunctionsService, public locationServics: LocationService, private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef) {
     this.platform.ready().then(() => {
-      this.requestLocPermissoin();
+      //this.requestLocPermissoin();
       this.enableDebugLogs();
     });
   }
@@ -68,7 +79,7 @@ export class PlayPage implements OnInit {
     console.log('home Resume Event, map', this.map);
     this.updateBeaconStoredList();
 
-
+    // Map initializing
     if (this.map == undefined) {
       console.log('◊ initialize map');
       mapboxgl.accessToken = 'pk.eyJ1IjoidGhlZ2lzZGV2IiwiYSI6ImNqdGQ5dmd2MTEyaWk0YXF0NzZ1amhtOWMifQ.GuFE28BPyzAcHWejNLzuyw';
@@ -79,12 +90,35 @@ export class PlayPage implements OnInit {
         center: [7.63, 51.960],
         zoom: 12
       });
-
       this.map.addControl(new MapboxStyleSwitcherControl());
-
     } else {
       console.log('ÒÒÒ map is alreasdy there')
     }
+
+    // Geolocation initializng 
+    this.locationServics.init();
+    this.positionSubscription = this.locationServics.geolocationSubscription.subscribe(position => {
+      /*       if (this.LastKnownPosition == undefined) {
+              this.LastKnownPosition = position;
+              this.uerLocMarker = new mapboxgl.Marker()
+                .setLngLat([this.LastKnownPosition['coords'].longitude, this.LastKnownPosition['coords'].latitude])
+                .addTo(this.map);
+            } */
+      this.LastKnownPosition = position;
+      console.log('(play-page), this.LastKnownPosition lat: ', this.LastKnownPosition['coords'].latitude);
+      console.log('(play-page), this.LastKnownPosition lng: ', this.LastKnownPosition['coords'].longitude);
+      // Zoom to the beacon location
+      //this.map.flyTo({ center: [this.LastKnownPosition['coords'].longitude, this.LastKnownPosition['coords'].latitude] });
+      if (this.uerLocMarker != undefined) {
+        this.uerLocMarker.remove();
+      }
+      this.uerLocMarker = new mapboxgl.Marker()
+        .setLngLat([this.LastKnownPosition['coords'].longitude, this.LastKnownPosition['coords'].latitude])
+        .addTo(this.map);
+
+      this.userReachedBeacon(this.currentTask.coords);
+
+    })
   }
 
   ionViewDidEnter() {
@@ -99,6 +133,22 @@ export class PlayPage implements OnInit {
     }
   }
 
+  userReachedBeacon(currentTaskLoc) {
+    console.log('userReachedBeacon');
+
+    this.gpsToBeaconDistance = this.helperFuns.getDistanceFromLatLonInM(
+      currentTaskLoc[1],
+      currentTaskLoc[0],
+      this.LastKnownPosition['coords'].latitude,
+      this.LastKnownPosition['coords'].latitude
+    );
+
+    console.log('userReachedBeacon, this.gpsToBeaconDistance <= this.currentTask.distanceMeter: ', this.gpsToBeaconDistance, '<=', this.currentTask.distanceMeter);
+
+    return this.gpsToBeaconDistance <= this.currentTask.distanceMeter;
+
+  }
+
   initializeTask() {
     // Add marker
     this.marker = new mapboxgl.Marker()
@@ -109,13 +159,13 @@ export class PlayPage implements OnInit {
     this.map.flyTo({ center: [this.currentTask.coords[0], this.currentTask.coords[1]] });
   }
 
-  requestLocPermissoin(): void {
+  /* requestLocPermissoin(): void {
     // Request permission to use location on iOS
     if (this.platform.is('ios')) {
       this.ibeacon.requestAlwaysAuthorization();
       console.log(`: request ios permisson`);
-    }
-  }
+    } 
+  }*/
 
   enableDebugLogs(): void {
     this.ibeacon.enableDebugLogs();
@@ -265,37 +315,6 @@ export class PlayPage implements OnInit {
     } */
   }
 
-  navigateAddBeaconPage() {
-    // get a key/value pair from db
-    this.storage.get('beacon_info_list').then((val) => {
-      //console.log('From home, beacon info display: ', val);
-    });
-    this.navCtrl.navigateForward('add-beacon');
-
-  }
-
-  saveData(event) {
-    // set a key/value
-    //this.storage.set('name', 'yousef');
-    //console.log(`: Data stored`);
-
-    /* let beaconinfo1: BeaconInfo = new BeaconInfo(56411, 14338, 7.814, 51.675); // hamm
-    let beaconinfo2: BeaconInfo = new BeaconInfo(24489, 35011, 8.538, 52.010); // beliefeld
-
-    this.beaconinfoList = [beaconinfo1, beaconinfo2]
-    this.storage.set('beacon_info_list', this.beaconinfoList); // sotre in db */
-    //this.beaconinfo = new BeaconInfo(56411, 14338);
-    ////this.beaconinfo = new BeaconInfo(24489, 35011);
-    //this.storage.set('beacon_info', this.beaconinfo); // sotre in db
-    //console.log(' Beacon info stored:', this.beaconinfoList);
-    //console.log(' id=:', event.target.attributes.ids);
-
-    // update service
-    //this.gameServ.changeCoords([111, 222]);
-
-    //this.updateBeaconStoredList();
-  }
-
   updateBeaconStoredList() {
     // get a key/value pair from db
     this.storage.get('beacon_info_list').then((val) => {
@@ -303,21 +322,6 @@ export class PlayPage implements OnInit {
       console.log(' From home, retreived list from db: ', this.beaconsStoredList);
 
     });
-  }
-
-  showMap(): void {
-    /* if (this.map == undefined) {
-
-      mapboxgl.accessToken = environment.mapboxAccessToken;
-      this.map = new mapboxgl.Map({
-        container: this.mapContainer.nativeElement,
-        style: 'mapbox://styles/mapbox/streets-v11',
-        center: [7.63, 51.960],
-        zoom: 12
-      });
-    } else {
-      console.log('ÒÒÒ map is alreasdy there')
-    } */
   }
 
   onNextClicked(): void {
