@@ -1,7 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button color=dark defaultHref="/"></ion-back-button>
+      <ion-button color=dark (click)="onBackButton()">
+        <ion-icon name="chevron-back"></ion-icon> Back
+      </ion-button>
     </ion-buttons>
     <ion-title size="large" class="ion-text-center">Create Task</ion-title>
   </ion-toolbar>
@@ -83,7 +85,8 @@
           <ion-item style="margin-right: 10%;">
             <ion-label><b>Accuracy</b></ion-label>
 
-            <ion-range style="padding-top: 22px;" min="2" max="15" snaps ticks pin step="1" value=3 (ionChange)="onRangeChange(beacon.minor, $event['detail'].value)">
+            <ion-range style="padding-top: 22px;" min="2" max="15" snaps ticks pin step="1" value=3
+              (ionChange)="onRangeChange(beacon.minor, $event['detail'].value)">
               <ion-label slot="start">2m</ion-label>
               <ion-icon slot="start" size="small" name="locate">
               </ion-icon>

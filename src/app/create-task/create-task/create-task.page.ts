@@ -81,7 +81,8 @@ export class CreateTaskPage implements OnInit {
             let found = data.filter(t => t.minor == this.beaconsStoredList_copy[i].minor); // Check if the task is already in the list
             console.log("found is: ", found, ", length: ", found.length);
             if (found.length != 0) {
-              this.beaconsStoredList_copy[i] = data[i];
+              this.beaconsStoredList_copy[i].lat = data[i].lat;
+              this.beaconsStoredList_copy[i].lng = data[i].lng;
             }
 
           }
@@ -95,9 +96,8 @@ export class CreateTaskPage implements OnInit {
   onTaskNumChange(opType: string): void {
     console.log("game name .", this.gameName);
 
-
     if (this.numTasks == 1 && opType == "dec") {
-      this.presentToast("There should be at least one task to play.");
+      this.presentToast("There should be at least one task to create a game.");
       console.log("There should be at least one task to play.");
       return;
     } else if (this.numTasks == this.maxNumTasks && opType == "inc") {
@@ -140,6 +140,12 @@ export class CreateTaskPage implements OnInit {
   }
 
   onDeleteBeacon(beaconMinor: number): void {
+    if (this.numTasks == 1) {
+      this.presentToast("There should be at least one task to play.");
+      console.log("onDeleteBeacon ,There should be at least one task to create a game.");
+      return;
+    }
+
     for (var i = 0; i < this.beaconsStoredList_copy.length; i++) {
       if (this.beaconsStoredList_copy[i].minor == beaconMinor) {
         this.beaconsStoredList_copy.splice(i, 1);
@@ -214,11 +220,16 @@ export class CreateTaskPage implements OnInit {
   onRangeChange(bMinor: number, accuracy: number) {
     console.log("onRangeChange,  bMinor= ", bMinor, 'accuracy', accuracy);
 
-     for (var i = 0; i < this.beaconsStoredList_copy.length; i++) {
+    for (var i = 0; i < this.beaconsStoredList_copy.length; i++) {
       if (this.beaconsStoredList_copy[i].minor == bMinor) {
         this.beaconsStoredList_copy[i].distanceMeter = accuracy;
       }
-    } 
+    }
+  }
+
+  // Back button
+  onBackButton() {
+    this.navCtrl.back();
   }
 
 }

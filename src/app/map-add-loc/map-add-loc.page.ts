@@ -157,22 +157,6 @@ export class MapAddLocPage implements OnInit {
 
   // Test GPS
   getPosition() {
-
-    /* console.log('◊ı◊ getPosition');
-
-    this.geolocation.getCurrentPosition().then((resp) => {
-      console.log('◊ı◊ resp.coords.latitude: ', resp.coords.latitude);
-      console.log('◊ı◊ resp.coords.latitude: ', resp.coords.longitude);
-      this.coords =[resp.coords.longitude, resp.coords.latitude];
-      this.marker2 = new mapboxgl.Marker()
-        .setLngLat([this.coords[0], this.coords[1]])
-        .addTo(this.map);
-      // resp.coords.latitude
-      // resp.coords.longitude
-    }).catch((error) => {
-      console.log('Error getting location', error);
-    }); */
-
     this.locationServics.getUserPosition().then((data) => {
       console.log('location data: ', data);
 
@@ -190,55 +174,6 @@ export class MapAddLocPage implements OnInit {
 
 
     });
-
-
-  }
-
-
-  // Test GPS 
-  watchPosition() {
-
-    console.log('◊ı◊ watchPosition');
-
-    this.locationServics.init();
-
-    this.positionSubscription = this.locationServics.geolocationSubscription.subscribe(position => {
-      console.log('◊ı◊ watchPosition, watchPosition:', position);
-
-      console.log('location lat: ', position['coords'].latitude);
-      console.log('location lat: ', position['coords'].longitude);
-
-      // Zoom to the beacon location
-      this.map.flyTo({ center: [position['coords'].longitude, position['coords'].latitude] });
-
-      this.marker2 = new mapboxgl.Marker()
-        .setLngLat([position['coords'].longitude, position['coords'].latitude])
-        .addTo(this.map);
-
-    })
-
-
-    /* let watch = this.geolocation.watchPosition({});
-    watch.subscribe((data) => {
-
-      this.coords = [data.coords.longitude, data.coords.latitude];
-
-      this.marker2 = new mapboxgl.Marker()
-        .setLngLat([data.coords.longitude, data.coords.latitude])
-        .addTo(this.map);
-
-      // Zoom to the beacon location
-      this.map.flyTo({ center: [data.coords.longitude, data.coords.latitude] });
-
-      console.log('◊2◊ watchPosition');
-
-      console.log('◊ı◊ resp.coords.latitude: ', data.coords.latitude);
-      console.log('◊ı◊ resp.coords.latitude: ', data.coords.longitude);
-
-      // data can be a set of coordinates, or an error (if an error occurred).
-      // data.coords.latitude
-      // data.coords.longitude
-    });*/
   } 
 
 
