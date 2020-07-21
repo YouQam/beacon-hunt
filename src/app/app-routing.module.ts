@@ -50,6 +50,10 @@ const routes: Routes = [
     path: 'play-game-list',
     loadChildren: () => import('./play-game/play-game-list/play-game-list.module').then( m => m.PlayGameListPageModule)
   },
+  {
+    path: 'update-game',
+    loadChildren: () => import('./create-task/update-game/update-game.module').then( m => m.UpdateGamePageModule)
+  },
 ];
 
 @NgModule({

@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color=dark (click)="onBackButton()">
+        <ion-icon name="chevron-back"></ion-icon> Back
+      </ion-button>
+    </ion-buttons>
+    <ion-title size="large" class="ion-text-center">update-game</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!--   <h5>Update games</h5> -->
+  <ion-list>
+    <ion-item *ngFor="let game of gameList">
+      <ion-label>
+        <h2>{{game.name}}</h2>
+      </ion-label>
+      <ion-button color=primary (click)="onDeleteGame(game.name)">
+        <ion-icon name="trash"></ion-icon> 
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

@@ -26,7 +26,10 @@ export class CreateTaskMenuPage implements OnInit {
   }
 
   onUpdateTaskClicked(): void {
+    console.log('Update button pressed');
 
+    // navigate to home page
+    this.navCtrl.navigateForward('update-game');
   }
 
 }
