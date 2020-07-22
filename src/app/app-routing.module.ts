@@ -23,16 +23,16 @@ const routes: Routes = [
     loadChildren: () => import('./play/play.module').then(m => m.PlayPageModule)
   },
   {
-    path: 'play-game-select',
-    loadChildren: () => import('./play-game-select/play-game-select.module').then( m => m.PlayGameSelectPageModule)
+    path: 'stored-beacon-list',
+    loadChildren: () => import('./game-settings/stored-beacon-list/stored-beacon-list.module').then( m => m.StoredBeaconListPageModule)
   },
   {
     path: 'game-settings',
-    loadChildren: () => import('./game-settings/game-settings.module').then( m => m.GameSettingsPageModule)
+    loadChildren: () => import('./game-settings/game-settings/game-settings.module').then( m => m.GameSettingsPageModule)
   },
   {
-    path: 'beacon-scan',
-    loadChildren: () => import('./beacon-scan/beacon-scan.module').then( m => m.BeaconScanPageModule)
+    path: 'add-beacon',
+    loadChildren: () => import('./game-settings/add-beacon/add-beacon.module').then( m => m.AddBeaconPageModule)
   },
   {
     path: 'scan-nearby',

@@ -1,15 +1,15 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ToastController, NavController } from '@ionic/angular';
-import { BeaconInfo } from '../models/beaconData';
+import { BeaconInfo } from '../../models/beaconData';
 import { Storage } from '@ionic/storage';
-import { GameServiceService } from '../services/game-service.service';
+import { GameServiceService } from '../../services/game-service.service';
 
 @Component({
-  selector: 'app-play-game-select',
-  templateUrl: './play-game-select.page.html',
-  styleUrls: ['./play-game-select.page.scss'],
+  selector: 'app-stored-beacon-list',
+  templateUrl: './stored-beacon-list.page.html',
+  styleUrls: ['./stored-beacon-list.page.scss'],
 })
-export class PlayGameSelectPage implements OnInit {
+export class StoredBeaconListPage implements OnInit {
 
   numTasks: number = 0;
   maxNumTasks: number = 0;
@@ -27,17 +27,17 @@ export class PlayGameSelectPage implements OnInit {
           this.beaconsStoredList = data;
           this.beaconsStoredList_copy = this.beaconsStoredList.slice();
           this.changeRef.detectChanges(); // Check for data change to update view Y.Q
-          console.log('From (play-game-select), beacon info list stored in the variable ', this.beaconsStoredList_copy);
+          console.log('From (stored-beacon-list), beacon info list stored in the variable ', this.beaconsStoredList_copy);
 
           this.maxNumTasks = this.numTasks = this.beaconsStoredList.length;
-          console.log('(play-game-select), beacon info list retreived successfully: ', this.maxNumTasks);
+          console.log('(stored-beacon-list), beacon info list retreived successfully: ', this.maxNumTasks);
         } else {
           this.maxNumTasks = this.numTasks = 0;
           this.beaconsStoredList_copy = [];
-          console.log('(play-game-select), storage is empty, no beacon info is stored yet');
+          console.log('(stored-beacon-list), storage is empty, no beacon info is stored yet');
         }
       }).catch((error: any) => {
-        console.error(`(play-game-select), error in retreiving beacon info list from storage`);
+        console.error(`(stored-beacon-list), error in retreiving beacon info list from storage`);
       });;
   }
 
@@ -86,15 +86,20 @@ export class PlayGameSelectPage implements OnInit {
     this.numTasks -= 1;
   }
 
-/*   // Invoked when user press the increase button
-  onAddTaskPressed(): void {
-    for (var i = 0; i < this.beaconsStoredList.length; i++) {
-      let answer = this.beaconsStoredList_copy.filter(t => t.minor == this.beaconsStoredList[i].minor); // Check if the task is already stored
-      console.log("answer is: ", answer, ", length: ", answer.length);
-      if(answer.length == 0){
-        this.beaconsStoredList_copy.push(this.beaconsStoredList[i]); // add task
+  /*   // Invoked when user press the increase button
+    onAddTaskPressed(): void {
+      for (var i = 0; i < this.beaconsStoredList.length; i++) {
+        let answer = this.beaconsStoredList_copy.filter(t => t.minor == this.beaconsStoredList[i].minor); // Check if the task is already stored
+        console.log("answer is: ", answer, ", length: ", answer.length);
+        if(answer.length == 0){
+          this.beaconsStoredList_copy.push(this.beaconsStoredList[i]); // add task
+        }
       }
-    }
-  } */
+    } */
+
+  // Back button
+  onBackButton() {
+    this.navCtrl.back();
+  }
 
 }

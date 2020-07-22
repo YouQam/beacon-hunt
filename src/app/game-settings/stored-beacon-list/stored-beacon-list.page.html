@@ -1,9 +1,11 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button color=dark defaultHref="/"></ion-back-button>
+      <ion-button color=dark (click)="onBackButton()">
+        <ion-icon name="chevron-back"></ion-icon> Back
+      </ion-button>
     </ion-buttons>
-    <ion-title size="large" class="ion-text-center">play-game-select</ion-title>
+    <ion-title size="large" class="ion-text-center">Stored Beacons</ion-title>
   </ion-toolbar>
 </ion-header>
 

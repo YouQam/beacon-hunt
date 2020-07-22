@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { BeaconScanPage } from './beacon-scan.page';
+import { AddBeaconPage } from './add-beacon.page';
 
-describe('BeaconScanPage', () => {
-  let component: BeaconScanPage;
-  let fixture: ComponentFixture<BeaconScanPage>;
+describe('AddBeaconPage', () => {
+  let component: AddBeaconPage;
+  let fixture: ComponentFixture<AddBeaconPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BeaconScanPage ],
+      declarations: [ AddBeaconPage ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(BeaconScanPage);
+    fixture = TestBed.createComponent(AddBeaconPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

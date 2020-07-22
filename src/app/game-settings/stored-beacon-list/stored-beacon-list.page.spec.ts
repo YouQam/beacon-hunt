@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { PlayGameSelectPage } from './play-game-select.page';
+import { StoredBeaconListPage } from './stored-beacon-list.page';
 
-describe('PlayGameSelectPage', () => {
-  let component: PlayGameSelectPage;
-  let fixture: ComponentFixture<PlayGameSelectPage>;
+describe('StoredBeaconListPage', () => {
+  let component: StoredBeaconListPage;
+  let fixture: ComponentFixture<StoredBeaconListPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PlayGameSelectPage ],
+      declarations: [ StoredBeaconListPage ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PlayGameSelectPage);
+    fixture = TestBed.createComponent(StoredBeaconListPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

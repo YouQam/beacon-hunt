@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { PlayGameSelectPage } from './play-game-select.page';
+import { AddBeaconPage } from './add-beacon.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: PlayGameSelectPage
+    component: AddBeaconPage
   }
 ];
 
@@ -14,4 +14,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class PlayGameSelectPageRoutingModule {}
+export class AddBeaconPageRoutingModule {}

@@ -50,8 +50,8 @@ export class MenuPage implements OnInit {
   /*   onPlayGameClicked(): void{
       console.log('PlayGame button pressed');
   
-      // navigate to play-game-select page
-      this.navCtrl.navigateForward('play-game-select');
+      // navigate to stored-beacon-list page
+      this.navCtrl.navigateForward('stored-beacon-list');
     } */
 
   onPlayClicked(): void {

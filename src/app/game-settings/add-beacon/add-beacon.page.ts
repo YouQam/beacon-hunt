@@ -3,16 +3,16 @@ import { IBeacon, IBeaconPluginResult, Beacon } from '@ionic-native/ibeacon/ngx'
 import { Platform, NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { BeaconInfo } from 'src/app/models/beaconData'
-import { GameServiceService } from '../services/game-service.service';
-import { BeaconFullInfo } from '../models/beaconFullInfo';
+import { GameServiceService } from '../../services/game-service.service';
+import { BeaconFullInfo } from '../../models/beaconFullInfo';
 
 
 @Component({
-  selector: 'app-beacon-scan',
-  templateUrl: './beacon-scan.page.html',
-  styleUrls: ['./beacon-scan.page.scss'],
+  selector: 'app-add-beacon',
+  templateUrl: './add-beacon.page.html',
+  styleUrls: ['./add-beacon.page.scss'],
 })
-export class BeaconScanPage implements OnInit {
+export class AddBeaconPage implements OnInit {
 
   slectedUUID = 'b9407f30-f5f8-466e-aff9-25556b57fe6d';
   //uuid = 'b9407f30-f5f8-466e-aff9-25556b57fe6d';
@@ -41,12 +41,12 @@ export class BeaconScanPage implements OnInit {
       .then((data) => {
         if (data != null) {
           this.beaconsStoredList = data;
-          console.log('(beacon-scan), beacon info list retreived successfully', this.beaconsStoredList.length);
+          console.log('(add-beacon), beacon info list retreived successfully', this.beaconsStoredList.length);
         } else {
-          console.log('(beacon-scan), storage is empty, no beacon info is stored yet', this.beaconsStoredList.length);
+          console.log('(add-beacon), storage is empty, no beacon info is stored yet', this.beaconsStoredList.length);
         }
       }).catch((error: any) => {
-        console.error(`(beacon-scan), error in retreiving beacon info list from storage`);
+        console.error(`(add-beacon), error in retreiving beacon info list from storage`);
       });;
   }
 
@@ -256,5 +256,10 @@ export class BeaconScanPage implements OnInit {
 
       });
 
+  }
+
+  // Back button
+  onBackButton() {
+    this.navCtrl.back();
   }
 }

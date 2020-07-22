@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { BeaconScanPageRoutingModule } from './beacon-scan-routing.module';
+import { AddBeaconPageRoutingModule } from './add-beacon-routing.module';
 
-import { BeaconScanPage } from './beacon-scan.page';
+import { AddBeaconPage } from './add-beacon.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    BeaconScanPageRoutingModule
+    AddBeaconPageRoutingModule
   ],
-  declarations: [BeaconScanPage]
+  declarations: [AddBeaconPage]
 })
-export class BeaconScanPageModule {}
+export class AddBeaconPageModule {}

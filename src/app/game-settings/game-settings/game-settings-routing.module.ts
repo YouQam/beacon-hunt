@@ -10,26 +10,26 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'play-game-select',
+        redirectTo: 'stored-beacon-list',
         pathMatch: 'full'
       },
       {
-        path: 'play-game-select',
+        path: 'stored-beacon-list',
         children: [
           {
             path: '',
             loadChildren: () =>
-              import('../play-game-select/play-game-select.module').then(m => m.PlayGameSelectPageModule)
+              import('../stored-beacon-list/stored-beacon-list.module').then(m => m.StoredBeaconListPageModule)
           }
         ]
       },
       {
-        path: 'beacon-scan',
+        path: 'add-beacon',
         children: [
           {
             path: '',
             loadChildren: () =>
-              import('../beacon-scan/beacon-scan.module').then(m => m.BeaconScanPageModule)
+              import('../add-beacon/add-beacon.module').then(m => m.AddBeaconPageModule)
           }
         ]
       }
