@@ -68,11 +68,11 @@ export class MenuPage implements OnInit {
       this.navCtrl.navigateForward('add-beacon');
     } */
 
-  onCreateTaskClicked(): void {
+  onCreateGameClicked(): void {
     console.log('Create task menu button pressed');
 
     // navigate to add-beacon page
-    this.navCtrl.navigateForward('create-task-menu');
+    this.navCtrl.navigateForward('create-game-menu');
   }
 
   onGameSettingsClicked(): void {

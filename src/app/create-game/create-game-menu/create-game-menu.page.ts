@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-create-task-menu',
-  templateUrl: './create-task-menu.page.html',
-  styleUrls: ['./create-task-menu.page.scss'],
+  selector: 'app-create-game-menu',
+  templateUrl: './create-game-menu.page.html',
+  styleUrls: ['./create-game-menu.page.scss'],
 })
-export class CreateTaskMenuPage implements OnInit {
+export class CreateGameMenuPage implements OnInit {
 
   constructor(public navCtrl: NavController) { }
 
@@ -22,7 +22,7 @@ export class CreateTaskMenuPage implements OnInit {
     console.log('Create task button pressed');
 
     // navigate to home page
-    this.navCtrl.navigateForward('create-task');
+    this.navCtrl.navigateForward('create-game');
   }
 
   onUpdateTaskClicked(): void {

@@ -8,11 +8,11 @@ import { Task } from 'src/app/models/task';
 
 
 @Component({
-  selector: 'app-create-task',
-  templateUrl: './create-task.page.html',
-  styleUrls: ['./create-task.page.scss'],
+  selector: 'app-create-game',
+  templateUrl: './create-game.page.html',
+  styleUrls: ['./create-game.page.scss'],
 })
-export class CreateTaskPage implements OnInit {
+export class CreateGamePage implements OnInit {
 
   numTasks: number = 0;
   maxNumTasks: number = 0;
@@ -35,17 +35,17 @@ export class CreateTaskPage implements OnInit {
           this.beaconsStoredList = data;
           this.beaconsStoredList_copy = this.beaconsStoredList.slice();
           this.changeRef.detectChanges(); // Check for data change to update view Y.Q
-          console.log('From (create-task), beacon info list stored in the variable ', this.beaconsStoredList_copy);
+          console.log('From (create-game), beacon info list stored in the variable ', this.beaconsStoredList_copy);
 
           this.maxNumTasks = this.numTasks = this.beaconsStoredList.length;
-          console.log('(create-task), beacon info list retreived successfully: ', this.maxNumTasks);
+          console.log('(create-game), beacon info list retreived successfully: ', this.maxNumTasks);
         } else {
           this.maxNumTasks = 0;
           this.beaconsStoredList_copy = [];
-          console.log('(create-task), storage is empty, no beacon info is stored yet');
+          console.log('(create-game), storage is empty, no beacon info is stored yet');
         }
       }).catch((error: any) => {
-        console.error(`(create-task), error in retreiving beacon info list from storage`);
+        console.error(`(create-game), error in retreiving beacon info list from storage`);
       });;
 
     // Retreive stored games list
@@ -54,7 +54,7 @@ export class CreateTaskPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    console.log('(create-task), Resume Event');
+    console.log('(create-game), Resume Event');
 
     this.changeRef.detectChanges(); // Check for data change to update view Y.Q
 
@@ -68,12 +68,12 @@ export class CreateTaskPage implements OnInit {
       .then((storedGames) => {
         if (storedGames != null) {
           this.gameListStored = storedGames;
-          console.log('(create-task), retreived games list', this.gameListStored);
+          console.log('(create-game), retreived games list', this.gameListStored);
         } else {
-          console.log('(create-task), storage is empty, no games is stored yet');
+          console.log('(create-game), storage is empty, no games is stored yet');
         }
       }).catch((error: any) => {
-        console.error(`(create-task), error in retreiving beacon info list from storage`);
+        console.error(`(create-game), error in retreiving beacon info list from storage`);
 
       });
   }
@@ -93,7 +93,7 @@ export class CreateTaskPage implements OnInit {
           }
         }
       }).catch((error: any) => {
-        console.error(`(create-task), error in retreiving beacon info list from storage`);
+        console.error(`(create-game), error in retreiving beacon info list from storage`);
       });;
 
   }
@@ -239,7 +239,7 @@ export class CreateTaskPage implements OnInit {
     // Retreive stored games list
     this.storage.get('game_list')
       .then((storedGames) => {
-        console.log('/////(create-task), storedGames', storedGames);
+        console.log('/////(create-game), storedGames', storedGames);
       });
 
     this.presentToast("The game " + this.gameName + ", was saved successfully");

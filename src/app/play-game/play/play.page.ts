@@ -5,14 +5,14 @@ import mapboxgl from "mapbox-gl";
 import { environment } from 'src/environments/environment';
 import { Storage } from '@ionic/storage';
 import { BeaconInfo } from 'src/app/models/beaconData'
-import { GameServiceService } from '../services/game-service.service';
-import { Task } from '../models/task';
+import { GameServiceService } from '../../services/game-service.service';
+import { Task } from '../../models/task';
 import { MapboxStyleSwitcherControl } from "mapbox-gl-style-switcher";
-import { Game } from '../models/game';
-import { LocationService } from '../services/location.service';
+import { Game } from '../../models/game';
+import { LocationService } from '../../services/location.service';
 import { Subscription } from 'rxjs';
 import { Geoposition, Geolocation, GeolocationOptions } from '@ionic-native/geolocation/ngx';
-import { HelperFunctionsService } from '../services/helper-functions.service';
+import { HelperFunctionsService } from '../../services/helper-functions.service';
 
 
 

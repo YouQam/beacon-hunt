@@ -260,6 +260,6 @@ export class AddBeaconPage implements OnInit {
 
   // Back button
   onBackButton() {
-    this.navCtrl.back();
+    this.navCtrl.navigateRoot('menu');
   }
 }

@@ -70,7 +70,7 @@ export class MapAddLocPage implements OnInit {
   }
 
   ionViewDidEnter() {
-    console.log('(create-task) ionViewDidEnter Event');
+    console.log('(create-game) ionViewDidEnter Event');
     // Zoom to the beacon location
     this.map.flyTo({ center: [this.beaconDataSer.lng, this.beaconDataSer.lat] });
   }

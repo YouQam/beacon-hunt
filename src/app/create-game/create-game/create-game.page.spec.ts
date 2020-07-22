@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { CreateTaskMenuPage } from './create-task-menu.page';
+import { CreateGamePage } from './create-game.page';
 
-describe('CreateTaskMenuPage', () => {
-  let component: CreateTaskMenuPage;
-  let fixture: ComponentFixture<CreateTaskMenuPage>;
+describe('CreateGamePage', () => {
+  let component: CreateGamePage;
+  let fixture: ComponentFixture<CreateGamePage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CreateTaskMenuPage ],
+      declarations: [ CreateGamePage ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CreateTaskMenuPage);
+    fixture = TestBed.createComponent(CreateGamePage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

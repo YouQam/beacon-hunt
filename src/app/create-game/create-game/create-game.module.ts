@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { CreateTaskMenuPageRoutingModule } from './create-task-menu-routing.module';
+import { CreateGamePageRoutingModule } from './create-game-routing.module';
 
-import { CreateTaskMenuPage } from './create-task-menu.page';
+import { CreateGamePage } from './create-game.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    CreateTaskMenuPageRoutingModule
+    CreateGamePageRoutingModule
   ],
-  declarations: [CreateTaskMenuPage]
+  declarations: [CreateGamePage]
 })
-export class CreateTaskMenuPageModule {}
+export class CreateGamePageModule {}
