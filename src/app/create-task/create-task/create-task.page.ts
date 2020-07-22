@@ -49,6 +49,21 @@ export class CreateTaskPage implements OnInit {
       });;
 
     // Retreive stored games list
+    this.retreiveStoredGames();
+
+  }
+
+  ionViewWillEnter() {
+    console.log('(create-task), Resume Event');
+
+    this.changeRef.detectChanges(); // Check for data change to update view Y.Q
+
+    // To update view when back to page
+    //this.ngOnInit();
+    this.UpdateTaskLoaction(); // To update beacon loc when back from map-add-loc 
+  }
+
+  retreiveStoredGames() {
     this.storage.get('game_list')
       .then((storedGames) => {
         if (storedGames != null) {
@@ -61,16 +76,6 @@ export class CreateTaskPage implements OnInit {
         console.error(`(create-task), error in retreiving beacon info list from storage`);
 
       });
-  }
-
-  ionViewWillEnter() {
-    console.log('(create-task), Resume Event');
-
-    this.changeRef.detectChanges(); // Check for data change to update view Y.Q
-
-    // To update view when back to page
-    //this.ngOnInit();
-    this.UpdateTaskLoaction(); // To update beacon loc when back from map-add-loc 
   }
 
   UpdateTaskLoaction() {
@@ -97,11 +102,11 @@ export class CreateTaskPage implements OnInit {
     console.log("game name .", this.gameName);
 
     if (this.numTasks == 1 && opType == "dec") {
-      this.presentToast("There should be at least one task to create a game.");
+      this.presentToast("There should be at least one task to create a game.", "warning");
       console.log("There should be at least one task to play.");
       return;
     } else if (this.numTasks == this.maxNumTasks && opType == "inc") {
-      this.presentToast("The maximum number of tasks is: " + this.numTasks);
+      this.presentToast("The maximum number of tasks is: " + this.numTasks, "warning");
       console.log("The maximum number of tasks is: ", this.numTasks);
       return;
     }
@@ -118,10 +123,11 @@ export class CreateTaskPage implements OnInit {
   }
 
   // Dispaly toast
-  async presentToast(msg: string) {
+  async presentToast(msg: string, color = 'success') {
     const toast = await this.toastController.create({
       message: msg,
-      duration: 2000
+      duration: 2000,
+      color: color
     });
     toast.present();
   }
@@ -141,7 +147,7 @@ export class CreateTaskPage implements OnInit {
 
   onDeleteBeacon(beaconMinor: number): void {
     if (this.numTasks == 1) {
-      this.presentToast("There should be at least one task to play.");
+      this.presentToast("There should be at least one task to play.", "warning");
       console.log("onDeleteBeacon ,There should be at least one task to create a game.");
       return;
     }
@@ -170,11 +176,32 @@ export class CreateTaskPage implements OnInit {
     }
   }
 
+  checkForNameDuplication() {
+    console.log("(checkForNameDuplication) ");
+
+    for (let i = 0; i < this.gameListStored.length; i++) {
+      if (this.gameListStored[i].name == this.gameName) {
+        this.presentToast("Please, use another name, the name is already used.", "warning");
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   onSaveGameClicked(): void {
-    if(this.gameName == undefined || this.gameName.trim() == ""){
-      this.presentToast("Set game name to be able to save.");
+    if (this.gameName == undefined || this.gameName.trim() == "") {
+      this.presentToast("Set game name to be able to save.", "warning");
       return;
     }
+
+    if (!this.checkForNameDuplication()) {
+      console.log("(checkForNameDuplication), return");
+
+      return;
+    }
+
+
 
     this.tasksList = []; // empty tasks list
 
@@ -209,7 +236,6 @@ export class CreateTaskPage implements OnInit {
 
 
     //this.storage. remove('game_list');
-
 
     // Retreive stored games list
     this.storage.get('game_list')
