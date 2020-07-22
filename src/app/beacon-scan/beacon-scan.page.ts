@@ -239,7 +239,7 @@ export class BeaconScanPage implements OnInit {
   }
 
   onclearClicked(): void {
-    this.storage.clear();
+    this.storage.remove('beacon_info_list');
     this.beaconsStoredList = []
 
     console.log(' Beacon info deleted successfully');

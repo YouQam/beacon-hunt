@@ -179,10 +179,12 @@ export class CreateTaskPage implements OnInit {
   checkForNameDuplication() {
     console.log("(checkForNameDuplication) ");
 
-    for (let i = 0; i < this.gameListStored.length; i++) {
-      if (this.gameListStored[i].name == this.gameName) {
-        this.presentToast("Please, use another name, the name is already used.", "warning");
-        return false;
+    if (this.gameListStored != null) {
+      for (let i = 0; i < this.gameListStored.length; i++) {
+        if (this.gameListStored[i].name == this.gameName) {
+          this.presentToast("Please, use another name, the name is already used.", "warning");
+          return false;
+        }
       }
     }
 
@@ -197,11 +199,8 @@ export class CreateTaskPage implements OnInit {
 
     if (!this.checkForNameDuplication()) {
       console.log("(checkForNameDuplication), return");
-
       return;
     }
-
-
 
     this.tasksList = []; // empty tasks list
 

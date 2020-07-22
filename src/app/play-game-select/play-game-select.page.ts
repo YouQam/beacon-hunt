@@ -32,7 +32,7 @@ export class PlayGameSelectPage implements OnInit {
           this.maxNumTasks = this.numTasks = this.beaconsStoredList.length;
           console.log('(play-game-select), beacon info list retreived successfully: ', this.maxNumTasks);
         } else {
-          this.maxNumTasks = 0;
+          this.maxNumTasks = this.numTasks = 0;
           this.beaconsStoredList_copy = [];
           console.log('(play-game-select), storage is empty, no beacon info is stored yet');
         }
@@ -50,28 +50,6 @@ export class PlayGameSelectPage implements OnInit {
     this.ngOnInit();
   }
 
-  onTaskNumChange(opType: string): void {
-    if (this.numTasks == 1 && opType == "dec") {
-      this.presentToast("There should be at least one task to play.");
-      console.log("There should be at least one task to play.");
-      return;
-    } else if (this.numTasks == this.maxNumTasks && opType == "inc") {
-      this.presentToast("The maximum number of tasks is: " + this.numTasks);
-      console.log("The maximum number of tasks is: ", this.numTasks);
-      return;
-    }
-
-    if (opType == "inc") {
-      this.numTasks += 1;
-      this.onAddTaskPressed();
-      console.log(" Num: ", this.numTasks);
-    } else {
-      this.numTasks -= 1;
-      this.beaconsStoredList_copy.pop(); // Remove task
-      console.log(" Num: ", this.numTasks);
-    }
-  }
-
   // Dispaly toast
   async presentToast(msg: string) {
     const toast = await this.toastController.create({
@@ -81,7 +59,7 @@ export class PlayGameSelectPage implements OnInit {
     toast.present();
   }
 
-  openBeaconData(beaconMinor: number, beaconLng: number, beaconLat: number): void {
+  openUpdateBeaconLoc(beaconMinor: number, beaconLng: number, beaconLat: number): void {
     console.log("Button: ", beaconMinor, "lng ", beaconLng, beaconLat);
 
     // Store info in service
@@ -108,7 +86,7 @@ export class PlayGameSelectPage implements OnInit {
     this.numTasks -= 1;
   }
 
-  // Invoked when user press the increase button
+/*   // Invoked when user press the increase button
   onAddTaskPressed(): void {
     for (var i = 0; i < this.beaconsStoredList.length; i++) {
       let answer = this.beaconsStoredList_copy.filter(t => t.minor == this.beaconsStoredList[i].minor); // Check if the task is already stored
@@ -117,6 +95,6 @@ export class PlayGameSelectPage implements OnInit {
         this.beaconsStoredList_copy.push(this.beaconsStoredList[i]); // add task
       }
     }
-  }
+  } */
 
 }
