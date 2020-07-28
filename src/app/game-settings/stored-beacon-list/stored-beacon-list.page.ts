@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ToastController, NavController } from '@ionic/angular';
-import { BeaconInfo } from '../../models/beaconData';
+import { BeaconInfo } from '../../models/beaconInfo';
 import { Storage } from '@ionic/storage';
 import { GameServiceService } from '../../services/game-service.service';
 

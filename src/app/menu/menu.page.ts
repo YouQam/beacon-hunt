@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
-import { BeaconInfo } from 'src/app/models/beaconData';
+import { BeaconInfo } from 'src/app/models/beaconInfo';
 import { Task } from '../models/task';
 import { Game } from '../models/game';
 

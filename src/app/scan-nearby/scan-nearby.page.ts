@@ -4,7 +4,7 @@ import { Platform, NavController } from '@ionic/angular';
 import mapboxgl from "mapbox-gl";
 import { environment } from 'src/environments/environment';
 import { Storage } from '@ionic/storage';
-import { BeaconInfo } from 'src/app/models/beaconData'
+import { BeaconInfo } from 'src/app/models/beaconInfo'
 import { GameServiceService } from '../services/game-service.service';
 import { HttpClient } from '@angular/common/http';
 import { ApiService } from '../services/api.service';
@@ -153,15 +153,23 @@ export class ScanNearbyPage implements OnInit {
       });
   }
 
-  event1() {
-    console.log('event1');
+  stpoScan() {
+    console.log('stpoScan');
     if (this.beaconRegion) {
       this.stopScannning();
     }
   }
 
   onTestNodeServer() {
-    this.apiService.getInfo()
+
+    let bi = new BeaconInfo(13,1,1,1,1);
+
+    /* this.apiService.getInfo()
+      .then(data => {
+        console.log(data);
+      }) */
+
+      this.apiService.postInfo(bi)
       .then(data => {
         console.log(data);
       })

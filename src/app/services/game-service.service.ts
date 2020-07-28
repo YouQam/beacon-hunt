@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from "rxjs";
-import { BeaconInfo } from '../models/beaconData';
+import { BeaconInfo } from '../models/beaconInfo';
 import { Game } from '../models/game';
 
 @Injectable({

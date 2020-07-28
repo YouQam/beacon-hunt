@@ -4,7 +4,7 @@ import { environment } from 'src/environments/environment';
 import { GameServiceService } from '../services/game-service.service';
 import { Storage } from '@ionic/storage';
 import { ToastController, NavController, Platform } from '@ionic/angular';
-import { BeaconInfo } from 'src/app/models/beaconData'
+import { BeaconInfo } from 'src/app/models/beaconInfo'
 import { MapboxStyleSwitcherControl } from "mapbox-gl-style-switcher";
 
 import { Geolocation } from '@ionic-native/geolocation/ngx';

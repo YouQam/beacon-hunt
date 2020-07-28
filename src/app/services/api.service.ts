@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { HttpClient } from "@angular/common/http";
+import { BeaconInfo } from '../models/beaconInfo';
 
 
 @Injectable({
@@ -17,6 +18,14 @@ export class ApiService {
     .get('http://localhost:3000/users/')
     .toPromise();
   }
+
+  postInfo(beaconInfo: BeaconInfo): Promise<any> {
+    return this.http
+    .post('http://localhost:3000/beacon-info', beaconInfo, { observe: "response" })
+    .toPromise();
+  }
+
+  
 
 
 }

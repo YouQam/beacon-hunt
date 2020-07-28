@@ -4,7 +4,7 @@ import { Platform, NavController } from '@ionic/angular';
 import mapboxgl from "mapbox-gl";
 import { environment } from 'src/environments/environment';
 import { Storage } from '@ionic/storage';
-import { BeaconInfo } from 'src/app/models/beaconData'
+import { BeaconInfo } from 'src/app/models/beaconInfo'
 import { GameServiceService } from '../../services/game-service.service';
 import { Task } from '../../models/task';
 import { MapboxStyleSwitcherControl } from "mapbox-gl-style-switcher";

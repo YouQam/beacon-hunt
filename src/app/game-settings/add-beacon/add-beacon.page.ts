@@ -2,7 +2,7 @@ import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { IBeacon, IBeaconPluginResult, Beacon } from '@ionic-native/ibeacon/ngx';
 import { Platform, NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
-import { BeaconInfo } from 'src/app/models/beaconData'
+import { BeaconInfo } from 'src/app/models/beaconInfo'
 import { GameServiceService } from '../../services/game-service.service';
 import { BeaconFullInfo } from '../../models/beaconFullInfo';
 
