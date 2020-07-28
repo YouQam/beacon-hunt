@@ -7,6 +7,7 @@ import { Storage } from '@ionic/storage';
 import { BeaconInfo } from 'src/app/models/beaconData'
 import { GameServiceService } from '../services/game-service.service';
 import { HttpClient } from '@angular/common/http';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-scan-nearby',
@@ -24,7 +25,7 @@ export class ScanNearbyPage implements OnInit {
   public beaconRegion: any = null;
 
 
-  constructor(public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef, private http: HttpClient) {
+  constructor(public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef, private http: HttpClient, private apiService: ApiService) {
     this.platform.ready().then(() => {
       //this.requestLocPermissoin();
       this.enableDebugLogs();
@@ -160,20 +161,10 @@ export class ScanNearbyPage implements OnInit {
   }
 
   onTestNodeServer() {
-/*     this.http.post('http://localhost:3000/checkname/', {name: data.sName})
-    .subscribe(data => {
-      console.log(data);
-      //this.data = data //error here
-      //alert(JSON.stringify(data));
-      //resolve(this.data);
-    }); */
-
-    this.http.get('http://localhost:3000/users/')
-      .subscribe(data => {
+    this.apiService.getInfo()
+      .then(data => {
         console.log(data);
-        //this.data = data //error here
-        //alert(JSON.stringify(data));
-        //resolve(this.data);
-      });
+      })
   }
+
 }
