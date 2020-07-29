@@ -160,19 +160,35 @@ export class ScanNearbyPage implements OnInit {
     }
   }
 
+  // Back button
+  onBackButton() {
+    this.navCtrl.navigateRoot('menu');
+  }
+
   onTestNodeServer() {
 
-    let bi = new BeaconInfo(13,1,1,1,1);
+    let bi = new BeaconInfo(13, 1, 1, 1, 1);
 
     /* this.apiService.getInfo()
       .then(data => {
         console.log(data);
       }) */
 
-      this.apiService.postInfo(bi)
+    console.log("onTestNodeServer");
+
+
+    this.apiService.postInfo(bi)
       .then(data => {
         console.log(data);
+
+        if (data.status == 200) {
+          console.log('(postInfo), status 200');
+        }
       })
+      .catch(e => {
+        console.error('(postInfo), ', e);
+        //console.error('(postInfo), ', e['error'].message); 
+      });
   }
 
 }

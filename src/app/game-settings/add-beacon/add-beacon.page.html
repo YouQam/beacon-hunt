@@ -56,7 +56,7 @@
       </ion-item>
 
       <ion-item>
-        <ion-button *ngIf="beacon.visibility" (click)="AddBeaconInfo(beacon.minor)">
+        <ion-button *ngIf="beacon.visibility" (click)="addBeaconInfo(beacon.minor)">
           <ion-icon name="add-circle"></ion-icon>
         </ion-button>
         <ion-label *ngIf="!beacon.visibility"><b>* This beacon info is saved.</b></ion-label>
@@ -72,7 +72,7 @@
   </ion-fab>
 
   <ion-fab vertical="bottom" horizontal="center" slot="fixed">
-    <ion-fab-button [color]="primary" (click)="onclearClicked()">
+    <ion-fab-button color="primary" (click)="onclearClicked()">
       <ion-icon name='trash' style="font-size: 25px;"></ion-icon>
     </ion-fab-button>
   </ion-fab>

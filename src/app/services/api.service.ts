@@ -15,13 +15,13 @@ export class ApiService {
 
   getInfo(): Promise<any> {
     return this.http
-    .get('http://localhost:3000/users/')
+    .get('http://192.168.0.242:3000/users/')
     .toPromise();
   }
 
   postInfo(beaconInfo: BeaconInfo): Promise<any> {
     return this.http
-    .post('http://localhost:3000/beacon-info', beaconInfo, { observe: "response" })
+    .post('http://192.168.0.242:3000/beacon-info', beaconInfo, { observe: "response" })
     .toPromise();
   }
 

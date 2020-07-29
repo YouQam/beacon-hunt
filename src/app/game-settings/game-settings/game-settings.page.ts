@@ -11,14 +11,7 @@ export class GameSettingsPage implements OnInit {
   constructor( public storage: Storage) { }
 
   ngOnInit() {
-    // get stored beaconinfo to be update selected beacon location
-    this.storage.get('test1')
-      .then((data) => {
-        console.log('// After inster test1: ', data);
-
-        //this.storage.clear();
-
-      });
+    
   }
 
 }

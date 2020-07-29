@@ -1,10 +1,11 @@
 import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { IBeacon, IBeaconPluginResult, Beacon } from '@ionic-native/ibeacon/ngx';
-import { Platform, NavController } from '@ionic/angular';
+import { Platform, NavController, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { BeaconInfo } from 'src/app/models/beaconInfo'
 import { GameServiceService } from '../../services/game-service.service';
 import { BeaconFullInfo } from '../../models/beaconFullInfo';
+import { ApiService } from 'src/app/services/api.service';
 
 
 @Component({
@@ -28,7 +29,7 @@ export class AddBeaconPage implements OnInit {
   public scanResultList: BeaconFullInfo[] = [];
 
 
-  constructor(private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef) {
+  constructor(private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef, private apiService: ApiService, public toastController: ToastController) {
     this.platform.ready().then(() => {
       this.requestLocPermissoin();
       this.enableDebugLogs();
@@ -219,23 +220,52 @@ export class AddBeaconPage implements OnInit {
     });
   }
 
-  AddBeaconInfo(beaconMinor: number) {
+  addBeaconInfo(beaconMinor: number) {
     console.log(' AddBeaconInfo pressed: ', beaconMinor);
-    this.storage.set('test1', "test3"); // sotre in db */
 
+    let selectedBeacon = this.findSelectedBeacon(beaconMinor);
+    console.log("selectedBeacon", selectedBeacon.major);
+    this.beaconsStoredList.push(selectedBeacon);
 
-    for (let i = 0; i < this.scanResultList.length; i++) {
-      if (this.scanResultList[i].minor == beaconMinor) {
-        this.beaconsStoredList.push(new BeaconInfo(this.scanResultList[i].major, this.scanResultList[i].minor, 0, 0));
-      }
+    // Chack if there is a network connection to store in server as well as in local storage
+    if (navigator.onLine) {
+      console.log("onTestNodeServer", 'online');
+      this.storage.set('beacon_info_list', this.beaconsStoredList); // sotre in db */
+
+      console.log("onTestNodeServer", 'online');
+      this.apiService.postInfo(selectedBeacon)
+        .then(data => {
+          console.log(data);
+
+          if (data.status == 200) {
+            console.log('(postInfo), status 200');
+            this.presentToast('Beacon info stored in server and local storage');
+
+          }
+        })
+        .catch(e => {
+          console.error('(postInfo), ', e);
+          //console.error('(postInfo), ', e['error'].message); 
+          this.presentToast('Due to existance in server, beacon info only stored in local storage', "warning");
+        });
+    } else {
+      console.log("onTestNodeServer", 'offline');
+      this.storage.set('beacon_info_list', this.beaconsStoredList); // sotre in db */
+      this.presentToast('Due to being offline, Beacon info only stored in local storage');
     }
-
-    this.storage.set('beacon_info_list', this.beaconsStoredList); // sotre in db */
-
     console.log(' After inster length: ', this.beaconsStoredList.length);
 
     // Refresh add button of inserted beacon
     this.compareFoundWithStoredBeacons();
+  }
+
+  findSelectedBeacon(bMinorNo: number): BeaconInfo {
+    for (let i = 0; i < this.scanResultList.length; i++) {
+      if (this.scanResultList[i].minor == bMinorNo) {
+        //this.beaconsStoredList.push(new BeaconInfo(this.scanResultList[i].major, this.scanResultList[i].minor, 0, 0));
+        return new BeaconInfo(this.scanResultList[i].major, this.scanResultList[i].minor, 0, 0);
+      }
+    }
   }
 
   onclearClicked(): void {
@@ -257,6 +287,16 @@ export class AddBeaconPage implements OnInit {
       });
 
   }
+
+    // Dispaly toast
+    async presentToast(msg: string, color = 'success') {
+      const toast = await this.toastController.create({
+        message: msg,
+        duration: 2000,
+        color: color
+      });
+      toast.present();
+    }
 
   // Back button
   onBackButton() {

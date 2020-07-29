@@ -1,7 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button color=dark defaultHref="/"></ion-back-button>
+      <ion-button color=dark (click)="onBackButton()">
+        <ion-icon name="chevron-back"></ion-icon> Back
+      </ion-button>
     </ion-buttons>
     <ion-title size="large" class="ion-text-center">Beacon Scanner</ion-title>
   </ion-toolbar>
@@ -11,10 +13,11 @@
 
   <!-- progressbar -->
   <ion-progress-bar type="indeterminate" [style.display]="scanStatus ? 'block' : 'none'"></ion-progress-bar>
-  
+
   <ion-item>
     <ion-label>UUID: </ion-label>
-    <ion-select style="width: 100%; max-width: 80%;" [(ngModel)]="slectedUUID" okText="Okay" cancelText="Dismiss" (click)="stpoScan()">
+    <ion-select style="width: 100%; max-width: 80%;" [(ngModel)]="slectedUUID" okText="Okay" cancelText="Dismiss"
+      (click)="stpoScan()">
       <ion-select-option value="b9407f30-f5f8-466e-aff9-25556b57fe6d">Estimote</ion-select-option>
       <ion-select-option value="B5B182C7-EAB1-4988-AA99-B5C1517008D9">AprilBeacon</ion-select-option>
     </ion-select>
@@ -68,8 +71,8 @@
   </ion-fab>
 
   <ion-fab vertical="bottom" horizontal="start" slot="fixed">
-    <ion-fab-button [color]="primary" (click)="onTestNodeServer()">
-      <ion-icon [name]='scanStatus ? "pause-sharp" : "play-sharp"' style="font-size: 25px;"></ion-icon>
+    <ion-fab-button color='danger' (click)="onTestNodeServer()">
+      <ion-icon name='add-sharp' style="font-size: 25px;"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
