@@ -4,6 +4,7 @@ import { Storage } from '@ionic/storage';
 import { BeaconInfo } from 'src/app/models/beaconInfo';
 import { Task } from '../models/task';
 import { Game } from '../models/game';
+import { ApiService } from '../services/api.service';
 
 
 
@@ -18,10 +19,27 @@ export class MenuPage implements OnInit {
   public tasksList: Task[];
 
 
-  constructor(public platform: Platform, public storage: Storage, public navCtrl: NavController) { }
+  constructor(public platform: Platform, public storage: Storage, public navCtrl: NavController, private apiService: ApiService) { }
 
   ngOnInit() {
     console.log('menu/onInit');
+
+    if (navigator.onLine) {
+      console.log('online');
+
+      this.apiService.getBeaconInfo() // retrieve from server
+        .then(data => {
+          console.log(data)
+          this.beaconinfoList = data;
+          console.log(this.beaconinfoList)
+
+          this.storage.set('beacon_info_list', this.beaconinfoList); // store in db
+        })
+    } else {
+      console.log('offline');
+    }
+
+
 
     // Initialise in desktop browser for testing  
     /* if (this.platform.is('desktop')) { 
@@ -47,26 +65,12 @@ export class MenuPage implements OnInit {
     } */
   }
 
-  /*   onPlayGameClicked(): void{
-      console.log('PlayGame button pressed');
-  
-      // navigate to stored-beacon-list page
-      this.navCtrl.navigateForward('stored-beacon-list');
-    } */
-
   onPlayClicked(): void {
     console.log('Play button pressed');
 
     // navigate to home page
     this.navCtrl.navigateForward('play');
   }
-
-  /*   onSettingsClicked(): void {
-      console.log('Settings button pressed');
-  
-      // navigate to add-beacon page
-      this.navCtrl.navigateForward('add-beacon');
-    } */
 
   onCreateGameClicked(): void {
     console.log('Create task menu button pressed');

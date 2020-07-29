@@ -37,7 +37,7 @@ export class AddBeaconPage implements OnInit {
   }
 
   ngOnInit() {
-    // get stored beaconinfo to be update selected beacon location
+    // get stored beaconinfo to be able to update selected beacon location
     this.storage.get('beacon_info_list')
       .then((data) => {
         if (data != null) {
@@ -233,7 +233,7 @@ export class AddBeaconPage implements OnInit {
       this.storage.set('beacon_info_list', this.beaconsStoredList); // sotre in db */
 
       console.log("onTestNodeServer", 'online');
-      this.apiService.postInfo(selectedBeacon)
+      this.apiService.postBeaconInfo(selectedBeacon)
         .then(data => {
           console.log(data);
 

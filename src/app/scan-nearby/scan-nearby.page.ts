@@ -177,7 +177,7 @@ export class ScanNearbyPage implements OnInit {
     console.log("onTestNodeServer");
 
 
-    this.apiService.postInfo(bi)
+    this.apiService.postBeaconInfo(bi)
       .then(data => {
         console.log(data);
 

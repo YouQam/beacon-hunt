@@ -13,13 +13,13 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
 
-  getInfo(): Promise<any> {
+  getBeaconInfo(): Promise<any> {
     return this.http
-    .get('http://192.168.0.242:3000/users/')
+    .get('http://192.168.0.242:3000/beacon-info')
     .toPromise();
   }
 
-  postInfo(beaconInfo: BeaconInfo): Promise<any> {
+  postBeaconInfo(beaconInfo: BeaconInfo): Promise<any> {
     return this.http
     .post('http://192.168.0.242:3000/beacon-info', beaconInfo, { observe: "response" })
     .toPromise();
