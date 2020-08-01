@@ -16,4 +16,4 @@ import { PlayPageRoutingModule } from './play-routing.module';
   ],
   declarations: [PlayPage]
 })
-export class PlayPageModule {}
+export class PlayPageModule { }

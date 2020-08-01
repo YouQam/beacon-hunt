@@ -27,7 +27,7 @@ export class MenuPage implements OnInit {
     if (navigator.onLine) {
       console.log('online');
 
-      this.apiService.getBeaconInfo() // retrieve from server
+      this.apiService.getBeaconInfo() // retrieve beacon info from server
         .then(data => {
           console.log(data)
           this.beaconinfoList = data;
@@ -39,8 +39,7 @@ export class MenuPage implements OnInit {
       console.log('offline');
     }
 
-
-
+    
     // Initialise in desktop browser for testing  
     /* if (this.platform.is('desktop')) { 
       if (this.beaconinfoList == undefined) {

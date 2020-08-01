@@ -223,16 +223,16 @@ export class AddBeaconPage implements OnInit {
   addBeaconInfo(beaconMinor: number) {
     console.log(' AddBeaconInfo pressed: ', beaconMinor);
 
+    // Search for selected beacon using beacon minor no
     let selectedBeacon = this.findSelectedBeacon(beaconMinor);
     console.log("selectedBeacon", selectedBeacon.major);
-    this.beaconsStoredList.push(selectedBeacon);
+    this.beaconsStoredList.push(selectedBeacon); // Add beaocn info to list to store it in local db
 
-    // Chack if there is a network connection to store in server as well as in local storage
+    // Check if there is a network connection to store in server as well as in local storage
     if (navigator.onLine) {
       console.log("onTestNodeServer", 'online');
       this.storage.set('beacon_info_list', this.beaconsStoredList); // sotre in db */
 
-      console.log("onTestNodeServer", 'online');
       this.apiService.postBeaconInfo(selectedBeacon)
         .then(data => {
           console.log(data);

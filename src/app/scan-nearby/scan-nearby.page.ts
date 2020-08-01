@@ -8,6 +8,7 @@ import { BeaconInfo } from 'src/app/models/beaconInfo'
 import { GameServiceService } from '../services/game-service.service';
 import { HttpClient } from '@angular/common/http';
 import { ApiService } from '../services/api.service';
+import { Task } from '../models/task';
 
 @Component({
   selector: 'app-scan-nearby',
@@ -165,19 +166,25 @@ export class ScanNearbyPage implements OnInit {
     this.navCtrl.navigateRoot('menu');
   }
 
-  onTestNodeServer() {
+  onTestNodeServer() { // just for test
 
-    let bi = new BeaconInfo(13, 1, 1, 1, 1);
 
-    /* this.apiService.getInfo()
+    let bi = new BeaconInfo(15, 1, 1, 1, 1);
+
+
+    let task = new Task(1, 1, [1,2], 5);
+
+    console.log("task", task);
+
+    /* this.apiService.getBeaconInfo()
       .then(data => {
         console.log(data);
-      }) */
+      })
 
-    console.log("onTestNodeServer");
+    console.log("onTestNodeServer"); */
 
 
-    this.apiService.postBeaconInfo(bi)
+    /* this.apiService.postBeaconInfo(bi)
       .then(data => {
         console.log(data);
 
@@ -188,7 +195,7 @@ export class ScanNearbyPage implements OnInit {
       .catch(e => {
         console.error('(postInfo), ', e);
         //console.error('(postInfo), ', e['error'].message); 
-      });
+      }); */
   }
 
 }

@@ -5,6 +5,7 @@ import { Storage } from '@ionic/storage';
 import { GameServiceService } from '../../services/game-service.service';
 import { Game } from 'src/app/models/game';
 import { Task } from 'src/app/models/task';
+import { ApiService } from 'src/app/services/api.service';
 
 
 @Component({
@@ -25,7 +26,7 @@ export class CreateGamePage implements OnInit {
   gameListStored: Game[];
 
 
-  constructor(private changeRef: ChangeDetectorRef, public navCtrl: NavController, private gameServ: GameServiceService, public toastController: ToastController, public storage: Storage) { }
+  constructor(private changeRef: ChangeDetectorRef, public navCtrl: NavController, private gameServ: GameServiceService, public toastController: ToastController, public storage: Storage, private apiService: ApiService) { }
 
   ngOnInit() {
     // get stored beaconinfo to be update selected beacon location
@@ -211,6 +212,36 @@ export class CreateGamePage implements OnInit {
 
     let gameCreated = new Game(this.gameName, this.tasksList);
 
+    ///*******///
+    // Check if there is a network connection to store in server as well as in local storage
+    if (navigator.onLine) {
+      console.log("onTestNodeServer", 'online');
+      //this.storage.set('beacon_info_list', this.beaconsStoredList); // sotre in db */
+
+      this.apiService.postGame(gameCreated)
+        .then(data => {
+          console.log(data);
+
+          if (data.status == 200) {
+            console.log('(postGame), status 200');
+            this.presentToast('Game stored in server and local storage');
+
+          }
+        })
+        /* .catch(e => {
+          console.error('(postInfo), ', e);
+          //console.error('(postInfo), ', e['error'].message); 
+          this.presentToast('Due to existance in server, beacon info only stored in local storage', "warning"); 
+        });*/
+    } /* else {
+      console.log("onTestNodeServer", 'offline');
+      this.storage.set('beacon_info_list', this.beaconsStoredList); // sotre in db /
+      this.presentToast('Due to being offline, Beacon info only stored in local storage');
+    } */
+
+    ///*******///
+
+
     console.log("//// Game stored: ", gameCreated);
     console.log("//// Game stored, tasks length: ", gameCreated.tasks.length);
 
@@ -219,7 +250,7 @@ export class CreateGamePage implements OnInit {
     this.storage.set('tasks_list', gameCreated); // store in db */
 
 
-    // store game created in DB to be used in play
+    // store game created in DB to be viewed in play game list
     if (this.gameListStored == null) {
       this.gameListStored = [gameCreated];
       console.log("//◊◊◊//if Game list stored: ", this.gameListStored);

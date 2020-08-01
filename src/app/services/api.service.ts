@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient } from "@angular/common/http";
 import { BeaconInfo } from '../models/beaconInfo';
+import { Game } from '../models/game';
 
 
 @Injectable({
@@ -25,7 +26,16 @@ export class ApiService {
     .toPromise();
   }
 
-  
+  getGame(game: Game): Promise<any> {
+    return this.http
+    .get('http://192.168.0.242:3000/game')
+    .toPromise();
+  }
 
+  postGame(game: Game): Promise<any> {
+    return this.http
+    .post('http://192.168.0.242:3000/game', game, { observe: "response" })
+    .toPromise();
+  }
 
 }
