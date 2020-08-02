@@ -96,7 +96,6 @@ export class CreateGamePage implements OnInit {
       }).catch((error: any) => {
         console.error(`(create-game), error in retreiving beacon info list from storage`);
       });;
-
   }
 
   onTaskNumChange(opType: string): void {
@@ -183,7 +182,7 @@ export class CreateGamePage implements OnInit {
     if (this.gameListStored != null) {
       for (let i = 0; i < this.gameListStored.length; i++) {
         if (this.gameListStored[i].name == this.gameName) {
-          this.presentToast("Please, use another name, the name is already used.", "warning");
+          this.presentToast("Please, use another name, this name is already used.", "warning");
           return false;
         }
       }
@@ -211,33 +210,33 @@ export class CreateGamePage implements OnInit {
     }
 
     let gameCreated = new Game(this.gameName, this.tasksList);
+    this.gameListStored.push(gameCreated); // Add game to the list to store it in local db
 
     ///*******///
     // Check if there is a network connection to store in server as well as in local storage
     if (navigator.onLine) {
-      console.log("onTestNodeServer", 'online');
-      //this.storage.set('beacon_info_list', this.beaconsStoredList); // sotre in db */
+      console.log("onTestServer", 'online');
+      this.storage.set('game_list', this.gameListStored); // sotre in local db */
 
-      this.apiService.postGame(gameCreated)
+      this.apiService.postGame(gameCreated) // sotre in server in the cloaud */
         .then(data => {
           console.log(data);
 
           if (data.status == 200) {
             console.log('(postGame), status 200');
             this.presentToast('Game stored in server and local storage');
-
           }
         })
-        /* .catch(e => {
-          console.error('(postInfo), ', e);
-          //console.error('(postInfo), ', e['error'].message); 
-          this.presentToast('Due to existance in server, beacon info only stored in local storage', "warning"); 
-        });*/
-    } /* else {
-      console.log("onTestNodeServer", 'offline');
-      this.storage.set('beacon_info_list', this.beaconsStoredList); // sotre in db /
+        .catch(e => {
+          console.error('(postGame), ', e);
+          //console.error('(postGame), ', e['error'].message); 
+          this.presentToast('Due to existance in server or failure, game only stored in local storage', "warning"); 
+        });
+    } else {
+      console.log("onTestServer", 'offline');
+      this.storage.set('game_list', this.gameListStored); // sotre in db /
       this.presentToast('Due to being offline, Beacon info only stored in local storage');
-    } */
+    }
 
     ///*******///
 
@@ -246,35 +245,11 @@ export class CreateGamePage implements OnInit {
     console.log("//// Game stored, tasks length: ", gameCreated.tasks.length);
 
 
-    /* //store tasks in DB
-    this.storage.set('tasks_list', gameCreated); // store in db */
-
-
-    // store game created in DB to be viewed in play game list
-    if (this.gameListStored == null) {
-      this.gameListStored = [gameCreated];
-      console.log("//◊◊◊//if Game list stored: ", this.gameListStored);
-
-    } else {
-      this.gameListStored.push(gameCreated);
-      console.log("//◊//eles Game list stored: ", gameCreated);
-
-    }
-
-    //store gmaes in DB
-    this.storage.set('game_list', this.gameListStored); // store in db
-
-
-    //this.storage. remove('game_list');
-
     // Retreive stored games list
     this.storage.get('game_list')
       .then((storedGames) => {
         console.log('/////(create-game), storedGames', storedGames);
       });
-
-    this.presentToast("The game " + this.gameName + ", was saved successfully");
-
   }
 
   // invoked when user update accuracy to beacon
