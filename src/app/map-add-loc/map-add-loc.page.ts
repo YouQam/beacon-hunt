@@ -11,6 +11,7 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { LocationService } from '../services/location.service';
 import { Subscription } from 'rxjs';
 import { HelperService } from '../services/helper-functions.service';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-map-add-loc',
@@ -36,7 +37,7 @@ export class MapAddLocPage implements OnInit {
   positionSubscription: Subscription;
 
 
-  constructor(public locationServics: LocationService, private geolocation: Geolocation, private changeRef: ChangeDetectorRef, private readonly platform: Platform, public navCtrl: NavController, public storage: Storage, private gameServ: GameServiceService, private helperService: HelperService) {
+  constructor(public locationServics: LocationService, private geolocation: Geolocation, private changeRef: ChangeDetectorRef, private readonly platform: Platform, public navCtrl: NavController, public storage: Storage, private gameServ: GameServiceService, private helperService: HelperService, private apiService: ApiService) {
     platform.resume.subscribe((result) => {
       console.log('Platform Resume Event');
     });
@@ -74,6 +75,17 @@ export class MapAddLocPage implements OnInit {
     console.log('(create-game) ionViewDidEnter Event');
     // Zoom to the beacon location
     this.map.flyTo({ center: [this.beaconDataSer.lng, this.beaconDataSer.lat] });
+  }
+
+  ionViewWillLeave() {
+    if (navigator.onLine) {
+      console.log('online');
+      // update beacon info on server
+      this.apiService.updateBeaconInfo(this.beaconDataSer)
+      .then(data => {
+        console.log('patch: ', data);
+      })
+    }
   }
 
   loadMap(): void {

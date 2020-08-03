@@ -6,6 +6,5 @@ export class BeaconInfo {
       public lng: number,
       public lat: number,
       public distanceMeter: number = 3
-      //public tasks: [number, number]
     ) {}
   }

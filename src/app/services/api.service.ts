@@ -26,6 +26,12 @@ export class ApiService {
     .toPromise();
   }
 
+  updateBeaconInfo(beaconInfo: BeaconInfo): Promise<any> {
+    return this.http
+    .patch('http://192.168.0.242:3000/beacon-info/'+beaconInfo.minor, beaconInfo, { observe: "response" })
+    .toPromise();
+  }
+
   getGame(): Promise<any> {
     return this.http
     .get('http://192.168.0.242:3000/game')
@@ -37,5 +43,4 @@ export class ApiService {
     .post('http://192.168.0.242:3000/game', game, { observe: "response" })
     .toPromise();
   }
-
 }
