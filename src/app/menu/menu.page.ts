@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, Platform, ToastController } from '@ionic/angular';
+import { NavController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { BeaconInfo } from 'src/app/models/beaconInfo';
 import { Task } from '../models/task';
 import { Game } from '../models/game';
 import { ApiService } from '../services/api.service';
+import { HelperService } from '../services/helper-functions.service';
 
 
 
@@ -19,7 +20,7 @@ export class MenuPage implements OnInit {
   public gamesList: Game[];
 
 
-  constructor(public platform: Platform, public storage: Storage, public navCtrl: NavController, private apiService: ApiService, private toastController: ToastController) { }
+  constructor(public platform: Platform, public storage: Storage, public navCtrl: NavController, private apiService: ApiService, private helperService: HelperService) { }
 
   ngOnInit() {
     console.log('menu/onInit');
@@ -49,7 +50,7 @@ export class MenuPage implements OnInit {
 
     } else { // get beacon info from local stoegae in case there is no internet connection
       console.log('offline');
-      this.presentToast('Due to offline mode, data retrieved from local storage.');
+      this.helperService.presentToast('Due to offline mode, data retrieved from local storage.');
     }
 
     // Initialise in desktop browser for testing  
@@ -109,16 +110,6 @@ export class MenuPage implements OnInit {
 
     // navigate to add-beacon page
     this.navCtrl.navigateForward('play-game-list');
-  }
-
-  // Dispaly toast
-  async presentToast(msg: string, color = 'success') {
-    const toast = await this.toastController.create({
-      message: msg,
-      duration: 2000,
-      color: color
-    });
-    toast.present();
   }
 
 }

@@ -49,9 +49,11 @@
           <ion-button color="medium" (click)="openUpdateBeaconLoc(beacon.minor, beacon.lng, beacon.lat)">
             <ion-icon name="pencil-outline"></ion-icon>
           </ion-button>
-          <ion-button (click)="onDeleteBeacon(beacon.minor)">
+
+          <!-- No need for delete beacon info
+            <ion-button (click)="onDeleteBeacon(beacon.minor)">
             <ion-icon name="trash-outline"></ion-icon>
-          </ion-button>
+          </ion-button> -->
 
         </ion-card-content>
       </ion-card>

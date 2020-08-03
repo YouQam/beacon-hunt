@@ -1,11 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ToastController, NavController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 import { BeaconInfo } from '../../models/beaconInfo';
 import { Storage } from '@ionic/storage';
 import { GameServiceService } from '../../services/game-service.service';
 import { Game } from 'src/app/models/game';
 import { Task } from 'src/app/models/task';
 import { ApiService } from 'src/app/services/api.service';
+import { HelperService } from 'src/app/services/helper-functions.service';
 
 
 @Component({
@@ -26,7 +27,7 @@ export class CreateGamePage implements OnInit {
   gameListStored: Game[];
 
 
-  constructor(private changeRef: ChangeDetectorRef, public navCtrl: NavController, private gameServ: GameServiceService, public toastController: ToastController, public storage: Storage, private apiService: ApiService) { }
+  constructor(private changeRef: ChangeDetectorRef, public navCtrl: NavController, private gameServ: GameServiceService, public storage: Storage, private apiService: ApiService, private helperService: HelperService) { }
 
   ngOnInit() {
     // get stored beaconinfo to be update selected beacon location
@@ -102,11 +103,11 @@ export class CreateGamePage implements OnInit {
     console.log("game name .", this.gameName);
 
     if (this.numTasks == 1 && opType == "dec") {
-      this.presentToast("There should be at least one task to create a game.", "warning");
+      this.helperService.presentToast("There should be at least one task to create a game.", "warning");
       console.log("There should be at least one task to play.");
       return;
     } else if (this.numTasks == this.maxNumTasks && opType == "inc") {
-      this.presentToast("The maximum number of tasks is: " + this.numTasks, "warning");
+      this.helperService.presentToast("The maximum number of tasks is: " + this.numTasks, "warning");
       console.log("The maximum number of tasks is: ", this.numTasks);
       return;
     }
@@ -120,16 +121,6 @@ export class CreateGamePage implements OnInit {
       this.beaconsStoredList_copy.pop(); // Remove task
       console.log(" Num: ", this.numTasks);
     }
-  }
-
-  // Dispaly toast
-  async presentToast(msg: string, color = 'success') {
-    const toast = await this.toastController.create({
-      message: msg,
-      duration: 2000,
-      color: color
-    });
-    toast.present();
   }
 
   openBeaconData(beaconMinor: number, beaconLng: number, beaconLat: number): void {
@@ -147,7 +138,7 @@ export class CreateGamePage implements OnInit {
 
   onDeleteBeacon(beaconMinor: number): void {
     if (this.numTasks == 1) {
-      this.presentToast("There should be at least one task to play.", "warning");
+      this.helperService.presentToast("There should be at least one task to play.", "warning");
       console.log("onDeleteBeacon ,There should be at least one task to create a game.");
       return;
     }
@@ -182,7 +173,7 @@ export class CreateGamePage implements OnInit {
     if (this.gameListStored != null) {
       for (let i = 0; i < this.gameListStored.length; i++) {
         if (this.gameListStored[i].name == this.gameName) {
-          this.presentToast("Please, use another name, this name is already used.", "warning");
+          this.helperService.presentToast("Please, use another name, this name is already used.", "warning");
           return false;
         }
       }
@@ -193,7 +184,7 @@ export class CreateGamePage implements OnInit {
 
   onSaveGameClicked(): void {
     if (this.gameName == undefined || this.gameName.trim() == "") {
-      this.presentToast("Set game name to be able to save.", "warning");
+      this.helperService.presentToast("Set game name to be able to save.", "warning");
       return;
     }
 
@@ -228,18 +219,18 @@ export class CreateGamePage implements OnInit {
 
           if (data.status == 200) {
             console.log('(postGame), status 200');
-            this.presentToast('Game stored in server and local storage');
+            this.helperService.presentToast('Game stored in server and local storage');
           }
         })
         .catch(e => {
           console.error('(postGame), ', e);
           //console.error('(postGame), ', e['error'].message); 
-          this.presentToast('Due to existance in server or failure, game only stored in local storage', "warning");
+          this.helperService.presentToast('Due to existance in server or failure, game only stored in local storage', "warning");
         });
     } else {
       console.log("onTestServer", 'offline');
       this.storage.set('game_list', this.gameListStored); // sotre in db /
-      this.presentToast('Due to offline mode, beacon info only stored in local storage');
+      this.helperService.presentToast('Due to offline mode, beacon info only stored in local storage');
     }
 
     ///*******///

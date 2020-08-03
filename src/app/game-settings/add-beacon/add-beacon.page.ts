@@ -1,11 +1,12 @@
 import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { IBeacon, IBeaconPluginResult, Beacon } from '@ionic-native/ibeacon/ngx';
-import { Platform, NavController, ToastController } from '@ionic/angular';
+import { Platform, NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { BeaconInfo } from 'src/app/models/beaconInfo'
 import { GameServiceService } from '../../services/game-service.service';
 import { BeaconFullInfo } from '../../models/beaconFullInfo';
 import { ApiService } from 'src/app/services/api.service';
+import { HelperService } from 'src/app/services/helper-functions.service';
 
 
 @Component({
@@ -29,7 +30,7 @@ export class AddBeaconPage implements OnInit {
   public scanResultList: BeaconFullInfo[] = [];
 
 
-  constructor(private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef, private apiService: ApiService, public toastController: ToastController) {
+  constructor(private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef, private apiService: ApiService, private helperService: HelperService) {
     this.platform.ready().then(() => {
       this.requestLocPermissoin();
       this.enableDebugLogs();
@@ -239,19 +240,19 @@ export class AddBeaconPage implements OnInit {
 
           if (data.status == 200) {
             console.log('(postInfo), status 200');
-            this.presentToast('Beacon info stored in server and local storage');
+            this.helperService.presentToast('Beacon info stored in server and local storage');
 
           }
         })
         .catch(e => {
           console.error('(postInfo), ', e);
           //console.error('(postInfo), ', e['error'].message); 
-          this.presentToast('Due to existance in server, beacon info only stored in local storage', "warning");
+          this.helperService.presentToast('Due to existance in server, beacon info only stored in local storage', "warning");
         });
     } else {
       console.log("onTestNodeServer", 'offline');
       this.storage.set('beacon_info_list', this.beaconsStoredList); // sotre in db */
-      this.presentToast('Due to being offline, Beacon info only stored in local storage');
+      this.helperService.presentToast('Due to being offline, Beacon info only stored in local storage');
     }
     console.log(' After inster length: ', this.beaconsStoredList.length);
 
@@ -287,16 +288,6 @@ export class AddBeaconPage implements OnInit {
       });
 
   }
-
-    // Dispaly toast
-    async presentToast(msg: string, color = 'success') {
-      const toast = await this.toastController.create({
-        message: msg,
-        duration: 2000,
-        color: color
-      });
-      toast.present();
-    }
 
   // Back button
   onBackButton() {

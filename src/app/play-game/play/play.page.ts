@@ -12,7 +12,7 @@ import { Game } from '../../models/game';
 import { LocationService } from '../../services/location.service';
 import { Subscription } from 'rxjs';
 import { Geoposition, Geolocation, GeolocationOptions } from '@ionic-native/geolocation/ngx';
-import { HelperFunctionsService } from '../../services/helper-functions.service';
+import { HelperService } from '../../services/helper-functions.service';
 
 
 
@@ -55,7 +55,7 @@ export class PlayPage implements OnInit {
 
 
 
-  constructor(private helperFuns: HelperFunctionsService, public locationServics: LocationService, private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef) {
+  constructor(private helperFuns: HelperService, public locationServics: LocationService, private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef) {
     this.platform.ready().then(() => {
       //this.requestLocPermissoin();
       this.enableDebugLogs();

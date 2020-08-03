@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
+import { ToastController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
 })
-export class HelperFunctionsService {
+export class HelperService {
 
-  constructor() { }
+  constructor(private toastController: ToastController) { }
 
   getDistanceFromLatLonInM(lat1, lon1, lat2, lon2) {
     var R = 6371; // Radius of the earth in km
@@ -25,4 +26,15 @@ export class HelperFunctionsService {
   deg2rad(deg) {
     return deg * (Math.PI / 180);
   }
+
+  // Dispaly toast
+  async presentToast(msg: string, color = 'success') {
+    const toast = await this.toastController.create({
+      message: msg,
+      duration: 2000,
+      color: color
+    });
+    toast.present();
+  }
+
 }

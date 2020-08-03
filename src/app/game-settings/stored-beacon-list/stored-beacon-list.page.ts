@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ToastController, NavController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 import { BeaconInfo } from '../../models/beaconInfo';
 import { Storage } from '@ionic/storage';
 import { GameServiceService } from '../../services/game-service.service';
@@ -17,7 +17,7 @@ export class StoredBeaconListPage implements OnInit {
   beaconsStoredList_copy: BeaconInfo[];
 
 
-  constructor(private changeRef: ChangeDetectorRef, public navCtrl: NavController, private gameServ: GameServiceService, public toastController: ToastController, public storage: Storage) { }
+  constructor(private changeRef: ChangeDetectorRef, public navCtrl: NavController, private gameServ: GameServiceService, public storage: Storage) { }
 
   ngOnInit() {
     // get stored beaconinfo to be update selected beacon location
@@ -50,15 +50,6 @@ export class StoredBeaconListPage implements OnInit {
     this.ngOnInit();
   }
 
-  // Dispaly toast
-  async presentToast(msg: string) {
-    const toast = await this.toastController.create({
-      message: msg,
-      duration: 2000
-    });
-    toast.present();
-  }
-
   openUpdateBeaconLoc(beaconMinor: number, beaconLng: number, beaconLat: number): void {
     console.log("Button: ", beaconMinor, "lng ", beaconLng, beaconLat);
 
@@ -72,7 +63,8 @@ export class StoredBeaconListPage implements OnInit {
     this.navCtrl.navigateRoot('map-add-loc'); // Used navigateRoot to be able to update coords in tab
   }
 
-  onDeleteBeacon(beaconMinor: number): void {
+  // No need for it at the moment
+/*   onDeleteBeacon(beaconMinor: number): void {
     for (var i = 0; i < this.beaconsStoredList_copy.length; i++) {
       if (this.beaconsStoredList_copy[i].minor == beaconMinor) {
         this.beaconsStoredList_copy.splice(i, 1);
@@ -80,22 +72,11 @@ export class StoredBeaconListPage implements OnInit {
         console.log("Deleted successfully!");
       }
     }
-  }
+  } */
 
   onUpdateTasksNum(): void {
     this.numTasks -= 1;
   }
-
-  /*   // Invoked when user press the increase button
-    onAddTaskPressed(): void {
-      for (var i = 0; i < this.beaconsStoredList.length; i++) {
-        let answer = this.beaconsStoredList_copy.filter(t => t.minor == this.beaconsStoredList[i].minor); // Check if the task is already stored
-        console.log("answer is: ", answer, ", length: ", answer.length);
-        if(answer.length == 0){
-          this.beaconsStoredList_copy.push(this.beaconsStoredList[i]); // add task
-        }
-      }
-    } */
 
   // Back button
   onBackButton() {

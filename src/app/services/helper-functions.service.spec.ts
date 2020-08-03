@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { HelperFunctionsService } from './helper-functions.service';
+import { HelperService } from './helper-functions.service';
 
 describe('HelperFunctionsService', () => {
-  let service: HelperFunctionsService;
+  let service: HelperService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(HelperFunctionsService);
+    service = TestBed.inject(HelperService);
   });
 
   it('should be created', () => {

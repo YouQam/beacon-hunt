@@ -3,13 +3,14 @@ import mapboxgl from "mapbox-gl";
 import { environment } from 'src/environments/environment';
 import { GameServiceService } from '../services/game-service.service';
 import { Storage } from '@ionic/storage';
-import { ToastController, NavController, Platform } from '@ionic/angular';
+import { NavController, Platform } from '@ionic/angular';
 import { BeaconInfo } from 'src/app/models/beaconInfo'
 import { MapboxStyleSwitcherControl } from "mapbox-gl-style-switcher";
 
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { LocationService } from '../services/location.service';
 import { Subscription } from 'rxjs';
+import { HelperService } from '../services/helper-functions.service';
 
 @Component({
   selector: 'app-map-add-loc',
@@ -35,7 +36,7 @@ export class MapAddLocPage implements OnInit {
   positionSubscription: Subscription;
 
 
-  constructor(public locationServics: LocationService, private geolocation: Geolocation, private changeRef: ChangeDetectorRef, private readonly platform: Platform, public navCtrl: NavController, public storage: Storage, public toastController: ToastController, private gameServ: GameServiceService) {
+  constructor(public locationServics: LocationService, private geolocation: Geolocation, private changeRef: ChangeDetectorRef, private readonly platform: Platform, public navCtrl: NavController, public storage: Storage, private gameServ: GameServiceService, private helperService: HelperService) {
     platform.resume.subscribe((result) => {
       console.log('Platform Resume Event');
     });
@@ -112,9 +113,7 @@ export class MapAddLocPage implements OnInit {
         console.log("drag, this.selectedCoords:", this.selectedCoords)
       });
     });
-
   }
-
 
   saveLocation(): void {
     // update selected beacon location
@@ -141,18 +140,8 @@ export class MapAddLocPage implements OnInit {
       this.navCtrl.back();
 
     } else {
-      this.presentToast('Please select location on the map to save.');
+      this.helperService.presentToast('Please select location on the map to save.', 'warning');
     }
-
-  }
-
-  // Dispaly toast
-  async presentToast(msg: string) {
-    const toast = await this.toastController.create({
-      message: msg,
-      duration: 2000
-    });
-    toast.present();
   }
 
   // Test GPS
@@ -162,19 +151,19 @@ export class MapAddLocPage implements OnInit {
 
       console.log('location coords: ', data['coords']);
 
-      console.log('location lat: ', data['coords'].latitude);
-      console.log('location lat: ', data['coords'].longitude);
+      // Zoom to the beacon location
+      this.map.flyTo({ zoom: 18, center: [data['coords'].longitude, data['coords'].latitude] });
 
-    // Zoom to the beacon location
-    this.map.flyTo({ zoom: 18, center: [data['coords'].longitude, data['coords'].latitude] });
-
+      if (this.marker2 != undefined) {
+        this.marker2.remove();
+      }
       this.marker2 = new mapboxgl.Marker()
         .setLngLat([data['coords'].longitude, data['coords'].latitude])
         .addTo(this.map);
 
 
     });
-  } 
+  }
 
 
 }
