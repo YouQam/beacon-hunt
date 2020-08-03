@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, Platform } from '@ionic/angular';
+import { NavController, Platform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { BeaconInfo } from 'src/app/models/beaconInfo';
 import { Task } from '../models/task';
@@ -16,10 +16,10 @@ import { ApiService } from '../services/api.service';
 export class MenuPage implements OnInit {
 
   public beaconinfoList: BeaconInfo[];
-  public tasksList: Task[];
+  public gamesList: Game[];
 
 
-  constructor(public platform: Platform, public storage: Storage, public navCtrl: NavController, private apiService: ApiService) { }
+  constructor(public platform: Platform, public storage: Storage, public navCtrl: NavController, private apiService: ApiService, private toastController: ToastController) { }
 
   ngOnInit() {
     console.log('menu/onInit');
@@ -27,19 +27,31 @@ export class MenuPage implements OnInit {
     if (navigator.onLine) {
       console.log('online');
 
-      this.apiService.getBeaconInfo() // retrieve beacon info from server
+      // retrieve beacon info from server
+      this.apiService.getBeaconInfo()
         .then(data => {
-          console.log(data)
           this.beaconinfoList = data;
-          console.log(this.beaconinfoList)
-
-          this.storage.set('beacon_info_list', this.beaconinfoList); // store in db
+          console.log('beaconinfoList: ', this.beaconinfoList.length)
+          if (this.beaconinfoList.length > 0) {
+            this.storage.set('beacon_info_list', this.beaconinfoList); // store in db
+          }
         })
-    } else {
+
+      // retrieve beacon info from server
+      this.apiService.getGame()
+        .then(data => {
+          this.gamesList = data;
+          console.log('gamesList: ', this.gamesList.length)
+          if (this.gamesList.length > 0) {
+            this.storage.set('game_list', this.gamesList); // store in db
+          }
+        })
+
+    } else { // get beacon info from local stoegae in case there is no internet connection
       console.log('offline');
+      this.presentToast('Due to offline mode, data retrieved from local storage.');
     }
 
-    
     // Initialise in desktop browser for testing  
     /* if (this.platform.is('desktop')) { 
       if (this.beaconinfoList == undefined) {
@@ -97,6 +109,16 @@ export class MenuPage implements OnInit {
 
     // navigate to add-beacon page
     this.navCtrl.navigateForward('play-game-list');
+  }
+
+  // Dispaly toast
+  async presentToast(msg: string, color = 'success') {
+    const toast = await this.toastController.create({
+      message: msg,
+      duration: 2000,
+      color: color
+    });
+    toast.present();
   }
 
 }

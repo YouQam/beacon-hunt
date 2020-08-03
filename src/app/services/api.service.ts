@@ -26,7 +26,7 @@ export class ApiService {
     .toPromise();
   }
 
-  getGame(game: Game): Promise<any> {
+  getGame(): Promise<any> {
     return this.http
     .get('http://192.168.0.242:3000/game')
     .toPromise();

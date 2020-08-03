@@ -210,7 +210,11 @@ export class CreateGamePage implements OnInit {
     }
 
     let gameCreated = new Game(this.gameName, this.tasksList);
-    this.gameListStored.push(gameCreated); // Add game to the list to store it in local db
+    if (this.gameListStored == null) {
+      this.gameListStored = [gameCreated];
+    } else {
+      this.gameListStored.push(gameCreated); // Add game to the list to store it in local db
+    }
 
     ///*******///
     // Check if there is a network connection to store in server as well as in local storage
@@ -230,12 +234,12 @@ export class CreateGamePage implements OnInit {
         .catch(e => {
           console.error('(postGame), ', e);
           //console.error('(postGame), ', e['error'].message); 
-          this.presentToast('Due to existance in server or failure, game only stored in local storage', "warning"); 
+          this.presentToast('Due to existance in server or failure, game only stored in local storage', "warning");
         });
     } else {
       console.log("onTestServer", 'offline');
       this.storage.set('game_list', this.gameListStored); // sotre in db /
-      this.presentToast('Due to being offline, Beacon info only stored in local storage');
+      this.presentToast('Due to offline mode, beacon info only stored in local storage');
     }
 
     ///*******///
