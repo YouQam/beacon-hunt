@@ -35,6 +35,7 @@ export class MenuPage implements OnInit {
           console.log('beaconinfoList: ', this.beaconinfoList.length)
           if (this.beaconinfoList.length > 0) {
             this.storage.set('beacon_info_list', this.beaconinfoList); // store in db
+            this.helperService.presentToast('Beacon info retrieved from server.');
           }
         })
 
@@ -45,6 +46,7 @@ export class MenuPage implements OnInit {
           console.log('gamesList: ', this.gamesList.length)
           if (this.gamesList.length > 0) {
             this.storage.set('game_list', this.gamesList); // store in db
+            this.helperService.presentToast('Games retrieved from server.');
           }
         })
 

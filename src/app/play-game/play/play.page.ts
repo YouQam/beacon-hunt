@@ -52,13 +52,17 @@ export class PlayPage implements OnInit {
   reachedUsingGPS: boolean =false;
   reachedUsingBeacon: boolean =false;
 
-
+  private beaconAudio: HTMLAudioElement = new Audio();
+  private gpsAudio: HTMLAudioElement = new Audio();
 
 
   constructor(private helperFuns: HelperService, public locationServics: LocationService, private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef) {
     this.platform.ready().then(() => {
       //this.requestLocPermissoin();
       this.enableDebugLogs();
+
+      this.gpsAudio.src = 'assets/sounds/little_robot_sound_factory_Jingle_Win_Synth_04.mp3'
+      this.beaconAudio.src = 'assets/sounds/cartoon_success_fanfair.mp3'
     });
   }
 
@@ -124,6 +128,7 @@ export class PlayPage implements OnInit {
       // Check if user reached destination
       if(this.userReachedBeacon(this.currentTask.coords)){
         console.log('(), GPS reached destination');
+        this.gpsAudio.play();
         this.reachedUsingGPS = true;
       }
 
@@ -158,7 +163,7 @@ export class PlayPage implements OnInit {
     );
 
 
-    console.log('userReachedBeacon, this.gpsToBeaconDistance <= this.currentTask.distanceMeter: ', this.gpsToBeaconDistance, '<=', this.currentTask.distanceMeter);
+    console.log('userReachedBeacon, this.gpsToBeaconDistance <= this.currentTask.distanceMeter: ', this.gpsToBeaconDistance.toFixed(2), '<=', this.currentTask.distanceMeter);
 
     return this.gpsToBeaconDistance <= this.currentTask.distanceMeter;
 
@@ -287,8 +292,8 @@ export class PlayPage implements OnInit {
           console.log(' Found Beacon: ', this.currentTask.minor);
 
           console.log('(), User reached the beacon');
+          this.beaconAudio.play();
           this.reachedUsingBeacon = true;
-
 
           // Add marker
           new mapboxgl.Marker()
@@ -298,7 +303,6 @@ export class PlayPage implements OnInit {
           // Zoom to the beacon location
           this.map.flyTo({ center: [this.currentTask.coords[0], this.currentTask.coords[1]] });
           console.log(' Fly to: ', [this.currentTask.coords[0], this.currentTask.coords[1]]);
-
 
           // Stop ranging
           this.stopScannning();
