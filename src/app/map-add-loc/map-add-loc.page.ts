@@ -177,5 +177,9 @@ export class MapAddLocPage implements OnInit {
     });
   }
 
+  onBackButton() {
+    this.navCtrl.back();
+  }
+
 
 }

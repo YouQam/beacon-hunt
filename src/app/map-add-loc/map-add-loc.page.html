@@ -1,5 +1,10 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color=dark (click)="onBackButton()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title size="large" class="ion-text-center">Add Beacon Location </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -19,7 +24,7 @@
     </ion-fab-button>
   </ion-fab>
 
-<!--   <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+  <!--   <ion-fab vertical="bottom" horizontal="start" slot="fixed">
     <ion-fab-button (click)="watchPosition()">
       <ion-icon name='search' style="font-size: 25px;"></ion-icon>
     </ion-fab-button>
