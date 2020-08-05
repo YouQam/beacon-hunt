@@ -43,7 +43,6 @@ export class PlayPage implements OnInit {
   selectedGame: Game;
 
   positionSubscription: Subscription;
-  uerLocMarker: mapboxgl.Marker; // for showing user position
   lastKnownPosition: Geolocation;
 
   gpsToBeaconDistance: number = 0;
@@ -120,12 +119,6 @@ export class PlayPage implements OnInit {
       console.log('(play-page), this.LastKnownPosition lng: ', this.lastKnownPosition['coords'].longitude);
       // Zoom to the beacon location
       this.map.flyTo({ center: [this.lastKnownPosition['coords'].longitude, this.lastKnownPosition['coords'].latitude] });
-      if (this.uerLocMarker != undefined) {
-        this.uerLocMarker.remove();
-      }
-      this.uerLocMarker = new mapboxgl.Marker()
-        .setLngLat([this.lastKnownPosition['coords'].longitude, this.lastKnownPosition['coords'].latitude])
-        .addTo(this.map);
 
       // Check if user reached destination
       if (!this.reachedUsingGPS && this.userReachedBeacon(this.currentTask.coords)) {
