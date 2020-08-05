@@ -6,13 +6,23 @@ import { PlayPage } from './play.page';
 
 import { PlayPageRoutingModule } from './play-routing.module';
 
+import { LottieModule } from 'ngx-lottie';
+import player from 'lottie-web';
+
+
+// Note we need a separate function as it's required
+// by the AOT compiler.
+export function playerFactory() {
+  return player;
+}
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    PlayPageRoutingModule
+    PlayPageRoutingModule,
+    LottieModule.forRoot({ player: playerFactory })
   ],
   declarations: [PlayPage]
 })

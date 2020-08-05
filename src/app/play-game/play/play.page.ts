@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
 import { Geoposition, Geolocation, GeolocationOptions } from '@ionic-native/geolocation/ngx';
 import { HelperService } from '../../services/helper-functions.service';
 
+import { AnimationOptions } from 'ngx-lottie';
 
 
 @Component({
@@ -53,6 +54,11 @@ export class PlayPage implements OnInit {
   private beaconAudio: HTMLAudioElement = new Audio();
   private gpsAudio: HTMLAudioElement = new Audio();
 
+  public lottieConfig: AnimationOptions;
+
+  private showGameFinish: boolean = true;
+
+
 
   constructor(private helperFuns: HelperService, public locationServics: LocationService, private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef, private helperService: HelperService) {
     this.platform.ready().then(() => {
@@ -62,6 +68,13 @@ export class PlayPage implements OnInit {
       this.gpsAudio.src = 'assets/sounds/little_robot_sound_factory_Jingle_Win_Synth_04.mp3'
       this.beaconAudio.src = 'assets/sounds/cartoon_success_fanfair.mp3'
     });
+
+    this.lottieConfig = {
+      path: "assets/lottie/success.json",
+      renderer: "canvas",
+      autoplay: true,
+      loop: true
+    };
   }
 
   ngOnInit() {
@@ -97,20 +110,20 @@ export class PlayPage implements OnInit {
       }
 
       this.lastKnownPosition = position;
-      console.log('(play-page), this.LastKnownPosition lng,lat: ', this.lastKnownPosition['coords'].latitude,', ', this.lastKnownPosition['coords'].longitude);
+      console.log('(play-page), this.LastKnownPosition lng,lat: ', this.lastKnownPosition['coords'].latitude, ', ', this.lastKnownPosition['coords'].longitude);
 
       // Zoom to the beacon location
       this.map.flyTo({ center: [this.lastKnownPosition['coords'].longitude, this.lastKnownPosition['coords'].latitude] });
 
       // Check if user reached destination using GPS
-      if (this.selectedGame.useGPS && !this.reachedUsingGPS && this.userReachedBeacon(this.currentTask.coords)) {
-        console.log('(), GPS reached destination');
-        this.gpsAudio.play();
-        this.reachedUsingGPS = true;
-        //if (this.reachedUsingGPS && this.reachedUsingBeacon) {
-          this.onNextTask();
-        //}
-      }
+      //if (this.selectedGame.useGPS && !this.reachedUsingGPS && this.userReachedBeacon(this.currentTask.coords)) {
+      console.log('(), GPS reached destination');
+      this.gpsAudio.play();
+      this.reachedUsingGPS = true;
+      //if (this.reachedUsingGPS && this.reachedUsingBeacon) {
+      this.onNextTask();
+      //}
+      //}
     })
 
     // Map initializing
@@ -140,16 +153,23 @@ export class PlayPage implements OnInit {
   }
 
   ionViewWillLeave() {
-    console.log(`on ionViewWillLeave, stop region`, this.beaconRegion);
+    this.stopScanningTracking();
+  }
+
+  stopScanningTracking() {
+    // Stop scanning for beacons
     if (this.beaconRegion) {
       this.stopScannning();
+      console.log(`Region stopped`);
+
     }
 
     // Stop tracking user location
-    this.positionSubscription.unsubscribe();
-    this.locationServics.clear();
-    console.log(`on ionViewWillLeave, geolocatoin unsubscribe`);
-
+    if (this.positionSubscription != undefined) {
+      this.positionSubscription.unsubscribe();
+      this.locationServics.clear();
+      console.log(`Geolocatoin unsubscribed`);
+    }
   }
 
   userReachedBeacon(currentTaskLoc) {
@@ -286,7 +306,7 @@ export class PlayPage implements OnInit {
             this.beaconAudio.play();
             this.reachedUsingBeacon = true;
 
-            if (this.reachedUsingBeacon && (this.selectedGame.useGPS && this.reachedUsingGPS )) {
+            if (this.reachedUsingBeacon && (this.selectedGame.useGPS && this.reachedUsingGPS)) {
               this.onNextTask();
             }
 
@@ -295,11 +315,11 @@ export class PlayPage implements OnInit {
             new mapboxgl.Marker()
               .setLngLat([this.beaconsStoredList[0].lng, this.beaconsStoredList[0].lat])
               .addTo(this.map);
-
+    
             // Zoom to the beacon location
             this.map.flyTo({ center: [this.currentTask.coords[0], this.currentTask.coords[1]] });
             console.log(' Fly to: ', [this.currentTask.coords[0], this.currentTask.coords[1]]);
- */
+    */
             // Stop ranging
             this.stopScannning();
           }
@@ -363,12 +383,16 @@ export class PlayPage implements OnInit {
 
       this.initializeTask();
     } else {
-      console.log('You have passed all tasks successfully');
-      this.helperService.presentToast("You have passed all tasks successfully");
-
-      // navigate to menu
-      this.navCtrl.navigateForward('menu');
+       console.log('You have passed all tasks successfully');
+      /*this.helperService.presentToast("You have passed all tasks successfully"); */
+      this.stopScanningTracking();
+      //this.showGameFinish = true;
     }
+  }
+  navigateHomeMenu() {
+    //this.showGameFinish = false;
+    // navigate to menu
+    this.navCtrl.navigateForward('menu');
   }
 
   onBackButton() {
