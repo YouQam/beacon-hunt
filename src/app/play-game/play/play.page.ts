@@ -102,14 +102,14 @@ export class PlayPage implements OnInit {
       // Zoom to the beacon location
       this.map.flyTo({ center: [this.lastKnownPosition['coords'].longitude, this.lastKnownPosition['coords'].latitude] });
 
-      // Check if user reached destination
-      if (!this.reachedUsingGPS && this.userReachedBeacon(this.currentTask.coords)) {
+      // Check if user reached destination using GPS
+      if (this.selectedGame.useGPS && !this.reachedUsingGPS && this.userReachedBeacon(this.currentTask.coords)) {
         console.log('(), GPS reached destination');
         this.gpsAudio.play();
         this.reachedUsingGPS = true;
-        if (this.reachedUsingGPS && this.reachedUsingBeacon) {
+        //if (this.reachedUsingGPS && this.reachedUsingBeacon) {
           this.onNextTask();
-        }
+        //}
       }
     })
 
@@ -286,7 +286,7 @@ export class PlayPage implements OnInit {
             this.beaconAudio.play();
             this.reachedUsingBeacon = true;
 
-            if (this.reachedUsingGPS && this.reachedUsingBeacon) {
+            if (this.reachedUsingBeacon && (this.selectedGame.useGPS && this.reachedUsingGPS )) {
               this.onNextTask();
             }
 
