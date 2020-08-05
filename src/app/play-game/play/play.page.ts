@@ -88,7 +88,7 @@ export class PlayPage implements OnInit {
     // Map initializing
     if (this.map == undefined) {
       console.log('◊ initialize map');
-      mapboxgl.accessToken = 'pk.eyJ1IjoidGhlZ2lzZGV2IiwiYSI6ImNqdGQ5dmd2MTEyaWk0YXF0NzZ1amhtOWMifQ.GuFE28BPyzAcHWejNLzuyw';
+      mapboxgl.accessToken = environment.mapboxAccessToken;
       //mapboxgl.accessToken = environment.mapboxAccessToken;
       this.map = new mapboxgl.Map({
         container: this.mapContainer.nativeElement,
@@ -97,6 +97,7 @@ export class PlayPage implements OnInit {
         zoom: 12
       });
       this.map.addControl(new MapboxStyleSwitcherControl());
+
     } else {
       console.log('ÒÒÒ map is already there')
     }
@@ -105,14 +106,16 @@ export class PlayPage implements OnInit {
     this.locationServics.init();
     this.positionSubscription = this.locationServics.geolocationSubscription.subscribe(position => {
 
+      // Draw animatied icon on user position
+      if (this.map && this.map.getLayer('geolocate')) {
+        this.map.getSource('points').setData({
+          type: "Point",
+          coordinates: [position['coords'].longitude, position['coords'].latitude]
+        });
+      }
 
-      /*       if (this.LastKnownPosition == undefined) {
-              this.LastKnownPosition = position;
-              this.uerLocMarker = new mapboxgl.Marker()
-                .setLngLat([this.LastKnownPosition['coords'].longitude, this.LastKnownPosition['coords'].latitude])
-                .addTo(this.map);
-            } */
       this.lastKnownPosition = position;
+
       console.log('(play-page), this.LastKnownPosition lat: ', this.lastKnownPosition['coords'].latitude);
       console.log('(play-page), this.LastKnownPosition lng: ', this.lastKnownPosition['coords'].longitude);
       // Zoom to the beacon location
@@ -135,6 +138,8 @@ export class PlayPage implements OnInit {
       }
 
     })
+
+    this.animatedUserLocIcon();
   }
 
   ionViewDidEnter() {
@@ -174,7 +179,7 @@ export class PlayPage implements OnInit {
 
   initializeTask() {
     // Add marker
-    if(this.marker != undefined){
+    if (this.marker != undefined) {
       this.marker.remove();
     }
     this.marker = new mapboxgl.Marker({ color: 'red' })
@@ -377,4 +382,106 @@ export class PlayPage implements OnInit {
   onBackButton() {
     this.navCtrl.back();
   }
+
+  animatedUserLocIcon(){
+    var size = 150;
+      // implementation of CustomLayerInterface to draw a pulsing dot icon on the map
+      // see https://docs.mapbox.com/mapbox-gl-js/api/#customlayerinterface for more info
+      var pulsingDot = {
+        width: size,
+        height: size,
+        data: new Uint8Array(size * size * 4),
+        context: null,
+
+        // get rendering context for the map canvas when layer is added to the map
+        onAdd: () => {
+          var canvas = document.createElement('canvas');
+          canvas.width = pulsingDot.width;
+          canvas.height = pulsingDot.height;
+          pulsingDot.context = canvas.getContext('2d');
+        },
+
+        // called once before every frame where the icon will be used
+        render: () => {
+          var duration = 1000;
+          var t = (performance.now() % duration) / duration;
+
+          var radius = (size / 2) * 0.3;
+          var outerRadius = (size / 2) * 0.7 * t + radius;
+          var context = pulsingDot.context;
+
+          // draw outer circle
+          context.clearRect(0, 0, pulsingDot.width, pulsingDot.height);
+          context.beginPath();
+          context.arc(
+            pulsingDot.width / 2,
+            pulsingDot.height / 2,
+            outerRadius,
+            0,
+            Math.PI * 2
+          );
+          context.fillStyle = 'rgba(255, 200, 200,' + (1 - t) + ')';
+          context.fill();
+
+          // draw inner circle
+          context.beginPath();
+          context.arc(
+            pulsingDot.width / 2,
+            pulsingDot.height / 2,
+            radius,
+            0,
+            Math.PI * 2
+          );
+          context.fillStyle = 'rgba(255, 100, 100, 1)';
+          context.strokeStyle = 'white';
+          context.lineWidth = 2 + 4 * (1 - t);
+          context.fill();
+          context.stroke();
+
+          // update this image's data with data from the canvas
+          pulsingDot.data = context.getImageData(
+            0,
+            0,
+            pulsingDot.width,
+            pulsingDot.height
+          ).data;
+
+          // continuously repaint the map, resulting in the smooth animation of the dot
+          this.map.triggerRepaint();
+
+          // return `true` to let the map know that the image was updated
+          return true;
+        }
+      };
+
+      this.map.on('load', () => {
+        this.map.addImage('pulsing-dot', pulsingDot, { pixelRatio: 2 });
+
+        this.map.addSource('geolocate', {
+          'type': 'geojson',
+          'data': {
+            'type': 'FeatureCollection',
+            'features': [
+              {
+                'type': 'Feature',
+                'geometry': {
+                  'type': 'Point',
+                  'coordinates': [this.lastKnownPosition['coords'].longitude, this.lastKnownPosition['coords'].latitude]
+                }
+              }
+            ]
+          }
+        });
+
+        this.map.addLayer({
+          'id': 'geolocate',
+          'type': 'symbol',
+          'source': 'geolocate',
+          'layout': {
+            'icon-image': 'pulsing-dot'
+          }
+        });
+      });
+  }
+
 }
