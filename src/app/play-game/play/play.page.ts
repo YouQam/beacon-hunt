@@ -84,6 +84,35 @@ export class PlayPage implements OnInit {
     console.log('home Resume Event, map', this.map);
     this.updateBeaconStoredList();
 
+    // Geolocation initializng 
+    this.locationServics.init();
+    this.positionSubscription = this.locationServics.geolocationSubscription.subscribe(position => {
+
+      // Draw animatied icon on user position
+      if (this.map && this.map.getLayer('geolocate')) {
+        this.map.getSource('geolocate').setData({
+          type: "geolocate",
+          coordinates: [position['coords'].longitude, position['coords'].latitude]
+        });
+      }
+
+      this.lastKnownPosition = position;
+      console.log('(play-page), this.LastKnownPosition lng,lat: ', this.lastKnownPosition['coords'].latitude,', ', this.lastKnownPosition['coords'].longitude);
+
+      // Zoom to the beacon location
+      this.map.flyTo({ center: [this.lastKnownPosition['coords'].longitude, this.lastKnownPosition['coords'].latitude] });
+
+      // Check if user reached destination
+      if (!this.reachedUsingGPS && this.userReachedBeacon(this.currentTask.coords)) {
+        console.log('(), GPS reached destination');
+        this.gpsAudio.play();
+        this.reachedUsingGPS = true;
+        if (this.reachedUsingGPS && this.reachedUsingBeacon) {
+          this.onNextTask();
+        }
+      }
+    })
+
     // Map initializing
     if (this.map == undefined) {
       console.log('◊ initialize map');
@@ -101,38 +130,8 @@ export class PlayPage implements OnInit {
       console.log('ÒÒÒ map is already there')
     }
 
-    // Geolocation initializng 
-    this.locationServics.init();
-    this.positionSubscription = this.locationServics.geolocationSubscription.subscribe(position => {
-
-      // Draw animatied icon on user position
-      if (this.map && this.map.getLayer('geolocate')) {
-        this.map.getSource('points').setData({
-          type: "Point",
-          coordinates: [position['coords'].longitude, position['coords'].latitude]
-        });
-      }
-
-      this.lastKnownPosition = position;
-
-      console.log('(play-page), this.LastKnownPosition lat: ', this.lastKnownPosition['coords'].latitude);
-      console.log('(play-page), this.LastKnownPosition lng: ', this.lastKnownPosition['coords'].longitude);
-      // Zoom to the beacon location
-      this.map.flyTo({ center: [this.lastKnownPosition['coords'].longitude, this.lastKnownPosition['coords'].latitude] });
-
-      // Check if user reached destination
-      if (!this.reachedUsingGPS && this.userReachedBeacon(this.currentTask.coords)) {
-        console.log('(), GPS reached destination');
-        this.gpsAudio.play();
-        this.reachedUsingGPS = true;
-        if (this.reachedUsingGPS && this.reachedUsingBeacon) {
-          this.onNextTask();
-        }
-      }
-
-    })
-
     this.animatedUserLocIcon();
+
   }
 
   ionViewDidEnter() {
@@ -376,105 +375,105 @@ export class PlayPage implements OnInit {
     this.navCtrl.back();
   }
 
-  animatedUserLocIcon(){
+  animatedUserLocIcon() {
     var size = 150;
-      // implementation of CustomLayerInterface to draw a pulsing dot icon on the map
-      // see https://docs.mapbox.com/mapbox-gl-js/api/#customlayerinterface for more info
-      var pulsingDot = {
-        width: size,
-        height: size,
-        data: new Uint8Array(size * size * 4),
-        context: null,
+    // implementation of CustomLayerInterface to draw a pulsing dot icon on the map
+    // see https://docs.mapbox.com/mapbox-gl-js/api/#customlayerinterface for more info
+    var pulsingDot = {
+      width: size,
+      height: size,
+      data: new Uint8Array(size * size * 4),
+      context: null,
 
-        // get rendering context for the map canvas when layer is added to the map
-        onAdd: () => {
-          var canvas = document.createElement('canvas');
-          canvas.width = pulsingDot.width;
-          canvas.height = pulsingDot.height;
-          pulsingDot.context = canvas.getContext('2d');
-        },
+      // get rendering context for the map canvas when layer is added to the map
+      onAdd: () => {
+        var canvas = document.createElement('canvas');
+        canvas.width = pulsingDot.width;
+        canvas.height = pulsingDot.height;
+        pulsingDot.context = canvas.getContext('2d');
+      },
 
-        // called once before every frame where the icon will be used
-        render: () => {
-          var duration = 1000;
-          var t = (performance.now() % duration) / duration;
+      // called once before every frame where the icon will be used
+      render: () => {
+        var duration = 1000;
+        var t = (performance.now() % duration) / duration;
 
-          var radius = (size / 2) * 0.3;
-          var outerRadius = (size / 2) * 0.7 * t + radius;
-          var context = pulsingDot.context;
+        var radius = (size / 2) * 0.3;
+        var outerRadius = (size / 2) * 0.7 * t + radius;
+        var context = pulsingDot.context;
 
-          // draw outer circle
-          context.clearRect(0, 0, pulsingDot.width, pulsingDot.height);
-          context.beginPath();
-          context.arc(
-            pulsingDot.width / 2,
-            pulsingDot.height / 2,
-            outerRadius,
-            0,
-            Math.PI * 2
-          );
-          context.fillStyle = 'rgba(255, 200, 200,' + (1 - t) + ')';
-          context.fill();
+        // draw outer circle
+        context.clearRect(0, 0, pulsingDot.width, pulsingDot.height);
+        context.beginPath();
+        context.arc(
+          pulsingDot.width / 2,
+          pulsingDot.height / 2,
+          outerRadius,
+          0,
+          Math.PI * 2
+        );
+        context.fillStyle = 'rgba(255, 200, 200,' + (1 - t) + ')';
+        context.fill();
 
-          // draw inner circle
-          context.beginPath();
-          context.arc(
-            pulsingDot.width / 2,
-            pulsingDot.height / 2,
-            radius,
-            0,
-            Math.PI * 2
-          );
-          context.fillStyle = 'rgba(255, 100, 100, 1)';
-          context.strokeStyle = 'white';
-          context.lineWidth = 2 + 4 * (1 - t);
-          context.fill();
-          context.stroke();
+        // draw inner circle
+        context.beginPath();
+        context.arc(
+          pulsingDot.width / 2,
+          pulsingDot.height / 2,
+          radius,
+          0,
+          Math.PI * 2
+        );
+        context.fillStyle = 'rgba(255, 100, 100, 1)';
+        context.strokeStyle = 'white';
+        context.lineWidth = 2 + 4 * (1 - t);
+        context.fill();
+        context.stroke();
 
-          // update this image's data with data from the canvas
-          pulsingDot.data = context.getImageData(
-            0,
-            0,
-            pulsingDot.width,
-            pulsingDot.height
-          ).data;
+        // update this image's data with data from the canvas
+        pulsingDot.data = context.getImageData(
+          0,
+          0,
+          pulsingDot.width,
+          pulsingDot.height
+        ).data;
 
-          // continuously repaint the map, resulting in the smooth animation of the dot
-          this.map.triggerRepaint();
+        // continuously repaint the map, resulting in the smooth animation of the dot
+        this.map.triggerRepaint();
 
-          // return `true` to let the map know that the image was updated
-          return true;
-        }
-      };
+        // return `true` to let the map know that the image was updated
+        return true;
+      }
+    };
 
-      this.map.on('load', () => {
-        this.map.addImage('pulsing-dot', pulsingDot, { pixelRatio: 2 });
+    this.map.on('load', () => {
+      this.map.addImage('pulsing-dot', pulsingDot, { pixelRatio: 2 });
 
-        this.map.addSource('geolocate', {
-          'type': 'geojson',
-          'data': {
-            'type': 'FeatureCollection',
-            'features': [
-              {
-                'type': 'Feature',
-                'geometry': {
-                  'type': 'Point',
-                  'coordinates': [this.lastKnownPosition['coords'].longitude, this.lastKnownPosition['coords'].latitude]
-                }
+      this.map.addSource('geolocate', {
+        'type': 'geojson',
+        'data': {
+          'type': 'FeatureCollection',
+          'features': [
+            {
+              'type': 'Feature',
+              'geometry': {
+                'type': 'Point',
+                'coordinates': [this.lastKnownPosition['coords'].longitude, this.lastKnownPosition['coords'].latitude]
               }
-            ]
-          }
-        });
-
-        this.map.addLayer({
-          'id': 'geolocate',
-          'type': 'symbol',
-          'source': 'geolocate',
-          'layout': {
-            'icon-image': 'pulsing-dot'
-          }
-        });
+            }
+          ]
+        }
       });
+
+      this.map.addLayer({
+        'id': 'geolocate',
+        'type': 'symbol',
+        'source': 'geolocate',
+        'layout': {
+          'icon-image': 'pulsing-dot'
+        }
+      });
+    });
   }
 
 }

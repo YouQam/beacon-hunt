@@ -26,6 +26,8 @@ export class CreateGamePage implements OnInit {
 
   gameListStored: Game[];
 
+  useGPS: boolean = false;
+
 
   constructor(private changeRef: ChangeDetectorRef, public navCtrl: NavController, private gameServ: GameServiceService, public storage: Storage, private apiService: ApiService, private helperService: HelperService) { }
 
@@ -200,7 +202,8 @@ export class CreateGamePage implements OnInit {
       this.tasksList.push(task);
     }
 
-    let gameCreated = new Game(this.gameName, this.tasksList);
+    let gameCreated = new Game(this.gameName, this.useGPS, this.tasksList);
+
     if (this.gameListStored == null) {
       this.gameListStored = [gameCreated];
     } else {
@@ -261,6 +264,10 @@ export class CreateGamePage implements OnInit {
   // Back button
   onBackButton() {
     this.navCtrl.back();
+  }
+
+  useGPSToggleChange(){
+    //console.log('toggle change: ', this.useGPS);
   }
 
 }
