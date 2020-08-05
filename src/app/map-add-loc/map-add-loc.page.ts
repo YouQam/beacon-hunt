@@ -172,14 +172,11 @@ export class MapAddLocPage implements OnInit {
       this.marker2 = new mapboxgl.Marker()
         .setLngLat([data['coords'].longitude, data['coords'].latitude])
         .addTo(this.map);
-
-
     });
   }
 
   onBackButton() {
     this.navCtrl.back();
   }
-
 
 }

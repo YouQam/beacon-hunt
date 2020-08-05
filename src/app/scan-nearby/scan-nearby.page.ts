@@ -31,7 +31,6 @@ export class ScanNearbyPage implements OnInit {
       //this.requestLocPermissoin();
       this.enableDebugLogs();
       console.log('platform is ready,,');
-
     });
   }
 
@@ -167,14 +166,15 @@ export class ScanNearbyPage implements OnInit {
   }
 
   onTestNodeServer() { // just for test
-
-
-    let bi = new BeaconInfo(15, 1, 1, 1, 1);
-
-
-    let task = new Task(1, 1, [1,2], 5);
+    /* let bi = new BeaconInfo(15, 35011, 1, 10, 10);
+    let task = new Task(1, 1, [1, 2], 5);
 
     console.log("task", task);
+
+    this.apiService.updateBeaconInfo(bi)
+      .then(data => {
+        console.log('patch: ', data);
+      }) */
 
     /* this.apiService.getBeaconInfo()
       .then(data => {

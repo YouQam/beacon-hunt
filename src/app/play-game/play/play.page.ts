@@ -24,7 +24,6 @@ import { HelperService } from '../../services/helper-functions.service';
 export class PlayPage implements OnInit {
 
   @ViewChild("map") mapContainer;
-  //@ViewChild("marker") directionMarker;
   map: mapboxgl.Map;
   marker: mapboxgl.Marker;
 
@@ -45,18 +44,18 @@ export class PlayPage implements OnInit {
 
   positionSubscription: Subscription;
   uerLocMarker: mapboxgl.Marker; // for showing user position
-  LastKnownPosition: Geolocation;
+  lastKnownPosition: Geolocation;
 
   gpsToBeaconDistance: number = 0;
 
-  reachedUsingGPS: boolean =false;
-  reachedUsingBeacon: boolean =false;
+  reachedUsingGPS: boolean = false;
+  reachedUsingBeacon: boolean = false;
 
   private beaconAudio: HTMLAudioElement = new Audio();
   private gpsAudio: HTMLAudioElement = new Audio();
 
 
-  constructor(private helperFuns: HelperService, public locationServics: LocationService, private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef) {
+  constructor(private helperFuns: HelperService, public locationServics: LocationService, private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef, private helperService: HelperService) {
     this.platform.ready().then(() => {
       //this.requestLocPermissoin();
       this.enableDebugLogs();
@@ -106,30 +105,33 @@ export class PlayPage implements OnInit {
     this.locationServics.init();
     this.positionSubscription = this.locationServics.geolocationSubscription.subscribe(position => {
 
-      
+
       /*       if (this.LastKnownPosition == undefined) {
               this.LastKnownPosition = position;
               this.uerLocMarker = new mapboxgl.Marker()
                 .setLngLat([this.LastKnownPosition['coords'].longitude, this.LastKnownPosition['coords'].latitude])
                 .addTo(this.map);
             } */
-      this.LastKnownPosition = position;
-      console.log('(play-page), this.LastKnownPosition lat: ', this.LastKnownPosition['coords'].latitude);
-      console.log('(play-page), this.LastKnownPosition lng: ', this.LastKnownPosition['coords'].longitude);
+      this.lastKnownPosition = position;
+      console.log('(play-page), this.LastKnownPosition lat: ', this.lastKnownPosition['coords'].latitude);
+      console.log('(play-page), this.LastKnownPosition lng: ', this.lastKnownPosition['coords'].longitude);
       // Zoom to the beacon location
-      this.map.flyTo({ center: [this.LastKnownPosition['coords'].longitude, this.LastKnownPosition['coords'].latitude] });
+      this.map.flyTo({ center: [this.lastKnownPosition['coords'].longitude, this.lastKnownPosition['coords'].latitude] });
       if (this.uerLocMarker != undefined) {
         this.uerLocMarker.remove();
       }
       this.uerLocMarker = new mapboxgl.Marker()
-        .setLngLat([this.LastKnownPosition['coords'].longitude, this.LastKnownPosition['coords'].latitude])
+        .setLngLat([this.lastKnownPosition['coords'].longitude, this.lastKnownPosition['coords'].latitude])
         .addTo(this.map);
 
       // Check if user reached destination
-      if(this.userReachedBeacon(this.currentTask.coords)){
+      if (!this.reachedUsingGPS && this.userReachedBeacon(this.currentTask.coords)) {
         console.log('(), GPS reached destination');
         this.gpsAudio.play();
         this.reachedUsingGPS = true;
+        if (this.reachedUsingGPS && this.reachedUsingBeacon) {
+          this.onNextTask();
+        }
       }
 
     })
@@ -146,6 +148,7 @@ export class PlayPage implements OnInit {
       this.stopScannning();
     }
 
+    // Stop tracking user location
     this.positionSubscription.unsubscribe();
     this.locationServics.clear();
     console.log(`on ionViewWillLeave, geolocatoin unsubscribe`);
@@ -158,8 +161,8 @@ export class PlayPage implements OnInit {
     this.gpsToBeaconDistance = this.helperFuns.getDistanceFromLatLonInM(
       currentTaskLoc[1],
       currentTaskLoc[0],
-      this.LastKnownPosition['coords'].latitude,
-      this.LastKnownPosition['coords'].longitude
+      this.lastKnownPosition['coords'].latitude,
+      this.lastKnownPosition['coords'].longitude
     );
 
 
@@ -171,7 +174,10 @@ export class PlayPage implements OnInit {
 
   initializeTask() {
     // Add marker
-    this.marker = new mapboxgl.Marker({color: 'red'})
+    if(this.marker != undefined){
+      this.marker.remove();
+    }
+    this.marker = new mapboxgl.Marker({ color: 'red' })
       .setLngLat([this.currentTask.coords[0], this.currentTask.coords[1]])
       .addTo(this.map);
 
@@ -179,26 +185,12 @@ export class PlayPage implements OnInit {
     this.map.flyTo({ center: [this.currentTask.coords[0], this.currentTask.coords[1]] });
   }
 
-  /* requestLocPermissoin(): void {
-    // Request permission to use location on iOS
-    if (this.platform.is('ios')) {
-      this.ibeacon.requestAlwaysAuthorization();
-      console.log(`: request ios permisson`);
-    } 
-  }*/
-
   enableDebugLogs(): void {
     this.ibeacon.enableDebugLogs();
     this.ibeacon.enableDebugNotifications();
   }
 
   public onScanClicked(): void {
-
-    /* if (this.marker != undefined) {
-      this.marker.remove();
-      console.log('/ marker has been removed successfully');
-    } */
-
     if (!this.scanStatus) {
       this.startScanning();
       this.scanStatus = true;
@@ -281,31 +273,39 @@ export class PlayPage implements OnInit {
   }
 
   onBeaconFound(receivedData: Beacon[]): void {
-    //to compare with one beacon at a time
-    for (let i = 0; i < receivedData.length; i++) {
-      console.log('◊ look for Beacon: 56411');
-      console.log(' receivedData[i].minor == this.currentTask.minor):', receivedData[i].minor, ' == ', this.currentTask.minor);
-      console.log(' receivedData[i].tx == this.currentTask.distanceMeter:', receivedData[i].accuracy, '<=', this.currentTask.distanceMeter);
+    //Ingnore it if beacon is allready found and waiting for GPS
+    if (!this.reachedUsingBeacon) {
+      //to compare with one beacon at a time
+      for (let i = 0; i < receivedData.length; i++) {
+        console.log('◊ look for Beacon: 56411');
+        console.log(' receivedData[i].minor == this.currentTask.minor):', receivedData[i].minor, ' == ', this.currentTask.minor);
+        console.log(' receivedData[i].tx == this.currentTask.distanceMeter:', receivedData[i].accuracy, '<=', this.currentTask.distanceMeter);
 
-      if (this.beaconsStoredList) {
-        if (receivedData[i].minor == this.currentTask.minor && receivedData[i].accuracy <= this.currentTask.distanceMeter) { // Check minor and distance
-          console.log(' Found Beacon: ', this.currentTask.minor);
+        if (this.beaconsStoredList) {
+          if (receivedData[i].minor == this.currentTask.minor && receivedData[i].accuracy <= this.currentTask.distanceMeter) { // Check minor and distance
+            console.log(' Found Beacon: ', this.currentTask.minor);
 
-          console.log('(), User reached the beacon');
-          this.beaconAudio.play();
-          this.reachedUsingBeacon = true;
+            console.log('(), User reached the beacon');
+            this.beaconAudio.play();
+            this.reachedUsingBeacon = true;
 
-          // Add marker
-          new mapboxgl.Marker()
-            .setLngLat([this.beaconsStoredList[0].lng, this.beaconsStoredList[0].lat])
-            .addTo(this.map);
+            if (this.reachedUsingGPS && this.reachedUsingBeacon) {
+              this.onNextTask();
+            }
 
-          // Zoom to the beacon location
-          this.map.flyTo({ center: [this.currentTask.coords[0], this.currentTask.coords[1]] });
-          console.log(' Fly to: ', [this.currentTask.coords[0], this.currentTask.coords[1]]);
+            // No need to zoom to beacon loc or create new marker
+            /* // Add marker
+            new mapboxgl.Marker()
+              .setLngLat([this.beaconsStoredList[0].lng, this.beaconsStoredList[0].lat])
+              .addTo(this.map);
 
-          // Stop ranging
-          this.stopScannning();
+            // Zoom to the beacon location
+            this.map.flyTo({ center: [this.currentTask.coords[0], this.currentTask.coords[1]] });
+            console.log(' Fly to: ', [this.currentTask.coords[0], this.currentTask.coords[1]]);
+ */
+            // Stop ranging
+            this.stopScannning();
+          }
         }
       }
     }
@@ -346,7 +346,7 @@ export class PlayPage implements OnInit {
     });
   }
 
-  onNextClicked(): void {
+  onNextTask(): void {
     console.log('Next task clicked');
 
     if (this.marker != undefined) {
@@ -354,19 +354,23 @@ export class PlayPage implements OnInit {
       console.log('/ marker has been removed successfully');
     }
 
-    if (this.taskIndex + 1 <= this.tasksList.length) {
+    if (this.taskIndex + 1 < this.tasksList.length) {
       this.taskIndex += 1;
       this.currentTask = this.tasksList[this.taskIndex];
 
       console.log('◊ı◊ Task num:', this.taskIndex);
 
       this.reachedUsingBeacon = false;
-      this.reachedUsingGPS = false; 
+      this.reachedUsingGPS = false;
 
 
       this.initializeTask();
     } else {
       console.log('You have passed all tasks successfully');
+      this.helperService.presentToast("You have passed all tasks successfully");
+
+      // navigate to menu
+      this.navCtrl.navigateForward('menu');
     }
   }
 
