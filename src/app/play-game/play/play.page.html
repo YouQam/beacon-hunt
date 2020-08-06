@@ -14,17 +14,31 @@
     <!-- progressbar -->
     <ion-progress-bar type="indeterminate" [style.display]="scanStatus ? 'block' : 'none'"></ion-progress-bar>
 
-    <ion-item-divider color="primary">
-      <ion-label style="max-width: 290px;">
-        <b>{{scanStatus?"Scanning for nearby beacons":"Press play to start playing."}} </b>
-      </ion-label>
-      <ion-spinner name="lines-small" color="light" [style.display]="scanStatus ? 'block' : 'none'"></ion-spinner>
-    </ion-item-divider>
-    <ion-item>
-      <ion-button *ngIf='reachedUsingGPS'>Reached target using GPS</ion-button>
-      <ion-button *ngIf='reachedUsingBeacon'>Reached target using Beacon</ion-button>
-    </ion-item>
+    <ion-card class="taskBar">
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label >Task {{taskIndex+1}} / {{tasksList.length}}</ion-label>
+          </ion-item>
+        </ion-col>
 
+        <ion-col>
+          <ion-item>
+            <ion-label><b>iBeacon</b></ion-label>
+            <ion-checkbox slot="start" 
+            [(ngModel)]='reachedUsingBeacon' disabled="true"></ion-checkbox>
+          </ion-item>
+        </ion-col>
+
+        <ion-col>
+          <ion-item>
+            <ion-label><b>GPS</b></ion-label>
+            <ion-checkbox slot="start" [(ngModel)]='reachedUsingGPS' disabled="true"></ion-checkbox>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+    
     <div #map class="map"></div>
     <!--  <div id="map" class="map"></div> -->
 

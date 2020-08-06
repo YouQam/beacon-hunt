@@ -49,14 +49,14 @@ export class PlayPage implements OnInit {
   gpsToBeaconDistance: number = 0;
 
   reachedUsingGPS: boolean = false;
-  reachedUsingBeacon: boolean = false;
+  reachedUsingBeacon: boolean = true;
 
   private beaconAudio: HTMLAudioElement = new Audio();
   private gpsAudio: HTMLAudioElement = new Audio();
 
   public lottieConfig: AnimationOptions;
 
-  private showGameFinish: boolean = true;
+  private showGameFinish: boolean = false;
 
 
 
@@ -114,16 +114,17 @@ export class PlayPage implements OnInit {
 
       // Zoom to the beacon location
       this.map.flyTo({ center: [this.lastKnownPosition['coords'].longitude, this.lastKnownPosition['coords'].latitude] });
+      console.log('(play-page),,,,,,,');
 
       // Check if user reached destination using GPS
-      //if (this.selectedGame.useGPS && !this.reachedUsingGPS && this.userReachedBeacon(this.currentTask.coords)) {
-      console.log('(), GPS reached destination');
-      this.gpsAudio.play();
-      this.reachedUsingGPS = true;
-      //if (this.reachedUsingGPS && this.reachedUsingBeacon) {
-      this.onNextTask();
-      //}
-      //}
+      if (this.selectedGame.useGPS && !this.reachedUsingGPS && this.userReachedBeacon(this.currentTask.coords)) {
+        console.log('(), GPS reached destination');
+        this.gpsAudio.play();
+        this.reachedUsingGPS = true;
+        if (this.reachedUsingGPS && this.reachedUsingBeacon) {
+          this.onNextTask();
+        }
+      }
     })
 
     // Map initializing
@@ -137,7 +138,7 @@ export class PlayPage implements OnInit {
         center: [7.63, 51.960],
         zoom: 12
       });
-      this.map.addControl(new MapboxStyleSwitcherControl());
+      this.map.addControl(new MapboxStyleSwitcherControl(), 'bottom-left');
 
     } else {
       console.log('ÒÒÒ map is already there')
@@ -230,6 +231,11 @@ export class PlayPage implements OnInit {
   }
 
   startScanning() {
+
+    this.reachedUsingBeacon = false;
+    console.log('test3', this.reachedUsingBeacon);
+
+
     // create a new delegate and register it with the native layer
     this.delegate = this.ibeacon.Delegate();
 
@@ -383,10 +389,10 @@ export class PlayPage implements OnInit {
 
       this.initializeTask();
     } else {
-       console.log('You have passed all tasks successfully');
+      console.log('You have passed all tasks successfully');
       /*this.helperService.presentToast("You have passed all tasks successfully"); */
       this.stopScanningTracking();
-      //this.showGameFinish = true;
+      this.showGameFinish = true;
     }
   }
   navigateHomeMenu() {
