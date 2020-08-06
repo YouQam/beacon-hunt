@@ -198,7 +198,7 @@ export class CreateGamePage implements OnInit {
     this.tasksList = []; // empty tasks list
 
     for (let i = 0; i < this.beaconsStoredList_copy.length; i++) {
-      let task = new Task(1, this.beaconsStoredList_copy[i].minor, [this.beaconsStoredList_copy[i].lng, this.beaconsStoredList_copy[i].lat], this.beaconsStoredList_copy[i].distanceMeter);
+      let task = new Task(i, this.beaconsStoredList_copy[i].minor, [this.beaconsStoredList_copy[i].lng, this.beaconsStoredList_copy[i].lat], this.beaconsStoredList_copy[i].distanceMeter);
       this.tasksList.push(task);
     }
 

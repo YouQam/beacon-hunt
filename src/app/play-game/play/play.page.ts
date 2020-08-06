@@ -110,6 +110,7 @@ export class PlayPage implements OnInit {
       }
 
       this.lastKnownPosition = position;
+      this.gpsAccuracy = this.lastKnownPosition['coords'].accuracy;
       console.log('(play-page), this.LastKnownPosition lng,lat: ', this.lastKnownPosition['coords'].latitude, ', ', this.lastKnownPosition['coords'].longitude);
 
       // Zoom to the beacon location
@@ -231,11 +232,6 @@ export class PlayPage implements OnInit {
   }
 
   startScanning() {
-
-    this.reachedUsingBeacon = false;
-    console.log('test3', this.reachedUsingBeacon);
-
-
     // create a new delegate and register it with the native layer
     this.delegate = this.ibeacon.Delegate();
 
