@@ -15,6 +15,8 @@ import { Geoposition, Geolocation, GeolocationOptions } from '@ionic-native/geol
 import { HelperService } from '../../services/helper-functions.service';
 
 import { AnimationOptions } from 'ngx-lottie';
+import { GameResults } from 'src/app/models/gameResults';
+import { TasksDetail } from 'src/app/models/tasksDetail';
 
 
 @Component({
@@ -44,20 +46,23 @@ export class PlayPage implements OnInit {
   selectedGame: Game;
 
   positionSubscription: Subscription;
-  lastKnownPosition: Geolocation;
+  public lastKnownPosition: Geolocation;
 
   gpsToBeaconDistance: number = 0;
 
   reachedUsingGPS: boolean = false;
-  reachedUsingBeacon: boolean = true;
+  reachedUsingBeacon: boolean = false;
 
   private beaconAudio: HTMLAudioElement = new Audio();
   private gpsAudio: HTMLAudioElement = new Audio();
 
   public lottieConfig: AnimationOptions;
 
-  private showGameFinish: boolean = false;
+  public showGameFinish: boolean = false;
 
+  public gpsAccuracy: number = 0;
+  public gameResults: any;
+  public tasksDetail: TasksDetail[];
 
 
   constructor(private helperFuns: HelperService, public locationServics: LocationService, private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef, private helperService: HelperService) {
@@ -86,7 +91,12 @@ export class PlayPage implements OnInit {
       this.currentTask = this.tasksList[0];
       this.taskIndex = 0;
       console.log('◊◊◊ (play) sent bgame :', this.selectedGame);
-      console.log('(play), retreived game tasks: ', this.tasksList);
+
+      // initialize game results
+      this.tasksDetail = [];
+      this.tasksDetail = [new TasksDetail(this.currentTask._id, this.currentTask.distanceMeter, null, null, null, null, null)];
+      this.gameResults = new GameResults(this.selectedGame.name, new Date().toISOString(), null, null);
+      console.log('gameResults: ', this.gameResults);
     } else {
       console.log('◊◊◊ (play) game is undefined');
     }
@@ -115,10 +125,9 @@ export class PlayPage implements OnInit {
 
       // Zoom to the beacon location
       this.map.flyTo({ center: [this.lastKnownPosition['coords'].longitude, this.lastKnownPosition['coords'].latitude] });
-      console.log('(play-page),,,,,,,');
 
       // Check if user reached destination using GPS
-      if (this.selectedGame.useGPS && !this.reachedUsingGPS && this.userReachedBeacon(this.currentTask.coords)) {
+      if (this.selectedGame.useGPS && !this.reachedUsingGPS && this.userReachedUsingGPS(this.currentTask.coords)) {
         console.log('(), GPS reached destination');
         this.gpsAudio.play();
         this.reachedUsingGPS = true;
@@ -141,8 +150,6 @@ export class PlayPage implements OnInit {
       });
       this.map.addControl(new MapboxStyleSwitcherControl(), 'bottom-left');
 
-    } else {
-      console.log('ÒÒÒ map is already there')
     }
 
     this.animatedUserLocIcon();
@@ -174,7 +181,7 @@ export class PlayPage implements OnInit {
     }
   }
 
-  userReachedBeacon(currentTaskLoc) {
+  userReachedUsingGPS(currentTaskLoc) {
     console.log('userReachedBeacon');
 
     this.gpsToBeaconDistance = this.helperFuns.getDistanceFromLatLonInM(
@@ -184,10 +191,17 @@ export class PlayPage implements OnInit {
       this.lastKnownPosition['coords'].longitude
     );
 
-
     console.log('userReachedBeacon, this.gpsToBeaconDistance <= this.currentTask.distanceMeter: ', this.gpsToBeaconDistance.toFixed(2), '<=', this.currentTask.distanceMeter);
+    if (this.gpsToBeaconDistance <= this.currentTask.distanceMeter) {
+      // Initialize task detail (using GPS)
+      this.tasksDetail[this.taskIndex].reachedGPSTime = new Date().toISOString();
+      this.tasksDetail[this.taskIndex].reachedGPSDistance = this.gpsToBeaconDistance;
+      this.tasksDetail[this.taskIndex].GPSAccuracy = this.gpsAccuracy;
 
-    return this.gpsToBeaconDistance <= this.currentTask.distanceMeter;
+      return true;
+    }
+
+    return false;
 
   }
 
@@ -309,51 +323,19 @@ export class PlayPage implements OnInit {
             this.reachedUsingBeacon = true;
 
             if (this.reachedUsingBeacon && (this.selectedGame.useGPS && this.reachedUsingGPS)) {
+              // Initialize task detail (using beacon)
+              this.tasksDetail[this.taskIndex].reachedBeaconTime = new Date().toISOString();
+              this.tasksDetail[this.taskIndex].reachedBeaconDistance = receivedData[i].accuracy;
+
               this.onNextTask();
             }
 
-            // No need to zoom to beacon loc or create new marker
-            /* // Add marker
-            new mapboxgl.Marker()
-              .setLngLat([this.beaconsStoredList[0].lng, this.beaconsStoredList[0].lat])
-              .addTo(this.map);
-    
-            // Zoom to the beacon location
-            this.map.flyTo({ center: [this.currentTask.coords[0], this.currentTask.coords[1]] });
-            console.log(' Fly to: ', [this.currentTask.coords[0], this.currentTask.coords[1]]);
-    */
             // Stop ranging
             this.stopScannning();
           }
         }
       }
     }
-
-    //to compare with mulitple beacons at a time
-    /* for (let i = 0; i < receivedData.length; i++) {
-      for (let j = 0; j < this.beaconinfoList.length; j++) {
-        console.log(' search for beacon major:', receivedData[i].major);
-        if (this.beaconinfoList) {
-          if (receivedData[i].major == this.beaconinfoList[j].major) {
-            console.log(' Found Beacon: ', this.beaconsStoredList.major);
-
-            // Add marker
-            new mapboxgl.Marker()
-              .setLngLat([this.beaconinfoList[j].lng, this.beaconinfoList[j].lat])
-              .addTo(this.map);
-
-            // Zoom to the beacon location
-            this.map.flyTo({ center: [this.beaconinfoList[j].lng, this.beaconinfoList[j].lat] });
-
-            //this.changeRef.detectChanges(); // Check for data change to update view Y.Q
-
-
-            // Stop ranging
-            this.stopScannning();
-          }
-        }
-      }
-    } */
   }
 
   updateBeaconStoredList() {
@@ -377,6 +359,10 @@ export class PlayPage implements OnInit {
       this.taskIndex += 1;
       this.currentTask = this.tasksList[this.taskIndex];
 
+      // initialize game results
+      this.tasksDetail[this.taskIndex] = new TasksDetail(this.currentTask._id, this.currentTask.distanceMeter, null, null, null, null, null);
+      console.log('tasksDetail, on next: ', this.tasksDetail);
+
       console.log('◊ı◊ Task num:', this.taskIndex);
 
       this.reachedUsingBeacon = false;
@@ -385,6 +371,11 @@ export class PlayPage implements OnInit {
 
       this.initializeTask();
     } else {
+      // initialize game results
+      this.gameResults.endTime = new Date().toISOString();
+      this.gameResults.tasksDetail =this.tasksDetail;
+      console.log('///////////////////gameResults, on success: ', this.gameResults);
+
       console.log('You have passed all tasks successfully');
       /*this.helperService.presentToast("You have passed all tasks successfully"); */
       this.stopScanningTracking();
