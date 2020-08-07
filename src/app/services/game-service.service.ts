@@ -12,23 +12,11 @@ export class GameServiceService {
   constructor() { }
 
   // Pass string
-  /*   private dataSource = new BehaviorSubject("Hello service!");
-    
-    serviceData = this.dataSource.asObservable();
-  
-    changeData(data: any) {
-      this.dataSource.next(data);
-    } */
+  /*   private dataSource = new BehaviorSubject("Hello service!");   */
 
 
   // Pass coordinates
-  /*   private coordsSelected = new BehaviorSubject<number[]>([123, 456]);
-  
-    serviceCoords = this.coordsSelected.asObservable();
-  
-    changeCoords(coords: number[]) {
-      this.coordsSelected.next(coords);
-    } */
+  /*   private coordsSelected = new BehaviorSubject<number[]>([123, 456]);  */
 
 
   // Pass minor to update beacon loaction

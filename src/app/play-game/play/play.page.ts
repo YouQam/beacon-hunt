@@ -17,6 +17,7 @@ import { HelperService } from '../../services/helper-functions.service';
 import { AnimationOptions } from 'ngx-lottie';
 import { GameResults } from 'src/app/models/gameResults';
 import { TasksDetail } from 'src/app/models/tasksDetail';
+import { ApiService } from 'src/app/services/api.service';
 
 
 @Component({
@@ -65,7 +66,7 @@ export class PlayPage implements OnInit {
   public tasksDetail: TasksDetail[];
 
 
-  constructor(private helperFuns: HelperService, public locationServics: LocationService, private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef, private helperService: HelperService) {
+  constructor(private helperFuns: HelperService, public locationServics: LocationService, private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef, private helperService: HelperService, private apiService: ApiService) {
     this.platform.ready().then(() => {
       //this.requestLocPermissoin();
       this.enableDebugLogs();
@@ -246,6 +247,17 @@ export class PlayPage implements OnInit {
   }
 
   startScanning() {
+    ///////////////////////////////////////////////////
+    this.beaconAudio.play();
+    this.reachedUsingBeacon = true;
+
+    if (this.reachedUsingBeacon && (this.selectedGame.useGPS && this.reachedUsingGPS)) {
+      // Initialize task detail (using beacon)
+      //this.tasksDetail[this.taskIndex].reachedBeaconTime = new Date().toISOString();
+      //this.tasksDetail[this.taskIndex].reachedBeaconDistance = receivedData[i].accuracy;
+      this.onNextTask();
+    }
+    ////////////////////////////////////////////////////
     // create a new delegate and register it with the native layer
     this.delegate = this.ibeacon.Delegate();
 
@@ -371,10 +383,10 @@ export class PlayPage implements OnInit {
 
       this.initializeTask();
     } else {
-      // initialize game results
+      // Initialize game results end time and tasksDetail
       this.gameResults.endTime = new Date().toISOString();
-      this.gameResults.tasksDetail =this.tasksDetail;
-      console.log('///////////////////gameResults, on success: ', this.gameResults);
+      this.gameResults.tasksDetail = this.tasksDetail;
+      this.uploadGameResults();
 
       console.log('You have passed all tasks successfully');
       /*this.helperService.presentToast("You have passed all tasks successfully"); */
@@ -382,6 +394,29 @@ export class PlayPage implements OnInit {
       this.showGameFinish = true;
     }
   }
+
+  uploadGameResults() {
+    // Check if there is a network connection to upload game results of each task
+    if (navigator.onLine) {
+
+      this.apiService.postGameResults(this.gameResults) // sotre in server in the cloaud */
+        .then(data => {
+          console.log(data);
+
+          if (data.status == 200) {
+            this.helperService.presentToast('GameResults uploaded successfully!');
+          }
+        })
+        .catch(e => {
+          console.error('(postGameResult), ', e['error'].message); 
+          this.helperService.presentToast('Due to network connection, game results couldn\'t uploaded', "warning");
+        });
+    } else {
+      console.log('Network status', 'offline');
+    }
+
+  }
+
   navigateHomeMenu() {
     //this.showGameFinish = false;
     // navigate to menu

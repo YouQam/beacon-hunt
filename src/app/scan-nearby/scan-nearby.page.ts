@@ -9,6 +9,8 @@ import { GameServiceService } from '../services/game-service.service';
 import { HttpClient } from '@angular/common/http';
 import { ApiService } from '../services/api.service';
 import { Task } from '../models/task';
+import { GameResults } from '../models/gameResults';
+import { TasksDetail } from '../models/tasksDetail';
 
 @Component({
   selector: 'app-scan-nearby',
@@ -166,6 +168,16 @@ export class ScanNearbyPage implements OnInit {
   }
 
   onTestNodeServer() { // just for test
+    let taskD1 = new TasksDetail(1,2,"1",3,"3",4,5);
+    let taskD2 = new TasksDetail(1,2,"1",3,"3",4,5);
+    let gameres = new GameResults("1", "2", "3", [taskD1, taskD2]);
+
+    this.apiService.postGameResults(gameres)
+      .then(data => {
+        console.log(data);
+      })
+
+
     /* let bi = new BeaconInfo(15, 35011, 1, 10, 10);
     let task = new Task(1, 1, [1, 2], 5);
 
