@@ -26,6 +26,7 @@ export class ScanNearbyPage implements OnInit {
   scanStatus: boolean = false;
   private delegate: any = null;
   public beaconRegion: any = null;
+  public iosDevice: boolean = false;
 
 
   constructor(public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef, private http: HttpClient, private apiService: ApiService) {
@@ -37,6 +38,10 @@ export class ScanNearbyPage implements OnInit {
   }
 
   ngOnInit() {
+    // Check if device platform is iOS
+    if (! this.platform.is('ios')) {
+      this.iosDevice = true;
+    }
   }
 
   ionViewWillEnter() {

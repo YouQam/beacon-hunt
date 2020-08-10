@@ -65,7 +65,7 @@
         </ion-item>
         <ion-item>
           <ion-label><b>Distance</b> <br> {{beacon.accuracy}} m</ion-label>
-          <ion-label><b>TX</b> <br> {{beacon.tx}}</ion-label>
+          <ion-label *ngIf="iosDevice"><b>TX</b> <br> {{beacon.tx}}</ion-label>
         </ion-item>
 
       </ion-card-content>

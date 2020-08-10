@@ -56,15 +56,12 @@ export class PlayPage implements OnInit {
 
   private beaconAudio: HTMLAudioElement = new Audio();
   private gpsAudio: HTMLAudioElement = new Audio();
-
   public lottieConfig: AnimationOptions;
-
   public showGameFinish: boolean = false;
-
   public gpsAccuracy: number = 0;
   public gameResults: any;
   public tasksDetail: TasksDetail[];
-
+  public iosDevice: boolean = false;
 
   constructor(private helperFuns: HelperService, public locationServics: LocationService, private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef, private helperService: HelperService, private apiService: ApiService) {
     this.platform.ready().then(() => {
@@ -84,6 +81,11 @@ export class PlayPage implements OnInit {
   }
 
   ngOnInit() {
+    // Check if device platform is iOS
+    if (! this.platform.is('ios')) {
+      this.iosDevice = true;
+    }
+
     // Retrteive selected game
     this.gameServ.serviceSelectedGame
       .subscribe(selGame => (this.selectedGame = selGame));
@@ -98,6 +100,10 @@ export class PlayPage implements OnInit {
       this.tasksDetail = [new TasksDetail(this.currentTask._id, this.currentTask.distanceMeter, null, null, null, null, null)];
       this.gameResults = new GameResults(this.selectedGame.name, new Date().toISOString(), null, null);
       console.log('gameResults: ', this.gameResults);
+
+      // Start scanning
+      this.onScanClicked();
+
     } else {
       console.log('◊◊◊ (play) game is undefined');
     }
@@ -247,8 +253,9 @@ export class PlayPage implements OnInit {
   }
 
   startScanning() {
+    //for testing on browser
     ///////////////////////////////////////////////////
-    this.beaconAudio.play();
+    /* this.beaconAudio.play();
     this.reachedUsingBeacon = true;
 
     if (this.reachedUsingBeacon && (this.selectedGame.useGPS && this.reachedUsingGPS)) {
@@ -256,8 +263,10 @@ export class PlayPage implements OnInit {
       //this.tasksDetail[this.taskIndex].reachedBeaconTime = new Date().toISOString();
       //this.tasksDetail[this.taskIndex].reachedBeaconDistance = receivedData[i].accuracy;
       this.onNextTask();
-    }
+    } */
     ////////////////////////////////////////////////////
+
+
     // create a new delegate and register it with the native layer
     this.delegate = this.ibeacon.Delegate();
 
@@ -342,8 +351,8 @@ export class PlayPage implements OnInit {
               this.onNextTask();
             }
 
-            // Stop ranging
-            this.stopScannning();
+            // Stop scanning for beacons
+            //this.stopScannning();
           }
         }
       }
@@ -408,7 +417,7 @@ export class PlayPage implements OnInit {
           }
         })
         .catch(e => {
-          console.error('(postGameResult), ', e['error'].message); 
+          console.error('(postGameResult), ', e['error'].message);
           this.helperService.presentToast('Due to network connection, game results couldn\'t uploaded', "warning");
         });
     } else {
