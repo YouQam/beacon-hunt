@@ -4,6 +4,7 @@ import { HttpClient } from "@angular/common/http";
 import { BeaconInfo } from '../models/beaconInfo';
 import { Game } from '../models/game';
 import { GameResults } from '../models/gameResults';
+import { environment } from 'src/environments/environment';
 
 
 @Injectable({
@@ -17,37 +18,37 @@ export class ApiService {
 
   getBeaconInfo(): Promise<any> {
     return this.http
-    .get('http://192.168.0.242:3000/beacon-info')
+    .get(`${environment.apiURL}/beacon-info` )
     .toPromise();
   }
 
   postBeaconInfo(beaconInfo: BeaconInfo): Promise<any> {
     return this.http
-    .post('http://192.168.0.242:3000/beacon-info', beaconInfo, { observe: "response" })
+    .post(`${environment.apiURL}/beacon-info`, beaconInfo, { observe: "response" })
     .toPromise();
   }
 
   updateBeaconInfo(beaconInfo: BeaconInfo): Promise<any> {
     return this.http
-    .patch('http://192.168.0.242:3000/beacon-info/'+beaconInfo.minor, beaconInfo, { observe: "response" })
+    .patch(`${environment.apiURL}/beacon-info/`+beaconInfo.minor, beaconInfo, { observe: "response" })
     .toPromise();
   }
 
   getGame(): Promise<any> {
     return this.http
-    .get('http://192.168.0.242:3000/game')
+    .get(`${environment.apiURL}/game`)
     .toPromise();
   }
 
   postGame(game: Game): Promise<any> {
     return this.http
-    .post('http://192.168.0.242:3000/game', game, { observe: "response" })
+    .post(`${environment.apiURL}/game`, game, { observe: "response" })
     .toPromise();
   }
 
   postGameResults(gameResults: GameResults): Promise<any> {
     return this.http
-    .post('http://192.168.0.242:3000/game-results', gameResults, { observe: "response" })
+    .post(`${environment.apiURL}/game-results`, gameResults, { observe: "response" })
     .toPromise();
   }
 }
