@@ -3,9 +3,9 @@ export class TasksDetail {
         public taskID: Number,
         public targetDistance: Number,
         public reachedBeaconTime: String,
-        public reachedGPSDistance: Number,
-        public reachedGPSTime: String,
         public reachedBeaconDistance: Number,
-        public GPSAccuracy: Number,
+        public reachedGPSTime: String,
+        public reachedGPSDistance: Number,
+        public GPSAccuracy: Number
     ) { }
 }

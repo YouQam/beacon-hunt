@@ -1,0 +1,116 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color=dark (click)="onBackButton()">
+        <ion-icon name="chevron-back"></ion-icon> Back
+      </ion-button>
+    </ion-buttons>
+    <ion-title size="large" class="ion-text-center">Game Results</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-grid>
+
+
+    <ion-row style="background: #cdcfd6;">
+      <ion-col size="1">
+        no
+      </ion-col>
+      <ion-col size="1">
+        date
+      </ion-col>
+      <ion-col size="2">
+        taskID
+      </ion-col>
+      <ion-col size="1">
+        t-Dis
+      </ion-col>
+<!--       <ion-col size="2">
+        B-Time
+      </ion-col> -->
+      <ion-col size="1">
+        B-Dis
+      </ion-col>
+<!--       <ion-col size="2">
+        G-Time
+      </ion-col> -->
+      <ion-col size="1">
+        G-Dis
+      </ion-col>
+      <ion-col size="1">
+        G-Acc
+      </ion-col>
+    </ion-row>
+
+    <!--  -->
+    <!--  -->
+    <ion-row style="border: 1px solid black;" *ngFor="let gameresult of gameResutlsList; let i = index ">
+
+      <ion-row style="width: 100%;" *ngFor="let taskDetail of gameresult.tasksDetail; let j = index ">
+        <ion-col size="1" style="border: 0px; border-right: 1px solid black;">
+          {{i}}
+        </ion-col>
+        <ion-col size="1" style="border: 0px; border-left: 1px solid black;">
+          {{gameresult.startTime.substring(0,16)}}
+        </ion-col>
+        <ion-col size="2">
+          {{taskDetail.taskID}}
+        </ion-col>
+        <ion-col size="1">
+          {{taskDetail.targetDistance}}
+        </ion-col>
+<!--         <ion-col size="2">
+          {{taskDetail.reachedBeaconTime}}
+        </ion-col> -->
+        <ion-col size="1">
+          {{taskDetail.reachedBeaconDistance}}
+        </ion-col>
+<!--         <ion-col size="2">
+          {{taskDetail.reachedGPSTime}}
+        </ion-col> -->
+        <ion-col size="1">
+          {{taskDetail.reachedGPSDistance.toFixed(1)}}
+        </ion-col>
+        <ion-col size="1">
+          {{taskDetail.GPSAccuracy.toFixed(1)}}
+        </ion-col>
+      </ion-row>
+
+      <!-- <ion-row style="width: 100%;">
+        <ion-col size="1" style="border: 0px; border-right: 1px solid black;">
+          
+        </ion-col>
+        <ion-col size="1" style="border: 0px; border-left: 1px solid black;">
+          
+        </ion-col>
+        <ion-col size="2">
+          taskID
+        </ion-col>
+        <ion-col size="1">
+          t-Dis
+        </ion-col>
+        <ion-col size="2">
+          B-Time
+        </ion-col>
+        <ion-col size="1">
+          B-Dis
+        </ion-col>
+        <ion-col size="2">
+          G-Time
+        </ion-col>
+        <ion-col size="1">
+          G-Dis
+        </ion-col>
+        <ion-col size="1">
+          G-Acc
+        </ion-col>
+      </ion-row> -->
+
+    </ion-row>
+
+
+  </ion-grid>
+
+</ion-content>

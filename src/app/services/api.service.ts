@@ -51,4 +51,10 @@ export class ApiService {
     .post(`${environment.apiURL}/game-results`, gameResults, { observe: "response" })
     .toPromise();
   }
+
+  getGameResults(): Promise<any> {
+    return this.http
+    .get(`${environment.apiURL}/game-results`)
+    .toPromise();
+  }
 }
