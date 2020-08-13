@@ -13,34 +13,33 @@
 
   <ion-grid>
 
-
     <ion-row style="background: #cdcfd6;">
-      <ion-col size="1">
+      <ion-col size="1.5">
         no
       </ion-col>
-      <ion-col size="1">
+      <ion-col size="3">
         date
       </ion-col>
-      <ion-col size="2">
+      <ion-col size="1.5">
         taskID
       </ion-col>
-      <ion-col size="1">
+      <ion-col size="1.5">
         t-Dis
       </ion-col>
 <!--       <ion-col size="2">
         B-Time
       </ion-col> -->
-      <ion-col size="1">
+      <ion-col size="1.5">
         B-Dis
       </ion-col>
 <!--       <ion-col size="2">
         G-Time
       </ion-col> -->
-      <ion-col size="1">
-        G-Dis
+      <ion-col size="1.5">
+        GPS Dis
       </ion-col>
-      <ion-col size="1">
-        G-Acc
+      <ion-col size="1.5">
+        GPS Acc
       </ion-col>
     </ion-row>
 
@@ -49,31 +48,31 @@
     <ion-row style="border: 1px solid black;" *ngFor="let gameresult of gameResutlsList; let i = index ">
 
       <ion-row style="width: 100%;" [ngClass]="(i % 2 == 0) ? 'even' : 'odd'" *ngFor="let taskDetail of gameresult.tasksDetail; let j = index ">
-        <ion-col size="1" style="border: 0px; border-right: 1px solid black;">
+        <ion-col size="1.5" style="border: 0px; border-right: 1px solid black;">
           {{ (j==0?i:"")}}
         </ion-col>
-        <ion-col size="1" style="border: 0px; border-left: 1px solid black;">
+        <ion-col size="3" style="border: 0px; border-left: 1px solid black;">
           {{ (j==0?gameresult.startTime.substring(0,16):"")}}
         </ion-col>
-        <ion-col size="2">
+        <ion-col size="1.5">
           {{taskDetail.taskID}}
         </ion-col>
-        <ion-col size="1">
+        <ion-col size="1.5">
           {{taskDetail.targetDistance}}
         </ion-col>
 <!--         <ion-col size="2">
           {{taskDetail.reachedBeaconTime}}
         </ion-col> -->
-        <ion-col size="1">
+        <ion-col size="1.5">
           {{taskDetail.reachedBeaconDistance}}
         </ion-col>
 <!--         <ion-col size="2">
           {{taskDetail.reachedGPSTime}}
         </ion-col> -->
-        <ion-col size="1">
+        <ion-col size="1.5">
           {{taskDetail.reachedGPSDistance.toFixed(1)}}
         </ion-col>
-        <ion-col size="1">
+        <ion-col size="1.5">
           {{taskDetail.GPSAccuracy.toFixed(1)}}
         </ion-col>
       </ion-row>
