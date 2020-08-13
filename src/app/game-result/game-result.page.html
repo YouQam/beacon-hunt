@@ -48,12 +48,12 @@
     <!--  -->
     <ion-row style="border: 1px solid black;" *ngFor="let gameresult of gameResutlsList; let i = index ">
 
-      <ion-row style="width: 100%;" *ngFor="let taskDetail of gameresult.tasksDetail; let j = index ">
+      <ion-row style="width: 100%;" [ngClass]="(i % 2 == 0) ? 'even' : 'odd'" *ngFor="let taskDetail of gameresult.tasksDetail; let j = index ">
         <ion-col size="1" style="border: 0px; border-right: 1px solid black;">
-          {{i}}
+          {{ (j==0?i:"")}}
         </ion-col>
         <ion-col size="1" style="border: 0px; border-left: 1px solid black;">
-          {{gameresult.startTime.substring(0,16)}}
+          {{ (j==0?gameresult.startTime.substring(0,16):"")}}
         </ion-col>
         <ion-col size="2">
           {{taskDetail.taskID}}

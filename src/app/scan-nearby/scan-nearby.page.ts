@@ -173,14 +173,33 @@ export class ScanNearbyPage implements OnInit {
   }
 
   onTestNodeServer() { // just for test
-    let taskD1 = new TasksDetail(1,2,"1",3,"3",4,5);
+    //test Date
+    console.log('toDateString: ', new Date().toDateString());
+    console.log('toISOString: ', new Date().toISOString());
+    console.log('toLocaleDateString: ', new Date().toLocaleDateString());
+    
+    
+    console.log('toLocaleString: ', new Date().toLocaleString(undefined, {hour12: false}));
+
+
+
+
+
+    console.log('toJSON: ', new Date().toJSON());
+    console.log('toLocaleTimeString: ', new Date().toLocaleTimeString());
+    console.log('toString: ', new Date().toString());
+    console.log('toTimeString: ', new Date().toTimeString());
+    console.log('toUTCString: ', new Date().toUTCString());
+
+
+    /* let taskD1 = new TasksDetail(1,2,"1",3,"3",4,5);
     let taskD2 = new TasksDetail(1,2,"1",3,"3",4,5);
     let gameres = new GameResults("1", "2", "3", [taskD1, taskD2]);
 
     this.apiService.postGameResults(gameres)
       .then(data => {
         console.log(data);
-      })
+      }) */
 
 
     /* let bi = new BeaconInfo(15, 35011, 1, 10, 10);

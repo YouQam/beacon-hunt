@@ -1,4 +1,11 @@
-ion-col{
+ion-col {
     //background: gray;
     border: 1px solid black;
-    }
+}
+
+.odd {
+    background: rgba($color: #F0F0F0, $alpha: 1.0);
+}
+.even {
+    background: rgba($color: #FFFFFF, $alpha: 1.0);
+}

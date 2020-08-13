@@ -98,7 +98,7 @@ export class PlayPage implements OnInit {
       // initialize game results
       this.tasksDetail = [];
       this.tasksDetail = [new TasksDetail(this.currentTask._id, this.currentTask.distanceMeter, null, null, null, null, null)];
-      this.gameResults = new GameResults(this.selectedGame.name, new Date().toISOString(), null, null);
+      this.gameResults = new GameResults(this.selectedGame.name, new Date().toLocaleString(undefined, {hour12: false}), null, null);
       console.log('gameResults: ', this.gameResults);
 
       // Start scanning
@@ -201,7 +201,7 @@ export class PlayPage implements OnInit {
     console.log('userReachedBeacon, this.gpsToBeaconDistance <= this.currentTask.distanceMeter: ', this.gpsToBeaconDistance.toFixed(2), '<=', this.currentTask.distanceMeter);
     if (this.gpsToBeaconDistance <= this.currentTask.distanceMeter) {
       // Initialize task detail (using GPS)
-      this.tasksDetail[this.taskIndex].reachedGPSTime = new Date().toISOString();
+      this.tasksDetail[this.taskIndex].reachedGPSTime = new Date().toLocaleString(undefined, {hour12: false});
       this.tasksDetail[this.taskIndex].reachedGPSDistance = this.gpsToBeaconDistance;
       this.tasksDetail[this.taskIndex].GPSAccuracy = this.gpsAccuracy;
 
@@ -345,7 +345,7 @@ export class PlayPage implements OnInit {
 
             if (this.reachedUsingBeacon && (this.selectedGame.useGPS && this.reachedUsingGPS)) {
               // Initialize task detail (using beacon)
-              this.tasksDetail[this.taskIndex].reachedBeaconTime = new Date().toISOString();
+              this.tasksDetail[this.taskIndex].reachedBeaconTime = new Date().toLocaleString(undefined, {hour12: false});
               this.tasksDetail[this.taskIndex].reachedBeaconDistance = receivedData[i].accuracy;
 
               this.onNextTask();
@@ -393,7 +393,7 @@ export class PlayPage implements OnInit {
       this.initializeTask();
     } else {
       // Initialize game results end time and tasksDetail
-      this.gameResults.endTime = new Date().toISOString();
+      this.gameResults.endTime = new Date().toLocaleString(undefined, {hour12: false});
       this.gameResults.tasksDetail = this.tasksDetail;
       this.uploadGameResults();
 
