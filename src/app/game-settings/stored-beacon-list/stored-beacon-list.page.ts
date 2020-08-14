@@ -53,11 +53,11 @@ export class StoredBeaconListPage implements OnInit {
   openUpdateBeaconLoc(beaconMinor: number, beaconLng: number, beaconLat: number): void {
     console.log("Button: ", beaconMinor, "lng ", beaconLng, beaconLat);
 
-    // Store info in service, zero to indeicate that this is sent from create-game page , ToDo: improve this impl.
+    // Store info in service, zero to indicate that this is sent from create-game page , ToDo: improve this impl.
     this.gameServ.changebeaconData(new BeaconInfo(0, beaconMinor, beaconLng, beaconLat));
 
     // update MinorNo service to minor number 
-    this.gameServ.changeMinorNo(beaconMinor);
+    //this.gameServ.changeMinorNo(beaconMinor);
 
     // navigate to map-add-loc page
     this.navCtrl.navigateRoot('map-add-loc'); // Used navigateRoot to be able to update coords in tab

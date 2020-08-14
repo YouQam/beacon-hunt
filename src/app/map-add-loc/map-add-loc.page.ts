@@ -56,9 +56,9 @@ export class MapAddLocPage implements OnInit {
     }
 
     console.log('(Page-num: )', this.beaconDataSer.major);
-    if(this.beaconDataSer.major == 0){
+    if (this.beaconDataSer.major == 0) {
       this.db_name = 'beacon_info_list'
-    }else{
+    } else {
       this.db_name = 'beacon_info_list_copy'
     }
 
@@ -87,13 +87,23 @@ export class MapAddLocPage implements OnInit {
   }
 
   ionViewWillLeave() {
+    console.log('(create-game), ionViewWillLeave');
+
     if (navigator.onLine) {
       console.log('online');
-      // update beacon info on server
-      this.apiService.updateBeaconInfo(this.beaconDataSer)
-      .then(data => {
-        console.log('patch: ', data);
-      })
+
+      // Only update loc in server when user press save and from stored-beacon-list page
+      if (this.selectedCoords != undefined && this.beaconDataSer.major == 0) {
+        // update beacon info on server
+        this.apiService.updateBeaconInfo(new BeaconInfo(null, this.beaconDataSer.minor, this.selectedCoords[0], this.selectedCoords[1]))
+          .then(data => {
+            console.log('patch: ', data);
+            this.helperService.presentToast('Loc updated in server');
+          })
+          .catch(e => {
+            console.error('(update loc), ', e);
+          });
+      }
     }
   }
 
@@ -157,7 +167,7 @@ export class MapAddLocPage implements OnInit {
       }
 
       // update MinorNo service to undefined 
-      this.gameServ.changeMinorNo(undefined);
+      //this.gameServ.changeMinorNo(undefined);
 
       // navigate to previous page
       this.navCtrl.back();

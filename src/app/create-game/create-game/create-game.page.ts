@@ -41,7 +41,8 @@ export class CreateGamePage implements OnInit {
           this.beaconsStoredList = data;
           this.beaconsStoredList_copy = this.beaconsStoredList.slice();
           this.changeRef.detectChanges(); // Check for data change to update view Y.Q
-          console.log('From (create-game), beacon info list stored in the variable ', this.beaconsStoredList_copy);
+          console.log('From (create-game), beacon info list stored in the variable, beaconsStoredList ', this.beaconsStoredList);
+          console.log('From (create-game), beacon info list stored in the variable, beaconsStoredList_copy ', this.beaconsStoredList_copy);
 
           this.maxNumTasks = this.numTasks = this.beaconsStoredList.length;
           console.log('(create-game), beacon info list retreived successfully: ', this.maxNumTasks);
@@ -69,6 +70,11 @@ export class CreateGamePage implements OnInit {
     this.UpdateTaskLoaction(); // To update beacon loc when back from map-add-loc 
   }
 
+  ionViewWillLeave() {
+    this.storage.remove('beacon_info_list_copy');
+    console.log('beacon_info_list_copy removed successfully');
+  }
+
   retreiveStoredGames() {
     this.storage.get('game_list')
       .then((storedGames) => {
@@ -87,7 +93,8 @@ export class CreateGamePage implements OnInit {
   UpdateTaskLoaction() {
     console.log('(create-game), UpdateTaskLoaction');
 
-    if (this.beaconsStoredList_copy.length < this.beaconsStoredList.length) {
+    //if (this.beaconsStoredList_copy.length < this.beaconsStoredList.length) {
+    //if (this.beaconsStoredList_copy != undefined) {
       this.storage.get('beacon_info_list_copy')
         .then((data) => {
           console.log('(create-game), data:', data);
@@ -105,7 +112,8 @@ export class CreateGamePage implements OnInit {
         }).catch((error: any) => {
           console.error(`(create-game), error in retreiving beacon info list from storage`, error);
         });;
-    }
+    //}
+    //}
   }
 
   onTaskNumChange(opType: string): void {
