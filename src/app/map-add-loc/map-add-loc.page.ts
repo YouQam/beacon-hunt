@@ -36,6 +36,8 @@ export class MapAddLocPage implements OnInit {
 
   positionSubscription: Subscription;
 
+  db_name: string; // To hold info list db name, either original or copy
+
 
   constructor(public locationServics: LocationService, private geolocation: Geolocation, private changeRef: ChangeDetectorRef, private readonly platform: Platform, public navCtrl: NavController, public storage: Storage, private gameServ: GameServiceService, private helperService: HelperService, private apiService: ApiService) {
     platform.resume.subscribe((result) => {
@@ -53,8 +55,15 @@ export class MapAddLocPage implements OnInit {
       console.log('◊◊◊ From map-add-loc, beacon data is undefined');
     }
 
+    console.log('(Page-num: )', this.beaconDataSer.major);
+    if(this.beaconDataSer.major == 0){
+      this.db_name = 'beacon_info_list'
+    }else{
+      this.db_name = 'beacon_info_list_copy'
+    }
+
     // get stored beaconinfo to be update selected beacon location
-    this.storage.get('beacon_info_list')
+    this.storage.get(this.db_name)
       .then((data) => {
         if (data != null) {
           this.beaconsStoredList = data;
@@ -140,7 +149,9 @@ export class MapAddLocPage implements OnInit {
           this.beaconsStoredList[i].lat = this.selectedCoords[1];
           console.log('beacon loaction has been updated');
 
-          this.storage.set('beacon_info_list', this.beaconsStoredList);
+          this.storage.set(this.db_name, this.beaconsStoredList);
+          console.log('this.beaconsStoredList: ', this.beaconsStoredList); // added in 14,08.20
+
           this.changeRef.detectChanges(); // Check for data change to update view Y.Q
         }
       }

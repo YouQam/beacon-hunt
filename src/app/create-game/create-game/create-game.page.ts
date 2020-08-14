@@ -32,6 +32,8 @@ export class CreateGamePage implements OnInit {
   constructor(private changeRef: ChangeDetectorRef, public navCtrl: NavController, private gameServ: GameServiceService, public storage: Storage, private apiService: ApiService, private helperService: HelperService) { }
 
   ngOnInit() {
+    console.log('(create-game), ngOnInit');
+
     // get stored beaconinfo to be update selected beacon location
     this.storage.get('beacon_info_list')
       .then((data) => {
@@ -83,22 +85,27 @@ export class CreateGamePage implements OnInit {
   }
 
   UpdateTaskLoaction() {
-    this.storage.get('beacon_info_list')
-      .then((data) => {
-        if (data != null) {
-          for (let i = 0; i < this.beaconsStoredList_copy.length; i++) {
-            let found = data.filter(t => t.minor == this.beaconsStoredList_copy[i].minor); // Check if the task is already in the list
-            console.log("found is: ", found, ", length: ", found.length);
-            if (found.length != 0) {
-              this.beaconsStoredList_copy[i].lat = data[i].lat;
-              this.beaconsStoredList_copy[i].lng = data[i].lng;
-            }
+    console.log('(create-game), UpdateTaskLoaction');
 
+    if (this.beaconsStoredList_copy.length < this.beaconsStoredList.length) {
+      this.storage.get('beacon_info_list_copy')
+        .then((data) => {
+          console.log('(create-game), data:', data);
+
+          if (data != null) {
+            for (let i = 0; i < this.beaconsStoredList_copy.length; i++) {
+              let found = data.filter(t => t.minor == this.beaconsStoredList_copy[i].minor); // Check if the task is already in the list
+              //console.log("found is: ", found, ", length: ", found.length);
+              if (found.length != 0) {
+                this.beaconsStoredList_copy[i].lat = data[i].lat;
+                this.beaconsStoredList_copy[i].lng = data[i].lng;
+              }
+            }
           }
-        }
-      }).catch((error: any) => {
-        console.error(`(create-game), error in retreiving beacon info list from storage`);
-      });;
+        }).catch((error: any) => {
+          console.error(`(create-game), error in retreiving beacon info list from storage`, error);
+        });;
+    }
   }
 
   onTaskNumChange(opType: string): void {
@@ -125,11 +132,14 @@ export class CreateGamePage implements OnInit {
     }
   }
 
-  openBeaconData(beaconMinor: number, beaconLng: number, beaconLat: number): void {
+  onUpdateBeaconLocClick(beaconMinor: number, beaconLng: number, beaconLat: number): void {
     console.log("Button: ", beaconMinor, "lng ", beaconLng, beaconLat);
 
-    // Store info in service
-    this.gameServ.changebeaconData(new BeaconInfo(null, beaconMinor, beaconLng, beaconLat));
+    // sotre in db, before send it to map loc. This will make it esaier to modify the loc in page view issue #87
+    this.storage.set('beacon_info_list_copy', this.beaconsStoredList_copy);
+
+    // Store info in service, one to indeicate that this is sent from create-game page , ToDo: improve this impl.
+    this.gameServ.changebeaconData(new BeaconInfo(1, beaconMinor, beaconLng, beaconLat));
 
     /* // update MinorNo service to minor number 
     this.gameServ.changeMinorNo(beaconMinor); */
@@ -165,6 +175,9 @@ export class CreateGamePage implements OnInit {
       console.log("answer is: ", answer, ", length: ", answer.length);
       if (answer.length == 0) {
         this.beaconsStoredList_copy.push(this.beaconsStoredList[i]); // add task
+        //console.log("(onAddTaskPressed):  task added");
+        break; // To make sure that only one task is added at a time
+
       }
     }
   }
@@ -266,7 +279,7 @@ export class CreateGamePage implements OnInit {
     this.navCtrl.back();
   }
 
-  useGPSToggleChange(){
+  useGPSToggleChange() {
     //console.log('toggle change: ', this.useGPS);
   }
 

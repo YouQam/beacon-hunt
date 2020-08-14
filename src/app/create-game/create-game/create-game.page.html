@@ -104,7 +104,7 @@
             </ion-range>
           </ion-item>
 
-          <ion-button (click)="openBeaconData(beacon.minor, beacon.lng, beacon.lat)">
+          <ion-button (click)="onUpdateBeaconLocClick(beacon.minor, beacon.lng, beacon.lat)">
             <ion-icon name="pencil-outline"></ion-icon>
           </ion-button>
           <ion-button (click)="onDeleteBeacon(beacon.minor)">

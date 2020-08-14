@@ -53,8 +53,8 @@ export class StoredBeaconListPage implements OnInit {
   openUpdateBeaconLoc(beaconMinor: number, beaconLng: number, beaconLat: number): void {
     console.log("Button: ", beaconMinor, "lng ", beaconLng, beaconLat);
 
-    // Store info in service
-    this.gameServ.changebeaconData(new BeaconInfo(null, beaconMinor, beaconLng, beaconLat));
+    // Store info in service, zero to indeicate that this is sent from create-game page , ToDo: improve this impl.
+    this.gameServ.changebeaconData(new BeaconInfo(0, beaconMinor, beaconLng, beaconLat));
 
     // update MinorNo service to minor number 
     this.gameServ.changeMinorNo(beaconMinor);
@@ -80,7 +80,7 @@ export class StoredBeaconListPage implements OnInit {
 
   // Back button
   onBackButton() {
-    this.navCtrl.navigateRoot('menu');
+    this.navCtrl.back()
   }
 
 }

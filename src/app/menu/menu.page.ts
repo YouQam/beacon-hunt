@@ -25,6 +25,8 @@ export class MenuPage implements OnInit {
   ngOnInit() {
     console.log('menu/onInit');
 
+    console.log('beaconinfoList: ', this.beaconinfoList);
+
     if (navigator.onLine) {
       console.log('online');
 

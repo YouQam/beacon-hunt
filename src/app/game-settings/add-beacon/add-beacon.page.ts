@@ -284,7 +284,6 @@ export class AddBeaconPage implements OnInit {
     // get stored beaconinfo to be update selected beacon location
     this.storage.get('beacon_info_list')
       .then((data) => {
-
       });
 
   }
