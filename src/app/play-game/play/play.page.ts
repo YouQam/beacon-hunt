@@ -31,7 +31,8 @@ export class PlayPage implements OnInit {
   map: mapboxgl.Map;
   marker: mapboxgl.Marker;
 
-  uuid = 'b9407f30-f5f8-466e-aff9-25556b57fe6d';
+  uuid = 'b9407f30-f5f8-466e-aff9-25556b57fe6d'; // etiomte
+  checkedUuid = '';
   beaconData = [];
   beaconUuid: String;
   scanStatus: boolean = false;
@@ -82,7 +83,7 @@ export class PlayPage implements OnInit {
 
   ngOnInit() {
     // Check if device platform is iOS
-    if (! this.platform.is('ios')) {
+    if (!this.platform.is('ios')) {
       this.iosDevice = true;
     }
 
@@ -98,7 +99,7 @@ export class PlayPage implements OnInit {
       // initialize game results
       this.tasksDetail = [];
       this.tasksDetail = [new TasksDetail(this.currentTask._id, this.currentTask.distanceMeter, null, null, null, null, null)];
-      this.gameResults = new GameResults(this.selectedGame.name, new Date().toLocaleString(undefined, {hour12: false}), null, null);
+      this.gameResults = new GameResults(this.selectedGame.name, new Date().toLocaleString(undefined, { hour12: false }), null, null);
       console.log('gameResults: ', this.gameResults);
 
       // Start scanning
@@ -201,7 +202,7 @@ export class PlayPage implements OnInit {
     console.log('userReachedBeacon, this.gpsToBeaconDistance <= this.currentTask.distanceMeter: ', this.gpsToBeaconDistance.toFixed(2), '<=', this.currentTask.distanceMeter);
     if (this.gpsToBeaconDistance <= this.currentTask.distanceMeter) {
       // Initialize task detail (using GPS)
-      this.tasksDetail[this.taskIndex].reachedGPSTime = new Date().toLocaleString(undefined, {hour12: false});
+      this.tasksDetail[this.taskIndex].reachedGPSTime = new Date().toLocaleString(undefined, { hour12: false });
       this.tasksDetail[this.taskIndex].reachedGPSDistance = this.gpsToBeaconDistance;
       this.tasksDetail[this.taskIndex].GPSAccuracy = this.gpsAccuracy;
 
@@ -345,7 +346,7 @@ export class PlayPage implements OnInit {
 
             if (this.reachedUsingBeacon && (this.selectedGame.useGPS && this.reachedUsingGPS)) {
               // Initialize task detail (using beacon)
-              this.tasksDetail[this.taskIndex].reachedBeaconTime = new Date().toLocaleString(undefined, {hour12: false});
+              this.tasksDetail[this.taskIndex].reachedBeaconTime = new Date().toLocaleString(undefined, { hour12: false });
               this.tasksDetail[this.taskIndex].reachedBeaconDistance = receivedData[i].accuracy;
 
               this.onNextTask();
@@ -380,6 +381,19 @@ export class PlayPage implements OnInit {
       this.taskIndex += 1;
       this.currentTask = this.tasksList[this.taskIndex];
 
+      // Stop scanning to update uuid of the beacon, ToDo: improve impl.
+      if (this.currentTask.minor == 14338 || this.currentTask.minor == 35011 || this.currentTask.minor == 50313) {
+        this.checkedUuid = 'b9407f30-f5f8-466e-aff9-25556b57fe6d'; // estiomte
+      }
+      else {
+        this.checkedUuid = 'B5B182C7-EAB1-4988-AA99-B5C1517008D9'; // april
+      }
+      if(this.checkedUuid != this.uuid){
+        this.onScanClicked();
+        this.uuid = this.checkedUuid;
+        this.onScanClicked();
+      }
+
       // initialize game results
       this.tasksDetail[this.taskIndex] = new TasksDetail(this.currentTask._id, this.currentTask.distanceMeter, null, null, null, null, null);
       console.log('tasksDetail, on next: ', this.tasksDetail);
@@ -393,7 +407,7 @@ export class PlayPage implements OnInit {
       this.initializeTask();
     } else {
       // Initialize game results end time and tasksDetail
-      this.gameResults.endTime = new Date().toLocaleString(undefined, {hour12: false});
+      this.gameResults.endTime = new Date().toLocaleString(undefined, { hour12: false });
       this.gameResults.tasksDetail = this.tasksDetail;
       this.uploadGameResults();
 
