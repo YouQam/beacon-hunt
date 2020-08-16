@@ -232,7 +232,6 @@ export class AddBeaconPage implements OnInit {
     // Check if there is a network connection to store in server as well as in local storage
     if (navigator.onLine) {
       console.log("onTestNodeServer", 'online');
-      this.storage.set('beacon_info_list', this.beaconsStoredList); // sotre in db */
 
       this.apiService.postBeaconInfo(selectedBeacon)
         .then(data => {
@@ -240,8 +239,8 @@ export class AddBeaconPage implements OnInit {
 
           if (data.status == 200) {
             console.log('(postInfo), status 200');
+            this.storage.set('beacon_info_list', this.beaconsStoredList); // sotre in db */
             this.helperService.presentToast('Beacon info stored in server and local storage');
-
           }
         })
         .catch(e => {
