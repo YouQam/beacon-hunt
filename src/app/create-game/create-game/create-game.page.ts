@@ -201,7 +201,6 @@ export class CreateGamePage implements OnInit {
         }
       }
     }
-
     return true;
   }
 

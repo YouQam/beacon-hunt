@@ -25,6 +25,8 @@ export class UpdateGamePage implements OnInit {
   updatedTasksList: Task[];
   gameListStored: Game[];
   useGPS: boolean;
+  newGameName: string;
+  showAddNewGameDialog: boolean;
 
 
   ngOnInit() {
@@ -84,7 +86,6 @@ export class UpdateGamePage implements OnInit {
         if (data != null) {
           for (let i = 0; i < this.taskList_BI.length; i++) {
             let found = data.filter(t => t.minor == this.taskList_BI[i].minor); // Check if the task is already in the list
-            //console.log("found is: ", found, ", length: ", found.length);
             if (found.length != 0) {
               this.taskList_BI[i].lat = data[i].lat;
               this.taskList_BI[i].lng = data[i].lng;
@@ -180,6 +181,84 @@ export class UpdateGamePage implements OnInit {
 
     // Navigate to update game list page
     this.onBackButton();
+  }
+
+  onAddNewGameClicked(){
+    this.showAddNewGameDialog = true;
+  } 
+  
+  onSaveNewGameClicked(){
+    if (this.newGameName == undefined || this.newGameName.trim() == "") {
+      this.helperService.presentToast("Set game name to be able to save.", "warning");
+      return;
+    }
+
+    if (!this.checkForNameDuplication()) {
+      console.log("(checkForNameDuplication), return");
+      return;
+    }
+
+    this.updatedTasksList = []; // empty tasks list
+
+    for (let i = 0; i < this.taskList_BI.length; i++) {
+      let task = new Task(i, this.taskList_BI[i].minor, [this.taskList_BI[i].lng, this.taskList_BI[i].lat], this.taskList_BI[i].distanceMeter);
+      this.updatedTasksList.push(task);
+    }
+
+    let gameCreated = new Game(this.newGameName, this.useGPS, this.updatedTasksList);
+
+    // ToDo: improve the impl since there should be at least one game
+    if (this.gameListStored == null) {
+      this.gameListStored = [gameCreated];
+    } else {
+      this.gameListStored.push(gameCreated); // Add game to the list to store it in local db
+    }
+
+    // Check if there is a network connection to store in server as well as in local storage
+    if (navigator.onLine) {
+      console.log("onTestServer", 'online');
+      this.storage.set('game_list', this.gameListStored); // sotre in local db/ ToDo: put it inside success
+
+      this.apiService.postGame(gameCreated) // sotre in server in the cloaud */
+        .then(data => {
+          console.log(data);
+
+          if (data.status == 200) {
+            console.log('(postGame), status 200');
+            this.helperService.presentToast('Game stored in server and local storage');
+          }
+        })
+        .catch(e => {
+          console.error('(postGame), ', e);
+          this.helperService.presentToast('Due to existance in server or failure, game only stored in local storage', "warning");
+        });
+    } else {
+      console.log("onTestServer", 'offline');
+      this.storage.set('game_list', this.gameListStored); // sotre in db /
+      this.helperService.presentToast('Due to offline mode, beacon info only stored in local storage');
+    }
+
+    // Navigate to update game list page
+    this.onBackButton();
+  } 
+  
+  onCancelClicked(){
+    this.showAddNewGameDialog = false;
+
+  }
+
+  checkForNameDuplication() {
+    console.log("(checkForNameDuplication) ");
+
+    if (this.gameListStored != null) {
+      for (let i = 0; i < this.gameListStored.length; i++) {
+        if (this.gameListStored[i].name == this.newGameName) {
+          this.helperService.presentToast("Please, use another name, this name is already used.", "warning");
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
 }

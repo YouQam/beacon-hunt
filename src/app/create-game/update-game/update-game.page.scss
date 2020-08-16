@@ -11,11 +11,29 @@ ion-item {
 }
 
 ion-input {
-    border: 1px solid black;
+    //border: 1px solid black;
     margin: 0px;
 }
 
 ion-label {
     padding: 0px;
     margin: 0px;
+}
+
+.blur {
+    filter: blur(3px);
+}
+
+.overlay {
+    &.player-name {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+        text-align: center;
+        padding: 1rem;
+        margin: 0;
+    }
 }
