@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { NavController } from '@ionic/angular';
 import { Game } from 'src/app/models/game';
+import { GameServiceService } from 'src/app/services/game-service.service';
 
 @Component({
   selector: 'app-update-game-list',
@@ -11,7 +12,7 @@ import { Game } from 'src/app/models/game';
 export class UpdateGameListPage implements OnInit {
   gameList: Game[] = [];
 
-  constructor(public storage: Storage, public navCtrl: NavController) { }
+  constructor(public storage: Storage, public navCtrl: NavController, private gameServ: GameServiceService) { }
 
   ngOnInit() {
     // Retreive stored games list
@@ -33,7 +34,7 @@ export class UpdateGameListPage implements OnInit {
     this.navCtrl.back();
   }
 
-  onDeleteGame(gameName: string){
+  onDeleteGameClicked(gameName: string) {
     console.log('Game name', gameName);
 
     for (var i = 0; i < this.gameList.length; i++) {
@@ -41,6 +42,18 @@ export class UpdateGameListPage implements OnInit {
         this.gameList.splice(i, 1);
       }
     }
+  }
+
+  onGameClicked(game: any) {
+    console.log('Game name', game.name);
+
+    // Store Game in service
+    this.gameServ.ChangeGame(game);
+
+    console.log('(update-game-list) store game in service', game)
+
+    // navigate to map-add-loc page
+    this.navCtrl.navigateForward('update-game');
   }
 
 }

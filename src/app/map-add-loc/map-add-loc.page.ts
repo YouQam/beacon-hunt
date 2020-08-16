@@ -58,8 +58,10 @@ export class MapAddLocPage implements OnInit {
     console.log('(Page-num: )', this.beaconDataSer.major);
     if (this.beaconDataSer.major == 0) {
       this.db_name = 'beacon_info_list'
-    } else {
+    } else if(this.beaconDataSer.major == 1){
       this.db_name = 'beacon_info_list_copy'
+    }else {
+      this.db_name = 'update-game-list'
     }
 
     // get stored beaconinfo to be update selected beacon location

@@ -1,9 +1,62 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>update-game</ion-title>
+    <ion-buttons slot="start">
+      <ion-button color=dark (click)="onBackButton()">
+        <ion-icon name="chevron-back"></ion-icon> Back
+      </ion-button>
+    </ion-buttons>
+    <ion-title size="large" class="ion-text-center">Update ({{gameName}})</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <!-- Show taks detail -->
+  <ion-card *ngFor="let task of taskList_BI; let i = index ">
+    <ion-card-content style="padding: 2px;">
+      <ion-item>
+        <ion-label>
+          <h1>Task ({{i+1}})</h1>
+        </ion-label>
+      </ion-item>
+
+      <ion-item-divider style="min-height: 1px; "> </ion-item-divider>
+
+      <ion-item>
+        <ion-label><b>Major</b> <br> 1 </ion-label>
+        <ion-label><b>Minor</b> <br> {{task.minor}}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label><b>Longitude</b> <br> {{task.lng}}</ion-label>
+        <ion-label><b>Latitude</b> <br> {{task.lat}}</ion-label>
+      </ion-item>
+
+      <ion-item style="margin-right: 10%;">
+        <ion-label><b>Accuracy</b></ion-label>
+
+        <ion-range style="padding-top: 22px;" min="2" max="15" snaps ticks pin step="1" value={{task.distanceMeter}}
+          (ionChange)="onRangeChange(task.minor, $event['detail'].value)">
+          <ion-label slot="start">2m</ion-label>
+          <ion-icon slot="start" size="small" name="locate">
+          </ion-icon>
+          <ion-icon slot="end" name="locate"></ion-icon>
+          <ion-label slot="end">15m</ion-label>
+        </ion-range>
+      </ion-item>
+
+      <ion-button (click)="onUpdateBeaconLocClick(task.minor, task.lng, task.lat, task.distanceMeter)">
+        <ion-icon name="pencil-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="onDeleteBeacon(beacon.minor)">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+
+    </ion-card-content>
+  </ion-card>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="onSaveGameClicked()">
+      <ion-icon name='save' style="font-size: 25px;"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
 </ion-content>

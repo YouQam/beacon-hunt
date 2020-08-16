@@ -235,7 +235,7 @@ export class CreateGamePage implements OnInit {
     // Check if there is a network connection to store in server as well as in local storage
     if (navigator.onLine) {
       console.log("onTestServer", 'online');
-      this.storage.set('game_list', this.gameListStored); // sotre in local db */
+      this.storage.set('game_list', this.gameListStored); // sotre in local db/ ToDo: put it inside success
 
       this.apiService.postGame(gameCreated) // sotre in server in the cloaud */
         .then(data => {
@@ -271,7 +271,7 @@ export class CreateGamePage implements OnInit {
       });
   }
 
-  // invoked when user update accuracy to beacon
+  // invoked when user update target accuracy of beacon
   onRangeChange(bMinor: number, accuracy: number) {
     console.log("onRangeChange,  bMinor= ", bMinor, 'accuracy', accuracy);
 

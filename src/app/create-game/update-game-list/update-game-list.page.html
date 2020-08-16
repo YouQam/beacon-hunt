@@ -13,11 +13,11 @@
     <h5>List of stored games: </h5>
     
   <ion-list>
-    <ion-item *ngFor="let game of gameList">
+    <ion-item *ngFor="let game of gameList" (click)="onGameClicked(game)">
       <ion-label>
         <h2>{{game.name}}</h2>
       </ion-label>
-      <ion-button color=primary (click)="onDeleteGame(game.name)">
+      <ion-button color=primary (click)="onDeleteGameClicked(game.name)">
         <ion-icon name="trash"></ion-icon> 
       </ion-button>
     </ion-item>
