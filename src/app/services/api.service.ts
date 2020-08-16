@@ -18,43 +18,49 @@ export class ApiService {
 
   getBeaconInfo(): Promise<any> {
     return this.http
-    .get(`${environment.apiURL}/beacon-info` )
-    .toPromise();
+      .get(`${environment.apiURL}/beacon-info`)
+      .toPromise();
   }
 
   postBeaconInfo(beaconInfo: BeaconInfo): Promise<any> {
     return this.http
-    .post(`${environment.apiURL}/beacon-info`, beaconInfo, { observe: "response" })
-    .toPromise();
+      .post(`${environment.apiURL}/beacon-info`, beaconInfo, { observe: "response" })
+      .toPromise();
   }
 
   updateBeaconInfo(beaconInfo: BeaconInfo): Promise<any> {
     return this.http
-    .patch(`${environment.apiURL}/beacon-info/`+beaconInfo.minor, beaconInfo, { observe: "response" })
-    .toPromise();
+      .patch(`${environment.apiURL}/beacon-info/` + beaconInfo.minor, beaconInfo, { observe: "response" })
+      .toPromise();
   }
 
   getGame(): Promise<any> {
     return this.http
-    .get(`${environment.apiURL}/game`)
-    .toPromise();
+      .get(`${environment.apiURL}/game`)
+      .toPromise();
   }
 
   postGame(game: Game): Promise<any> {
     return this.http
-    .post(`${environment.apiURL}/game`, game, { observe: "response" })
-    .toPromise();
+      .post(`${environment.apiURL}/game`, game, { observe: "response" })
+      .toPromise();
+  }
+  
+  updateGame(game: Game): Promise<any> {
+    return this.http
+      .patch(`${environment.apiURL}/game/` + game.name, game, { observe: "response" })
+      .toPromise();
   }
 
   postGameResults(gameResults: GameResults): Promise<any> {
     return this.http
-    .post(`${environment.apiURL}/game-results`, gameResults, { observe: "response" })
-    .toPromise();
+      .post(`${environment.apiURL}/game-results`, gameResults, { observe: "response" })
+      .toPromise();
   }
 
   getGameResults(): Promise<any> {
     return this.http
-    .get(`${environment.apiURL}/game-results`)
-    .toPromise();
+      .get(`${environment.apiURL}/game-results`)
+      .toPromise();
   }
 }

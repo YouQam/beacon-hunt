@@ -5,6 +5,8 @@ import { Task } from 'src/app/models/task';
 import { NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { BeaconInfo } from 'src/app/models/beaconInfo';
+import { ApiService } from 'src/app/services/api.service';
+import { HelperService } from 'src/app/services/helper-functions.service';
 
 @Component({
   selector: 'app-update-game',
@@ -14,7 +16,7 @@ import { BeaconInfo } from 'src/app/models/beaconInfo';
 export class UpdateGamePage implements OnInit {
 
 
-  constructor(private gameServ: GameServiceService, public navCtrl: NavController, public storage: Storage) { }
+  constructor(private gameServ: GameServiceService, public navCtrl: NavController, public storage: Storage, private apiService: ApiService, private helperService: HelperService) { }
 
   selectedGame: Game;
   tasksList: Task[];
@@ -148,67 +150,33 @@ export class UpdateGamePage implements OnInit {
 
     console.log("Updated tasks: ", this.updatedTasksList);
 
+    // Update game in main game list
     let gameIndex = this.gameListStored.findIndex(x => x.name == this.gameName); // Get index of game
-
-
-    console.log("gameIndex: ", gameIndex);
-
     this.selectedGame.tasks = this.updatedTasksList;
     this.gameListStored[gameIndex] = this.selectedGame;
 
-    console.log("selectedGame: ", this.selectedGame);
-    console.log("gameListStored: ", this.gameListStored);
-
-
-    //let gameCreated = new Game(this.gameName, this.useGPS, this.tasksList);
-
-/*     if (this.gameListStored == null) {
-      this.gameListStored = [gameCreated];
-    } else {
-      this.gameListStored.push(gameCreated); // Add game to the list to store it in local db
-    } */
-
-    ///*******///
     // Check if there is a network connection to store in server as well as in local storage
-    /* if (navigator.onLine) {
+    if (navigator.onLine) {
       console.log("onTestServer", 'online');
       this.storage.set('game_list', this.gameListStored); // sotre in local db/ ToDo: put it inside success
 
-      this.apiService.postGame(gameCreated) // sotre in server in the cloaud /
+      this.apiService.updateGame(this.selectedGame) // sotre in server in the cloaud /
         .then(data => {
-          console.log(data);
-
-          if (data.status == 200) {
-            console.log('(postGame), status 200');
-            this.helperService.presentToast('Game stored in server and local storage');
-          }
+          console.log('patch: ', data);
+          this.helperService.presentToast('Game updated in server successfully');
         })
         .catch(e => {
-          console.error('(postGame), ', e);
-          //console.error('(postGame), ', e['error'].message); 
+          console.error('(update loc), ', e);
           this.helperService.presentToast('Due to existance in server or failure, game only stored in local storage', "warning");
         });
-    } else { */
+    } else {
       console.log("onTestServer", 'offline');
       this.storage.set('game_list', this.gameListStored); // sotre in db /
-      //this.helperService.presentToast('Due to offline mode, beacon info only stored in local storage');
-    //}
+      this.helperService.presentToast('Due to offline mode, beacon info only stored in local storage');
+    }
 
-    ///*******///
-
-
-    /* console.log("//// Game stored: ", gameCreated);
-    console.log("//// Game stored, tasks length: ", gameCreated.tasks.length);
-
-
-    // Retreive stored games list
-    this.storage.get('game_list')
-      .then((storedGames) => {
-        console.log('/////(create-game), storedGames', storedGames);
-      }); */
-
-      // Navigate to update game list page
-      this.onBackButton();
+    // Navigate to update game list page
+    this.onBackButton();
   }
 
 }
