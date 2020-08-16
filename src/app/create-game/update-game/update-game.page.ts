@@ -24,6 +24,7 @@ export class UpdateGamePage implements OnInit {
   taskList_BI: BeaconInfo[];
   updatedTasksList: Task[];
   gameListStored: Game[];
+  useGPS: boolean;
 
 
   ngOnInit() {
@@ -36,6 +37,7 @@ export class UpdateGamePage implements OnInit {
 
     if (this.selectedGame != undefined) {
       this.gameName = this.selectedGame.name;
+      this.useGPS = this.selectedGame.useGPS;
       this.tasksList = this.selectedGame.tasks;
       this.convertTobeaconInfo();
 
@@ -152,6 +154,7 @@ export class UpdateGamePage implements OnInit {
 
     // Update game in main game list
     let gameIndex = this.gameListStored.findIndex(x => x.name == this.gameName); // Get index of game
+    this.selectedGame.useGPS = this.useGPS;
     this.selectedGame.tasks = this.updatedTasksList;
     this.gameListStored[gameIndex] = this.selectedGame;
 

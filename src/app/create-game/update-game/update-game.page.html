@@ -10,6 +10,13 @@
 </ion-header>
 
 <ion-content>
+
+  <ion-item style="border: 1px solid black; margin: 5px; padding: 0px;">
+    <ion-label>Use GPS</ion-label>
+    <ion-toggle [(ngModel)]="useGPS"></ion-toggle>
+  </ion-item>
+
+
   <!-- Show taks detail -->
   <ion-card *ngFor="let task of taskList_BI; let i = index ">
     <ion-card-content style="padding: 2px;">
