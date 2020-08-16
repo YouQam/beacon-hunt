@@ -261,4 +261,19 @@ export class UpdateGamePage implements OnInit {
     return true;
   }
 
+  onDeleteTaskClicked(beaconMinor: number): void {
+    if (this.taskList_BI.length == 1) {
+      this.helperService.presentToast("There should be at least one task to play.", "warning");
+      console.log("onDeleteBeacon ,There should be at least one task to create a game.");
+      return;
+    }
+
+    for (var i = 0; i < this.taskList_BI.length; i++) {
+      if (this.taskList_BI[i].minor == beaconMinor) {
+        this.taskList_BI.splice(i, 1);
+        console.log("Deleted successfully!");
+      }
+    }
+  }
+
 }
