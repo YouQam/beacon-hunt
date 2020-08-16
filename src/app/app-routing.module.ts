@@ -48,8 +48,8 @@ const routes: Routes = [
     loadChildren: () => import('./play-game/play-game-list/play-game-list.module').then(m => m.PlayGameListPageModule)
   },
   {
-    path: 'update-game',
-    loadChildren: () => import('./create-game/update-game/update-game.module').then(m => m.UpdateGamePageModule)
+    path: 'update-game-list',
+    loadChildren: () => import('./create-game/update-game-list/update-game-list.module').then(m => m.UpdateGameListPageModule)
   },
   {
     path: 'game-result',

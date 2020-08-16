@@ -29,7 +29,7 @@ export class CreateGameMenuPage implements OnInit {
     console.log('Update button pressed');
 
     // navigate to home page
-    this.navCtrl.navigateForward('update-game');
+    this.navCtrl.navigateForward('update-game-list');
   }
 
 }

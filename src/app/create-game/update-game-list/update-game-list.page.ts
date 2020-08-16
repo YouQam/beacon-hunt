@@ -4,11 +4,11 @@ import { NavController } from '@ionic/angular';
 import { Game } from 'src/app/models/game';
 
 @Component({
-  selector: 'app-update-game',
-  templateUrl: './update-game.page.html',
-  styleUrls: ['./update-game.page.scss'],
+  selector: 'app-update-game-list',
+  templateUrl: './update-game-list.page.html',
+  styleUrls: ['./update-game-list.page.scss'],
 })
-export class UpdateGamePage implements OnInit {
+export class UpdateGameListPage implements OnInit {
   gameList: Game[] = [];
 
   constructor(public storage: Storage, public navCtrl: NavController) { }
