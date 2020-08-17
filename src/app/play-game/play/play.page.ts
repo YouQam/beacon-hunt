@@ -63,6 +63,7 @@ export class PlayPage implements OnInit {
   public gameResults: any;
   public tasksDetail: TasksDetail[];
   public iosDevice: boolean = false;
+  gpsStatus: boolean = false;
 
   constructor(private helperFuns: HelperService, public locationServics: LocationService, private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef, private helperService: HelperService, private apiService: ApiService) {
     this.platform.ready().then(() => {
@@ -94,6 +95,7 @@ export class PlayPage implements OnInit {
       this.tasksList = this.selectedGame.tasks;
       this.currentTask = this.tasksList[0];
       this.taskIndex = 0;
+      this.gpsStatus = this.selectedGame.useGPS;
       console.log('◊◊◊ (play) sent bgame :', this.selectedGame);
 
       // initialize game results
@@ -102,12 +104,16 @@ export class PlayPage implements OnInit {
       this.gameResults = new GameResults(this.selectedGame.name, new Date().toLocaleString(undefined, { hour12: false }), null, null);
       console.log('gameResults: ', this.gameResults);
 
+      // Check beacon UUID
+      this.updateBeaconUUID();
+
       // Start scanning
       this.onScanClicked();
 
     } else {
       console.log('◊◊◊ (play) game is undefined');
     }
+
 
   }
 
@@ -171,6 +177,14 @@ export class PlayPage implements OnInit {
 
   ionViewWillLeave() {
     this.stopScanningTracking();
+  }
+  updateBeaconUUID(){
+    if (this.currentTask.minor == 14338 || this.currentTask.minor == 35011 || this.currentTask.minor == 50313) {
+      this.uuid = 'b9407f30-f5f8-466e-aff9-25556b57fe6d'; // estiomte
+    }
+    else {
+      this.uuid = 'B5B182C7-EAB1-4988-AA99-B5C1517008D9'; // april
+    }
   }
 
   stopScanningTracking() {
@@ -337,14 +351,14 @@ export class PlayPage implements OnInit {
         console.log(' receivedData[i].tx == this.currentTask.distanceMeter:', receivedData[i].accuracy, '<=', this.currentTask.distanceMeter);
 
         if (this.beaconsStoredList) {
-          if (receivedData[i].minor == this.currentTask.minor && receivedData[i].accuracy <= this.currentTask.distanceMeter) { // Check minor and distance
+          if (receivedData[i].accuracy != -1 && receivedData[i].minor == this.currentTask.minor && receivedData[i].accuracy <= this.currentTask.distanceMeter) { // Check minor and distance
             console.log(' Found Beacon: ', this.currentTask.minor);
 
             console.log('(), User reached the beacon');
             this.beaconAudio.play();
             this.reachedUsingBeacon = true;
 
-            if (this.reachedUsingBeacon && (this.selectedGame.useGPS && this.reachedUsingGPS)) {
+            if (this.reachedUsingBeacon && (!this.selectedGame.useGPS || this.reachedUsingGPS)) {
               // Initialize task detail (using beacon)
               this.tasksDetail[this.taskIndex].reachedBeaconTime = new Date().toLocaleString(undefined, { hour12: false });
               this.tasksDetail[this.taskIndex].reachedBeaconDistance = receivedData[i].accuracy;
@@ -381,18 +395,10 @@ export class PlayPage implements OnInit {
       this.taskIndex += 1;
       this.currentTask = this.tasksList[this.taskIndex];
 
+      this.onScanClicked();
       // Stop scanning to update uuid of the beacon, ToDo: improve impl.
-      if (this.currentTask.minor == 14338 || this.currentTask.minor == 35011 || this.currentTask.minor == 50313) {
-        this.checkedUuid = 'b9407f30-f5f8-466e-aff9-25556b57fe6d'; // estiomte
-      }
-      else {
-        this.checkedUuid = 'B5B182C7-EAB1-4988-AA99-B5C1517008D9'; // april
-      }
-      if(this.checkedUuid != this.uuid){
-        this.onScanClicked();
-        this.uuid = this.checkedUuid;
-        this.onScanClicked();
-      }
+      this.updateBeaconUUID();
+      this.onScanClicked();
 
       // initialize game results
       this.tasksDetail[this.taskIndex] = new TasksDetail(this.currentTask._id, this.currentTask.distanceMeter, null, null, null, null, null);

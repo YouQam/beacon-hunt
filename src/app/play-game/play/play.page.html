@@ -32,7 +32,7 @@
 
         <ion-col>
           <ion-item>
-            <ion-label><b>GPS</b></ion-label>
+            <ion-label *ngIf='gpsStatus'><b>GPS</b></ion-label>
             <ion-checkbox slot="start" [(ngModel)]='reachedUsingGPS' disabled="true"></ion-checkbox>
           </ion-item>
         </ion-col>
