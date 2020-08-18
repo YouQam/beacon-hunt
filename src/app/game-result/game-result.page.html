@@ -52,7 +52,7 @@
           {{ (j==0?i:"")}}
         </ion-col>
         <ion-col size="3" style="border: 0px; border-left: 1px solid black;">
-          {{ (j==0?gameresult.startTime.substring(0,16):"")}}
+          {{ (j==0?gameresult.startTime.substring(0,20):"")}}
         </ion-col>
         <ion-col size="1.5">
           {{taskDetail.taskID}}
@@ -70,42 +70,12 @@
           {{taskDetail.reachedGPSTime}}
         </ion-col> -->
         <ion-col size="1.5">
-          {{taskDetail.reachedGPSDistance.toFixed(1)}}
+          {{taskDetail.reachedGPSDistance?.toFixed(1)}}
         </ion-col>
         <ion-col size="1.5">
-          {{taskDetail.GPSAccuracy.toFixed(1)}}
+          {{taskDetail.GPSAccuracy?.toFixed(1)}}
         </ion-col>
       </ion-row>
-
-      <!-- <ion-row style="width: 100%;">
-        <ion-col size="1" style="border: 0px; border-right: 1px solid black;">
-          
-        </ion-col>
-        <ion-col size="1" style="border: 0px; border-left: 1px solid black;">
-          
-        </ion-col>
-        <ion-col size="2">
-          taskID
-        </ion-col>
-        <ion-col size="1">
-          t-Dis
-        </ion-col>
-        <ion-col size="2">
-          B-Time
-        </ion-col>
-        <ion-col size="1">
-          B-Dis
-        </ion-col>
-        <ion-col size="2">
-          G-Time
-        </ion-col>
-        <ion-col size="1">
-          G-Dis
-        </ion-col>
-        <ion-col size="1">
-          G-Acc
-        </ion-col>
-      </ion-row> -->
 
     </ion-row>
 
