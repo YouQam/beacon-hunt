@@ -63,7 +63,7 @@ export class PlayPage implements OnInit {
   public gameResults: any;
   public tasksDetail: TasksDetail[];
   public iosDevice: boolean = false;
-  gpsStatus: boolean = false;
+  //gpsStatus: boolean = false;
 
   constructor(private helperFuns: HelperService, public locationServics: LocationService, private gameServ: GameServiceService, public storage: Storage, public navCtrl: NavController, private readonly ibeacon: IBeacon, private readonly platform: Platform, private changeRef: ChangeDetectorRef, private helperService: HelperService, private apiService: ApiService) {
     this.platform.ready().then(() => {
@@ -95,7 +95,7 @@ export class PlayPage implements OnInit {
       this.tasksList = this.selectedGame.tasks;
       this.currentTask = this.tasksList[0];
       this.taskIndex = 0;
-      this.gpsStatus = this.selectedGame.useGPS;
+      //this.gpsStatus = this.selectedGame.useGPS;
       console.log('◊◊◊ (play) sent bgame :', this.selectedGame);
 
       // initialize game results
@@ -108,7 +108,7 @@ export class PlayPage implements OnInit {
       this.updateBeaconUUID();
 
       // Start scanning
-      this.onScanClicked();
+      //this.onScanClicked();
 
     } else {
       console.log('◊◊◊ (play) game is undefined');

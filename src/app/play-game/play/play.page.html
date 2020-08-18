@@ -31,8 +31,8 @@
         </ion-col>
 
         <ion-col>
-          <ion-item>
-            <ion-label *ngIf='gpsStatus'><b>GPS</b></ion-label>
+          <ion-item *ngIf='selectedGame.useGPS'>
+            <ion-label ><b>GPS</b></ion-label>
             <ion-checkbox slot="start" [(ngModel)]='reachedUsingGPS' disabled="true"></ion-checkbox>
           </ion-item>
         </ion-col>
